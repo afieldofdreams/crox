@@ -8,16 +8,36 @@ export default function AboutPage() {
 			<Helmet>
 				<title>About Crox | Founded by Adam Field</title>
 				<meta name="description" content="Crox was founded by Adam Field — a product leader, former commercial pilot, and builder with a decade of experience helping organisations ship AI products in regulated industries." />
+				<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
 				<link rel="canonical" href="https://crox.io/about" />
 				<meta property="og:title" content="About Crox | Founded by Adam Field" />
 				<meta property="og:description" content="Crox was founded by Adam Field — a product leader, former commercial pilot, and builder with a decade of experience shipping AI in regulated industries." />
 				<meta property="og:url" content="https://crox.io/about" />
 				<meta property="og:type" content="profile" />
+				<meta property="og:site_name" content="Crox" />
 				<meta property="og:image" content="https://crox.io/og.png" />
 				<meta name="twitter:card" content="summary_large_image" />
 				<meta name="twitter:title" content="About Crox | Founded by Adam Field" />
 				<meta name="twitter:description" content="Crox was founded by Adam Field — a product leader, former commercial pilot, and builder with a decade of experience shipping AI in regulated industries." />
 				<meta name="twitter:image" content="https://crox.io/og.png" />
+				<script type="application/ld+json">{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'Person',
+					name: 'Adam Field',
+					url: 'https://crox.io/about',
+					jobTitle: 'Founder',
+					worksFor: { '@type': 'Organization', name: 'Crox', url: 'https://crox.io' },
+					sameAs: ['https://linkedin.com/in/afieldio'],
+					description: 'Product leader, former commercial pilot, and builder with a decade of experience shipping AI products in regulated industries.',
+				})}</script>
+				<script type="application/ld+json">{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'BreadcrumbList',
+					itemListElement: [
+						{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+						{ '@type': 'ListItem', position: 2, name: 'About', item: 'https://crox.io/about' },
+					],
+				})}</script>
 			</Helmet>
 
 			{/* Hero */}

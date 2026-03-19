@@ -34,16 +34,44 @@ export default function AiIntegrationPage() {
 			<Helmet>
 				<title>AI Integration for Small Business | Connect AI to Your Tools | Crox</title>
 				<meta name="description" content="Your team uses AI but it can't access your business tools. We connect AI assistants to your CRM, accounts, project tools, and data — so they actually work. Fast setup for SMEs." />
+				<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
 				<link rel="canonical" href="https://crox.io/ai-integration" />
 				<meta property="og:title" content="AI Integration for Small Business | Connect AI to Your Tools" />
 				<meta property="og:description" content="We connect AI assistants to your CRM, accounts, project tools, and data — so they actually work. Fast setup for SMEs." />
 				<meta property="og:url" content="https://crox.io/ai-integration" />
 				<meta property="og:type" content="website" />
+				<meta property="og:site_name" content="Crox" />
 				<meta property="og:image" content="https://crox.io/og.png" />
 				<meta name="twitter:card" content="summary_large_image" />
 				<meta name="twitter:title" content="AI Integration for Small Business | Connect AI to Your Tools" />
 				<meta name="twitter:description" content="We connect AI assistants to your CRM, accounts, project tools, and data — so they actually work." />
 				<meta name="twitter:image" content="https://crox.io/og.png" />
+				<script type="application/ld+json">{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'Service',
+					name: 'AI Integration for Small Business',
+					description: 'Connect AI assistants to your CRM, accounting software, project tools, and data using the Model Context Protocol.',
+					provider: { '@type': 'Organization', name: 'Crox', url: 'https://crox.io' },
+					url: 'https://crox.io/ai-integration',
+					areaServed: 'GB',
+				})}</script>
+				<script type="application/ld+json">{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'FAQPage',
+					mainEntity: faqs.map(faq => ({
+						'@type': 'Question',
+						name: faq.q,
+						acceptedAnswer: { '@type': 'Answer', text: faq.a },
+					})),
+				})}</script>
+				<script type="application/ld+json">{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'BreadcrumbList',
+					itemListElement: [
+						{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+						{ '@type': 'ListItem', position: 2, name: 'AI Integration', item: 'https://crox.io/ai-integration' },
+					],
+				})}</script>
 			</Helmet>
 
 			{/* Hero */}

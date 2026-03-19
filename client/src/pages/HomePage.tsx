@@ -37,16 +37,34 @@ export default function HomePage() {
 			<Helmet>
 				<title>Crox — AI That Works in Your Business | Advisory, Integration & Workshops</title>
 				<meta name="description" content="Crox helps small and mid-sized businesses get real value from AI. Strategy, integration, and decision-making workshops for regulated industries: healthcare, legal, finance, insurance." />
+				<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
 				<link rel="canonical" href="https://crox.io/" />
 				<meta property="og:title" content="Crox — AI That Works in Your Business" />
 				<meta property="og:description" content="Crox helps SMEs get real value from AI. Strategy, integration, and workshops for regulated industries." />
 				<meta property="og:url" content="https://crox.io/" />
 				<meta property="og:type" content="website" />
+				<meta property="og:site_name" content="Crox" />
 				<meta property="og:image" content="https://crox.io/og.png" />
 				<meta name="twitter:card" content="summary_large_image" />
 				<meta name="twitter:title" content="Crox — AI That Works in Your Business" />
 				<meta name="twitter:description" content="Crox helps SMEs get real value from AI. Strategy, integration, and workshops for regulated industries." />
 				<meta name="twitter:image" content="https://crox.io/og.png" />
+				<script type="application/ld+json">{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'Organization',
+					name: 'Crox',
+					url: 'https://crox.io',
+					logo: 'https://crox.io/og.png',
+					description: 'Crox helps small and mid-sized businesses connect AI assistants to their existing tools using the Model Context Protocol.',
+					founder: { '@type': 'Person', name: 'Adam Field' },
+					sameAs: ['https://linkedin.com/in/afieldio'],
+				})}</script>
+				<script type="application/ld+json">{JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'WebSite',
+					name: 'Crox',
+					url: 'https://crox.io',
+				})}</script>
 			</Helmet>
 
 			{/* Hero */}

@@ -55,6 +55,7 @@ const BlogPost: React.FC = () => {
       meta={{
         description: post.description,
         canonical: `/blog/${slug}`,
+        ogImage: 'https://crox.io/og.png',
       }}
     >
       {content}
