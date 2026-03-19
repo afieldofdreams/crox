@@ -108,20 +108,6 @@ def create_app() -> Flask:
 
 	app.register_blueprint(api)
 
-	# Debug: check static folder resolution (remove after confirming)
-	@app.route('/debug/static')
-	def debug_static():
-		sf = app.static_folder
-		exists = os.path.isdir(sf) if sf else False
-		files = os.listdir(sf) if sf and exists else []
-		return jsonify({
-			"static_folder": sf,
-			"exists": exists,
-			"files": files,
-			"cwd": os.getcwd(),
-			"__file__": os.path.abspath(__file__),
-		})
-
 	# Catch-all: serve index.html for client-side routes
 	@app.route('/', defaults={'path': ''})
 	@app.route('/<path:path>')

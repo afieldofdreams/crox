@@ -1,0 +1,26 @@
+# Crox — Adam Field
+
+> AI product leadership in regulated industries. Consulting, workshops, and advisory through Crox Ltd.
+
+## About
+
+Adam Field is a builder, founder and AI product leader with 10+ years building and deploying machine learning systems in highly regulated environments. He launched the UK's first BSI-audited AI clinical chatbot across 12 countries at Babylon Health, built ML risk stratification models that reduced NHS readmissions by 35% at Health Navigator, and designed automated FinTech scoring systems that cut underwriting from two weeks to two days at Forward Partners. He is a former Ryanair commercial pilot (737 fleet, 2002-2013).
+
+Currently Head of Product at SideLight AI, building medical and medical-legal AI systems. Based in London, UK.
+
+## Services
+
+- **AI Product Advisory**: Fractional product thinking for founders building AI in regulated spaces. Strategy, architecture decisions, compliance navigation. Healthcare, legal tech, fintech, insurance.
+- **DODAR Workshops**: Structured decision-making for teams who make high-stakes calls. Half-day sessions using the aviation framework. Remote or on-site, up to 15 participants.
+- **Build & Ship**: Production code, LLM prototyping, full-stack tools. Python, Next.js, LLM integrations. Zero-to-one builds or targeted feature work.
+
+## Contact
+
+- Email: adam@crox.io
+- LinkedIn: linkedin.com/in/afieldio
+- Website: https://crox.io
+
+## Pages
+
+- Home: https://crox.io/
+- About: https://crox.io/about

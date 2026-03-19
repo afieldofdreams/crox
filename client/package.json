@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/prerender.mjs",
+    "build": "tsc -b && vite build",
+    "build:full": "tsc -b && vite build && node scripts/prerender.mjs",
     "preview": "vite preview --port 3099"
   },
   "dependencies": {
@@ -20,7 +21,6 @@
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
-    "puppeteer": "^24.39.1",
     "serve-handler": "^6.1.7",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
