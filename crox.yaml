@@ -1,0 +1,28 @@
+alerts:
+- rule: DEPLOYMENT_FAILED
+- rule: DOMAIN_FAILED
+domains:
+- domain: crox.io
+  type: PRIMARY
+ingress:
+  rules:
+  - component:
+      name: crox
+    match:
+      authority:
+        exact: ""
+      path:
+        prefix: /
+name: crox
+region: lon
+static_sites:
+- build_command: cd client && npm install && npm run build
+  environment_slug: node-js
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: afieldofdreams/crox
+  name: crox
+  output_dir: client/dist
+  source_dir: /
+  catchall_document: index.html
