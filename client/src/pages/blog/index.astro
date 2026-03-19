@@ -1,0 +1,167 @@
+---
+import Base from '../../layouts/Base.astro';
+import BlogFaqAccordion from '../../components/BlogFaqAccordion.tsx';
+import { blogPosts } from '../../content/blogPosts';
+
+const baseUrl = 'https://crox.io';
+const canonicalUrl = `${baseUrl}/blog`;
+
+const faqs = [
+	{
+		question: 'How do I connect ChatGPT to my accounting software?',
+		answer: 'You can connect ChatGPT to accounting software like Xero, QuickBooks, or FreshBooks using Model Context Protocol (MCP) servers. These act as bridges that let Claude access your financial data, create invoices, and reconcile accounts without direct API access.',
+	},
+	{
+		question: 'Can AI access my business data safely?',
+		answer: 'Yes, with proper safeguards. MCP servers provide secure access patterns where AI only gets the data it needs, your credentials stay on your servers, and you maintain complete control over what information is shared. This is much safer than giving AI full database access.',
+	},
+	{
+		question: 'What is the cheapest way to integrate AI with my small business tools?',
+		answer: 'Using existing MCP servers is the most cost-effective approach. Open-source servers for common tools are free, while custom integrations start around the cost of a few developer days. No expensive infrastructure or licensing required.',
+	},
+	{
+		question: 'Do I need a developer to set up AI for my business?',
+		answer: 'Not necessarily. Many integrations can be configured through Claude itself or simple configuration files. For custom setups with proprietary systems, you might need a developer, but standard business tools typically work out of the box.',
+	},
+	{
+		question: 'How long does it take to connect AI to Xero or HubSpot?',
+		answer: 'For standard integrations like Xero or HubSpot, you can get up and running in hours. Initial setup takes about 1-2 hours, then you can immediately start using Claude with your data. Complex workflows might take a day or two to optimize.',
+	},
+];
+
+const collectionPageSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'CollectionPage',
+	name: 'Insights — Crox',
+	description: 'Insights and guides on AI integration for business.',
+	url: canonicalUrl,
+	isPartOf: {
+		'@type': 'Website',
+		name: 'Crox',
+		url: baseUrl,
+	},
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl },
+		{ '@type': 'ListItem', position: 2, name: 'Insights', item: canonicalUrl },
+	],
+};
+
+const itemListSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'ItemList',
+	name: "Insights",
+	url: canonicalUrl,
+	itemListElement: blogPosts.map((post, index) => ({
+		'@type': 'Article',
+		position: index + 1,
+		name: post.title,
+		description: post.description,
+		url: `${baseUrl}/blog/${post.slug}`,
+	})),
+};
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map(faq => ({
+		'@type': 'Question',
+		name: faq.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: faq.answer,
+		},
+	})),
+};
+
+const jsonLd = [collectionPageSchema, breadcrumbSchema, itemListSchema, faqSchema];
+---
+
+<Base
+	title="Insights — Crox"
+	description="Insights and guides on AI integration for business. Learn how to safely connect AI to your tools."
+	canonical={canonicalUrl}
+	jsonLd={jsonLd}
+>
+	<div class="w-full max-w-[900px] mx-auto px-4 sm:px-6 py-16 sm:py-24">
+		<!-- Hero Section -->
+		<header class="mb-16">
+			<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] text-fg mb-4">
+				Insights
+			</h1>
+			<p class="text-[1.1rem] text-fg-dim leading-[1.8]">
+				Practical guides and analysis on integrating AI with your business tools. Learn how Model Context Protocol is making it safe and accessible for SMEs to connect their AI assistants to the systems they already use.
+			</p>
+		</header>
+
+		<!-- Blog Posts List -->
+		<div class="space-y-8 mb-16">
+			{blogPosts.map((post) => (
+				<a
+					href={`/blog/${post.slug}`}
+					class="block group"
+				>
+					<article class="border border-border p-6 sm:p-8 hover:border-accent transition-colors duration-300 bg-surface/30">
+						<div class="flex flex-col">
+							<h2 class="font-serif font-normal text-[1.6rem] text-fg group-hover:text-accent transition-colors mb-2">
+								{post.title}
+							</h2>
+							<p class="text-[0.95rem] text-fg-dim mb-4 leading-[1.6]">
+								{post.subtitle}
+							</p>
+
+							<div class="flex flex-wrap items-center gap-4 text-[0.8rem] text-fg-dim mb-4">
+								<span>{post.date}</span>
+								<span>&bull;</span>
+								<span>{post.readTime}</span>
+							</div>
+
+							{post.tags.length > 0 && (
+								<div class="flex flex-wrap gap-2">
+									{post.tags.map((tag) => (
+										<span
+											class="inline-block text-[0.75rem] tracking-[0.1em] uppercase text-fg-dim border border-border/50 px-3 py-1"
+										>
+											{tag}
+										</span>
+									))}
+								</div>
+							)}
+						</div>
+					</article>
+				</a>
+			))}
+		</div>
+
+		<!-- FAQ Section -->
+		<div class="mb-16">
+			<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+				FAQ
+				<span class="flex-1 h-px bg-border"></span>
+			</div>
+			<BlogFaqAccordion faqs={faqs} client:load />
+		</div>
+
+		<!-- CTA Section -->
+		<div class="bg-surface border border-border p-8 sm:p-10">
+			<h2 class="font-serif font-normal text-[1.6rem] text-fg mb-4">
+				Ready to implement AI in your business?
+			</h2>
+			<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-6">
+				Discuss how Model Context Protocol can safely connect your AI assistant to your business systems. Book a call with our team.
+			</p>
+			<a
+				href="https://calendar.app.google/3avUXyXnctfWpyHF7"
+				target="_blank"
+				rel="noopener noreferrer"
+				class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 hover:opacity-90 transition-opacity"
+			>
+				Book a Call <span class="sr-only">(opens in a new tab)</span>
+			</a>
+		</div>
+	</div>
+</Base>

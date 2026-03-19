@@ -5,179 +5,1588 @@ export interface MCPServerEntry {
   category: string;
   tools: string[];
   status: 'official' | 'community' | 'custom';
-  relatedBlogSlug?: string;
-  relatedLearnSlug?: string;
+  url?: string;
 }
 
+export interface FeaturedServer {
+  serverId: string;
+  headline: string;
+  description: string;
+  weekOf: string; // ISO date string for the Monday of the featured week
+}
+
+export const featuredServer: FeaturedServer = {
+  serverId: 'fibery-mcp',
+  headline: 'MCP Server of the Week',
+  description: 'Fibery is a connected workspace that adapts to your team. Their official MCP server lets AI agents query entities, manage work items, and interact with custom databases — making it easy to build AI-powered workflows on top of your existing Fibery setup.',
+  weekOf: '2026-03-16',
+};
+
 export const servers: MCPServerEntry[] = [
-  // Business Tools
+  // ─── Business Tools ───────────────────────────────────────────────
+
   {
     id: 'slack-mcp',
     name: 'Slack',
-    description: 'Send messages, manage channels, search conversations, and automate workflows across your Slack workspace. Let Claude read and respond to channel history.',
+    description: 'Send messages, manage channels, search conversations, and automate workflows across your Slack workspace.',
     category: 'Business Tools',
     tools: ['Messaging', 'Channel Management', 'Search', 'User Management'],
     status: 'official',
-    relatedLearnSlug: 'mcp-slack-integration'
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/slack'
   },
   {
     id: 'hubspot-mcp',
     name: 'HubSpot',
-    description: 'Access contacts, deals, pipelines, and customer data. Enable AI to qualify leads, update CRM records, and generate sales insights without manual data entry.',
+    description: 'Access contacts, deals, pipelines, and customer data. Enable AI to qualify leads, update CRM records, and generate sales insights.',
     category: 'Business Tools',
     tools: ['CRM', 'Contacts', 'Deals', 'Analytics'],
     status: 'official',
-    relatedLearnSlug: 'hubspot-crm-automation'
+    url: 'https://developers.hubspot.com/docs/guides/mcp'
   },
   {
     id: 'salesforce-mcp',
     name: 'Salesforce',
-    description: 'Connect to Salesforce orgs to query objects, create/update records, and execute workflows. Let AI manage opportunities, accounts, and custom objects.',
+    description: 'Connect to Salesforce orgs to query objects, create/update records, and execute workflows. Manage opportunities, accounts, and custom objects.',
     category: 'Business Tools',
     tools: ['CRM', 'Objects', 'Workflows', 'Reports'],
-    status: 'official'
+    status: 'official',
+    url: 'https://github.com/salesforce/salesforce-mcp'
   },
   {
     id: 'google-workspace-mcp',
     name: 'Google Workspace',
-    description: 'Integrate with Gmail, Google Docs, Sheets, and Drive. Enable Claude to read documents, create presentations, and manage workspace data at scale.',
+    description: 'Integrate with Gmail, Google Docs, Sheets, and Drive. Read documents, create presentations, and manage workspace data at scale.',
     category: 'Business Tools',
     tools: ['Gmail', 'Docs', 'Sheets', 'Drive', 'Slides'],
     status: 'official',
-    relatedLearnSlug: 'google-workspace-automation'
+    url: 'https://github.com/anthropics/anthropic-quickstarts/tree/main/google-workspace-mcp'
   },
   {
     id: 'microsoft-365-mcp',
     name: 'Microsoft 365',
-    description: 'Access Outlook, Teams, Excel, Word, and OneDrive. Automate email workflows, manage shared documents, and integrate with Azure services.',
+    description: 'Access Outlook, Teams, Excel, Word, and OneDrive. Automate email workflows, manage documents, and integrate with Azure services.',
     category: 'Business Tools',
     tools: ['Outlook', 'Teams', 'Excel', 'Word', 'OneDrive'],
-    status: 'official'
-  },
-
-  // Finance & Accounting
-  {
-    id: 'xero-mcp',
-    name: 'Xero',
-    description: 'Connect to accounting data: invoices, bills, contacts, and bank transactions. Let Claude analyze financial health and automate bookkeeping tasks.',
-    category: 'Finance & Accounting',
-    tools: ['Invoicing', 'Bills', 'Bank Reconciliation', 'Financial Reports'],
-    status: 'official'
-  },
-  {
-    id: 'quickbooks-mcp',
-    name: 'QuickBooks',
-    description: 'Manage invoices, expenses, and accounts via QuickBooks API. Enable AI to extract financial data, create reports, and sync transactions.',
-    category: 'Finance & Accounting',
-    tools: ['Invoicing', 'Expenses', 'Reports', 'Accounts'],
-    status: 'community'
-  },
-  {
-    id: 'stripe-mcp',
-    name: 'Stripe',
-    description: 'Query payment events, manage customers, retrieve invoices, and analyze payment data. Let Claude understand transaction patterns and refund requests.',
-    category: 'Finance & Accounting',
-    tools: ['Payments', 'Invoices', 'Customers', 'Transactions'],
     status: 'official',
-    relatedLearnSlug: 'stripe-payment-automation'
+    url: 'https://github.com/microsoft/mcp-servers'
   },
-
-  // Development
   {
-    id: 'github-mcp',
-    name: 'GitHub',
-    description: 'Search repos, read code, create issues, manage PRs, and trigger workflows. Let Claude understand codebases and contribute to development cycles.',
-    category: 'Development',
-    tools: ['Repos', 'Issues', 'Pull Requests', 'Actions', 'Code Search'],
+    id: 'atlassian-mcp',
+    name: 'Atlassian',
+    description: 'Interact with Jira work items and Confluence pages. Manage tickets, search documentation, and streamline project workflows.',
+    category: 'Business Tools',
+    tools: ['Jira', 'Confluence', 'Issues', 'Pages', 'Search'],
     status: 'official',
-    relatedLearnSlug: 'github-integration-mcp'
+    url: 'https://github.com/sooperset/mcp-atlassian'
   },
   {
-    id: 'gitlab-mcp',
-    name: 'GitLab',
-    description: 'Integrate with GitLab instances to manage projects, merge requests, CI/CD pipelines, and repository data.',
-    category: 'Development',
-    tools: ['Projects', 'Merge Requests', 'CI/CD', 'Repository'],
-    status: 'community'
+    id: 'clickup-mcp',
+    name: 'ClickUp',
+    description: 'Manage tasks, checklists, sprints, comments, and docs. Create and update work items, track progress, and automate project management.',
+    category: 'Business Tools',
+    tools: ['Tasks', 'Sprints', 'Docs', 'Comments', 'Time Tracking'],
+    status: 'community',
+    url: 'https://github.com/TaazKarma/clickup-mcp-server'
+  },
+  {
+    id: 'asana-mcp',
+    name: 'Asana',
+    description: 'Interact with Asana projects, tasks, and teams. Automate task creation, update statuses, and manage project timelines.',
+    category: 'Business Tools',
+    tools: ['Tasks', 'Projects', 'Teams', 'Workflows'],
+    status: 'community',
+    url: 'https://github.com/roychri/mcp-server-asana'
+  },
+  {
+    id: 'trello-mcp',
+    name: 'Trello',
+    description: 'Manage Trello boards, lists, and cards. Automate card creation, move items across workflows, and query board data.',
+    category: 'Business Tools',
+    tools: ['Boards', 'Cards', 'Lists', 'Labels'],
+    status: 'community',
+    url: 'https://github.com/m0xai/trello-mcp-server'
+  },
+  {
+    id: 'todoist-mcp',
+    name: 'Todoist',
+    description: 'Natural language task management with Todoist. Create, update, and organize tasks and projects via REST and Sync APIs.',
+    category: 'Business Tools',
+    tools: ['Tasks', 'Projects', 'Labels', 'Filters'],
+    status: 'community',
+    url: 'https://github.com/abhiz123/todoist-mcp-server'
+  },
+  {
+    id: 'plane-mcp',
+    name: 'Plane',
+    description: 'Open-source project management with full AI automation. Manage issues, cycles, modules, and project views.',
+    category: 'Business Tools',
+    tools: ['Issues', 'Cycles', 'Modules', 'Views'],
+    status: 'official',
+    url: 'https://github.com/makeplane/plane-mcp'
+  },
+  {
+    id: 'fibery-mcp',
+    name: 'Fibery',
+    description: 'Query entities, manage work items, and interact with custom databases in your Fibery workspace. Build AI-powered workflows on top of your connected workspace.',
+    category: 'Business Tools',
+    tools: ['Entities', 'Queries', 'Databases', 'Workflows', 'Documents'],
+    status: 'official',
+    url: 'https://fibery.io/blog/fibery-mcp-server'
+  },
+  {
+    id: 'dart-mcp',
+    name: 'Dart',
+    description: 'Interact with task, doc, and project data in Dart. Manage workflows and keep project information synchronized.',
+    category: 'Business Tools',
+    tools: ['Tasks', 'Docs', 'Projects', 'Properties'],
+    status: 'official',
+    url: 'https://github.com/its-dart/dart-mcp-server'
+  },
+  {
+    id: 'taskade-mcp',
+    name: 'Taskade',
+    description: 'Connect to Taskade for AI-powered task management, notes, and team collaboration workflows.',
+    category: 'Business Tools',
+    tools: ['Tasks', 'Notes', 'Workflows', 'Collaboration'],
+    status: 'official',
+    url: 'https://github.com/taskade/taskade-mcp-server'
   },
   {
     id: 'linear-mcp',
     name: 'Linear',
-    description: 'Connect to Linear workspaces to create issues, update projects, and manage engineering workflows. Let Claude stay in sync with your development roadmap.',
-    category: 'Development',
+    description: 'Connect to Linear workspaces to create issues, update projects, and manage engineering workflows. Stay in sync with your development roadmap.',
+    category: 'Business Tools',
     tools: ['Issues', 'Projects', 'Workflows', 'Teams'],
-    status: 'official'
+    status: 'official',
+    url: 'https://github.com/jerhadf/linear-mcp-server'
+  },
+
+  // ─── Finance & Accounting ─────────────────────────────────────────
+
+  {
+    id: 'xero-mcp',
+    name: 'Xero',
+    description: 'Connect to accounting data: invoices, bills, contacts, and bank transactions. Analyze financial health and automate bookkeeping tasks.',
+    category: 'Finance & Accounting',
+    tools: ['Invoicing', 'Bills', 'Bank Reconciliation', 'Financial Reports'],
+    status: 'official',
+    url: 'https://github.com/XeroAPI/xero-mcp-server'
+  },
+  {
+    id: 'quickbooks-mcp',
+    name: 'QuickBooks',
+    description: 'Manage invoices, expenses, and accounts. Extract financial data, create reports, and sync transactions.',
+    category: 'Finance & Accounting',
+    tools: ['Invoicing', 'Expenses', 'Reports', 'Accounts'],
+    status: 'community',
+    url: 'https://github.com/hannesrudolph/quickbooks-mcp-server'
+  },
+  {
+    id: 'stripe-mcp',
+    name: 'Stripe',
+    description: 'Query payment events, manage customers, retrieve invoices, and analyze payment data. Understand transaction patterns and refund requests.',
+    category: 'Finance & Accounting',
+    tools: ['Payments', 'Invoices', 'Customers', 'Transactions'],
+    status: 'official',
+    url: 'https://github.com/stripe/agent-toolkit'
+  },
+  {
+    id: 'paypal-mcp',
+    name: 'PayPal',
+    description: 'Payment processing, transaction management, and merchant operations through AI-powered function calling.',
+    category: 'Finance & Accounting',
+    tools: ['Payments', 'Transactions', 'Invoices', 'Merchant Tools'],
+    status: 'official',
+    url: 'https://github.com/paypal/agent-toolkit'
+  },
+  {
+    id: 'square-mcp',
+    name: 'Square',
+    description: 'Connect to Square for payment processing, inventory management, and point-of-sale operations.',
+    category: 'Finance & Accounting',
+    tools: ['Payments', 'Inventory', 'POS', 'Customers'],
+    status: 'official',
+    url: 'https://github.com/square/square-mcp-server'
+  },
+  {
+    id: 'alpaca-mcp',
+    name: 'Alpaca',
+    description: 'Trade stocks and options, analyze market data, and build trading strategies. Interact with brokerage accounts in real time.',
+    category: 'Finance & Accounting',
+    tools: ['Trading', 'Market Data', 'Portfolios', 'Options'],
+    status: 'official',
+    url: 'https://github.com/alpacahq/alpaca-mcp-server'
+  },
+  {
+    id: 'alphavantage-mcp',
+    name: 'Alpha Vantage',
+    description: 'Connect to 100+ APIs for financial market data including stock prices, forex rates, cryptocurrency, and fundamentals.',
+    category: 'Finance & Accounting',
+    tools: ['Stock Prices', 'Forex', 'Crypto', 'Fundamentals'],
+    status: 'official',
+    url: 'https://github.com/calvernaz/alphavantage-mcp'
+  },
+  {
+    id: 'chargebee-mcp',
+    name: 'Chargebee',
+    description: 'Connect AI agents to Chargebee billing. Manage subscriptions, invoices, and revenue operations programmatically.',
+    category: 'Finance & Accounting',
+    tools: ['Subscriptions', 'Billing', 'Invoices', 'Revenue'],
+    status: 'official',
+    url: 'https://github.com/chargebee/agentkit'
+  },
+  {
+    id: 'revenuecat-mcp',
+    name: 'RevenueCat',
+    description: 'Manage in-app purchases and subscription data. Track revenue, entitlements, and subscriber analytics.',
+    category: 'Finance & Accounting',
+    tools: ['Subscriptions', 'In-App Purchases', 'Revenue', 'Analytics'],
+    status: 'official',
+    url: 'https://github.com/nicklasbekkevold/revenuecat-mcp'
+  },
+  {
+    id: 'ramp-mcp',
+    name: 'Ramp',
+    description: 'Spend analysis, expense management, and corporate card operations via Ramp\'s Developer API.',
+    category: 'Finance & Accounting',
+    tools: ['Expenses', 'Spend Analysis', 'Cards', 'Transactions'],
+    status: 'official',
+    url: 'https://github.com/ramp-public/ramp-mcp-server'
+  },
+  {
+    id: 'airwallex-mcp',
+    name: 'Airwallex',
+    description: 'AI coding assistance for integrating with Airwallex payment and treasury APIs. Streamline cross-border payments.',
+    category: 'Finance & Accounting',
+    tools: ['Payments', 'Treasury', 'FX', 'Integration'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/airwallex-mcp'
+  },
+  {
+    id: 'adfin-mcp',
+    name: 'Adfin',
+    description: 'All-in-one platform for payments, invoicing, and accounting reconciliations. Automate financial workflows.',
+    category: 'Finance & Accounting',
+    tools: ['Payments', 'Invoicing', 'Reconciliation', 'Accounting'],
+    status: 'official',
+    url: 'https://github.com/adfin/adfin-mcp'
+  },
+  {
+    id: 'coingecko-mcp',
+    name: 'CoinGecko',
+    description: 'Comprehensive crypto price data, market caps, trading volumes, and token information via the official CoinGecko API.',
+    category: 'Finance & Accounting',
+    tools: ['Prices', 'Market Data', 'Tokens', 'Exchanges'],
+    status: 'official',
+    url: 'https://github.com/coingecko/coingecko-mcp-server'
+  },
+
+  // ─── Development & DevOps ─────────────────────────────────────────
+
+  {
+    id: 'github-mcp',
+    name: 'GitHub',
+    description: 'Search repos, read code, create issues, manage PRs, and trigger workflows. Understand codebases and contribute to development cycles.',
+    category: 'Development & DevOps',
+    tools: ['Repos', 'Issues', 'Pull Requests', 'Actions', 'Code Search'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/github'
+  },
+  {
+    id: 'gitlab-mcp',
+    name: 'GitLab',
+    description: 'Manage projects, merge requests, CI/CD pipelines, and repository data on GitLab instances.',
+    category: 'Development & DevOps',
+    tools: ['Projects', 'Merge Requests', 'CI/CD', 'Repository'],
+    status: 'community',
+    url: 'https://gitlab.com/gitlab-org/editor-extensions/gitlab-mcp-server'
   },
   {
     id: 'sentry-mcp',
     name: 'Sentry',
-    description: 'Query error tracking data, access crash reports, and manage releases. Enable Claude to triage bugs and suggest fixes based on stack traces.',
-    category: 'Development',
+    description: 'Query error tracking data, access crash reports, and manage releases. Triage bugs and suggest fixes based on stack traces.',
+    category: 'Development & DevOps',
     tools: ['Error Tracking', 'Issues', 'Releases', 'Alerts'],
-    status: 'community'
+    status: 'official',
+    url: 'https://github.com/getsentry/sentry-mcp'
+  },
+  {
+    id: 'terraform-mcp',
+    name: 'Terraform',
+    description: 'Access Terraform Registry documentation, modules, and provider schemas. Generate accurate infrastructure-as-code configurations.',
+    category: 'Development & DevOps',
+    tools: ['Registry', 'Providers', 'Modules', 'IaC Generation'],
+    status: 'official',
+    url: 'https://github.com/hashicorp/terraform-mcp-server'
+  },
+  {
+    id: 'playwright-mcp',
+    name: 'Playwright',
+    description: 'Official Microsoft Playwright MCP server for browser automation, testing, and web interaction.',
+    category: 'Development & DevOps',
+    tools: ['Browser Automation', 'Testing', 'Screenshots', 'Web Interaction'],
+    status: 'official',
+    url: 'https://github.com/microsoft/playwright-mcp'
+  },
+  {
+    id: 'azure-devops-mcp',
+    name: 'Azure DevOps',
+    description: 'Interact with Azure DevOps repositories, work items, builds, releases, and test plans.',
+    category: 'Development & DevOps',
+    tools: ['Repos', 'Work Items', 'Builds', 'Releases', 'Pipelines'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/azure-devops-mcp'
+  },
+  {
+    id: 'buildkite-mcp',
+    name: 'Buildkite',
+    description: 'Manage Buildkite CI/CD pipelines and builds. Monitor build status, trigger deployments, and analyze failures.',
+    category: 'Development & DevOps',
+    tools: ['Pipelines', 'Builds', 'Agents', 'Artifacts'],
+    status: 'official',
+    url: 'https://github.com/buildkite/buildkite-mcp-server'
+  },
+  {
+    id: 'circleci-mcp',
+    name: 'CircleCI',
+    description: 'Investigate and fix CircleCI build failures. Access pipeline data, job logs, and configuration insights.',
+    category: 'Development & DevOps',
+    tools: ['Pipelines', 'Jobs', 'Builds', 'Debugging'],
+    status: 'official',
+    url: 'https://github.com/CircleCI-Public/mcp-server-circleci'
+  },
+  {
+    id: 'cloudflare-mcp',
+    name: 'Cloudflare',
+    description: 'Deploy, configure, and manage resources on Cloudflare. Workers, Pages, DNS, and security settings.',
+    category: 'Development & DevOps',
+    tools: ['Workers', 'Pages', 'DNS', 'Security', 'KV'],
+    status: 'official',
+    url: 'https://github.com/cloudflare/mcp-server-cloudflare'
+  },
+  {
+    id: 'netlify-mcp',
+    name: 'Netlify',
+    description: 'Create projects, manage deployments, and configure build settings through AI-powered workflows.',
+    category: 'Development & DevOps',
+    tools: ['Deployments', 'Builds', 'Sites', 'Functions'],
+    status: 'official',
+    url: 'https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/'
+  },
+  {
+    id: 'render-mcp',
+    name: 'Render',
+    description: 'Official Render MCP server for cloud service deployment. Manage web services, databases, and static sites.',
+    category: 'Development & DevOps',
+    tools: ['Deployments', 'Services', 'Databases', 'Static Sites'],
+    status: 'official',
+    url: 'https://github.com/render-oss/render-mcp-server'
+  },
+  {
+    id: 'vercel-nextjs-mcp',
+    name: 'Next.js DevTools',
+    description: 'Next.js development tools for AI coding assistants. Debug, inspect, and optimize Next.js applications.',
+    category: 'Development & DevOps',
+    tools: ['Next.js', 'Debugging', 'Optimization', 'DevTools'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/nextjs-mcp'
+  },
+  {
+    id: 'aws-mcp',
+    name: 'AWS',
+    description: 'Specialized MCP servers for AWS services including CDK, Lambda, ECS, EKS, Bedrock, and cost analysis.',
+    category: 'Development & DevOps',
+    tools: ['CDK', 'Lambda', 'ECS', 'Documentation', 'Cost Analysis'],
+    status: 'official',
+    url: 'https://awslabs.github.io/mcp/'
+  },
+  {
+    id: 'azure-mcp',
+    name: 'Azure',
+    description: 'Access key Azure services including Storage, Cosmos DB, and Azure CLI. Manage cloud resources through AI.',
+    category: 'Development & DevOps',
+    tools: ['Storage', 'Cosmos DB', 'CLI', 'Resources'],
+    status: 'official',
+    url: 'https://github.com/Azure/azure-mcp-server'
+  },
+  {
+    id: 'google-cloud-run-mcp',
+    name: 'Google Cloud Run',
+    description: 'Deploy and manage applications on Google Cloud Run. Automate container deployment and scaling.',
+    category: 'Development & DevOps',
+    tools: ['Deployments', 'Containers', 'Scaling', 'Services'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/google-cloud-run-mcp'
+  },
+  {
+    id: 'docker-mcp',
+    name: 'Docker',
+    description: 'Manage Docker containers, images, and compose stacks. Container orchestration, debugging, and deployment.',
+    category: 'Development & DevOps',
+    tools: ['Containers', 'Images', 'Compose', 'Volumes'],
+    status: 'community',
+    url: 'https://github.com/ckreiling/mcp-server-docker'
+  },
+  {
+    id: 'kubernetes-mcp',
+    name: 'Kubernetes',
+    description: 'Interact with Kubernetes clusters. Manage pods, deployments, services, and troubleshoot cluster issues.',
+    category: 'Development & DevOps',
+    tools: ['Pods', 'Deployments', 'Services', 'Namespaces'],
+    status: 'community',
+    url: 'https://github.com/strowk/mcp-k8s-go'
+  },
+  {
+    id: 'postman-mcp',
+    name: 'Postman',
+    description: 'Connect AI agents directly to APIs through Postman. Test endpoints, manage collections, and automate workflows.',
+    category: 'Development & DevOps',
+    tools: ['API Testing', 'Collections', 'Environments', 'Workflows'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/postman-mcp'
+  },
+  {
+    id: 'jetbrains-mcp',
+    name: 'JetBrains',
+    description: 'Work on your code with JetBrains IDEs. Interact with your development environment, run actions, and navigate code.',
+    category: 'Development & DevOps',
+    tools: ['IDE', 'Code Navigation', 'Refactoring', 'Debugging'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/jetbrains-mcp'
+  },
+  {
+    id: 'sonarqube-mcp',
+    name: 'SonarQube',
+    description: 'Integration with SonarQube for static code analysis, quality gates, and security vulnerability detection.',
+    category: 'Development & DevOps',
+    tools: ['Code Quality', 'Security Scanning', 'Quality Gates', 'Reports'],
+    status: 'official',
+    url: 'https://github.com/SonarSource/sonarqube-mcp-server'
+  },
+  {
+    id: 'semgrep-mcp',
+    name: 'Semgrep',
+    description: 'Secure code with Semgrep static analysis. Find vulnerabilities, enforce coding standards, and automate security reviews.',
+    category: 'Development & DevOps',
+    tools: ['SAST', 'Security Rules', 'Code Scanning', 'Compliance'],
+    status: 'official',
+    url: 'https://github.com/semgrep/mcp'
+  },
+  {
+    id: 'e2b-mcp',
+    name: 'E2B',
+    description: 'Run code in secure cloud sandboxes. Execute Python, JavaScript, and other languages safely in isolated environments.',
+    category: 'Development & DevOps',
+    tools: ['Sandboxed Execution', 'Python', 'JavaScript', 'Isolation'],
+    status: 'official',
+    url: 'https://github.com/e2b-dev/mcp-server'
+  },
+  {
+    id: 'harness-mcp',
+    name: 'Harness',
+    description: 'Access Harness platform data for CI/CD, feature flags, and cloud cost management.',
+    category: 'Development & DevOps',
+    tools: ['CI/CD', 'Feature Flags', 'Cloud Cost', 'Deployments'],
+    status: 'official',
+    url: 'https://github.com/harness/mcp-server'
+  },
+  {
+    id: 'browserstack-mcp',
+    name: 'BrowserStack',
+    description: 'Full BrowserStack Test Platform access for cross-browser testing. Run tests across real devices and browsers.',
+    category: 'Development & DevOps',
+    tools: ['Cross-Browser Testing', 'Real Devices', 'Automation', 'Screenshots'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/browserstack-mcp'
+  },
+  {
+    id: 'dbt-mcp',
+    name: 'dbt',
+    description: 'Official dbt MCP server providing project metadata, model lineage, and analytics engineering context.',
+    category: 'Development & DevOps',
+    tools: ['Models', 'Lineage', 'Testing', 'Documentation'],
+    status: 'official',
+    url: 'https://github.com/dbt-labs/dbt-mcp'
+  },
+  {
+    id: 'gitkraken-mcp',
+    name: 'GitKraken',
+    description: 'CLI for GitKraken APIs including integrations with Jira, GitHub, and GitLab. Manage repos and code reviews.',
+    category: 'Development & DevOps',
+    tools: ['Git', 'Code Review', 'Integrations', 'Workflows'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/gitkraken-mcp'
+  },
+  {
+    id: 'apollo-graphql-mcp',
+    name: 'Apollo GraphQL',
+    description: 'Connect GraphQL APIs to AI agents. Query schemas, run operations, and explore your graph.',
+    category: 'Development & DevOps',
+    tools: ['GraphQL', 'Schemas', 'Queries', 'Mutations'],
+    status: 'official',
+    url: 'https://github.com/apollographql/apollo-mcp-server'
+  },
+  {
+    id: 'apimatic-mcp',
+    name: 'APIMatic',
+    description: 'Validate OpenAPI specifications. Ensure API designs meet quality standards before implementation.',
+    category: 'Development & DevOps',
+    tools: ['OpenAPI Validation', 'API Quality', 'Specifications', 'Linting'],
+    status: 'official',
+    url: 'https://github.com/apimatic/apimatic-mcp-server'
+  },
+  {
+    id: 'lingo-dev-mcp',
+    name: 'Lingo.dev',
+    description: 'Make your AI agent speak every language. Automate i18n and translation workflows with a localization engine.',
+    category: 'Development & DevOps',
+    tools: ['Localization', 'Translation', 'i18n', 'Languages'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/lingo-dev-mcp'
+  },
+  {
+    id: 'xcodebuild-mcp',
+    name: 'XcodeBuild MCP',
+    description: 'Build and test iOS, macOS, and visionOS apps. Integrate Xcode build processes into AI-assisted development.',
+    category: 'Development & DevOps',
+    tools: ['iOS', 'macOS', 'Build', 'Testing'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/xcodebuild-mcp'
+  },
+  {
+    id: 'chrome-devtools-mcp',
+    name: 'Chrome DevTools',
+    description: 'Control and inspect a live Chrome browser. Debug web apps, analyze performance, and interact with the DOM.',
+    category: 'Development & DevOps',
+    tools: ['Browser Debugging', 'DOM', 'Network', 'Performance'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/chrome-devtools-mcp'
+  },
+  {
+    id: 'appium-mcp',
+    name: 'Appium',
+    description: 'Mobile development and automation for iOS and Android. Test on simulators, emulators, and real devices.',
+    category: 'Development & DevOps',
+    tools: ['Mobile Testing', 'iOS', 'Android', 'Automation'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/appium-mcp'
   },
 
-  // Data & Storage
+  // ─── Data & Storage ───────────────────────────────────────────────
+
   {
     id: 'postgresql-mcp',
     name: 'PostgreSQL',
-    description: 'Query databases, read schemas, execute safe SQL, and fetch data. Let Claude analyze your database structure and answer questions about data.',
+    description: 'Query databases, read schemas, execute safe SQL, and fetch data. Analyze database structure and answer questions about data.',
     category: 'Data & Storage',
     tools: ['Query', 'Schema Inspection', 'Analytics'],
     status: 'official',
-    relatedLearnSlug: 'database-mcp-integration'
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/postgres'
+  },
+  {
+    id: 'sqlite-mcp',
+    name: 'SQLite',
+    description: 'Query and manage SQLite databases. Local data analysis, prototyping, and embedded database operations.',
+    category: 'Data & Storage',
+    tools: ['SQL', 'Schema', 'Local Database', 'Analytics'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite'
   },
   {
     id: 'google-drive-mcp',
     name: 'Google Drive',
-    description: 'Read and manage files in Drive and Sheets. Enable Claude to understand documents, extract data, and organize shared files.',
+    description: 'Read and manage files in Drive and Sheets. Understand documents, extract data, and organize shared files.',
     category: 'Data & Storage',
     tools: ['Files', 'Folders', 'Permissions', 'Search'],
-    status: 'official'
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/gdrive'
   },
   {
     id: 'notion-mcp',
     name: 'Notion',
-    description: 'Query Notion databases, read pages, and update content. Let Claude integrate with your knowledge base and wiki systems.',
+    description: 'Query Notion databases, read pages, and update content. Integrate with your knowledge base and wiki systems.',
     category: 'Data & Storage',
     tools: ['Databases', 'Pages', 'Properties', 'Search'],
     status: 'official',
-    relatedLearnSlug: 'notion-ai-integration'
+    url: 'https://github.com/makenotion/notion-mcp-server'
   },
   {
     id: 'airtable-mcp',
     name: 'Airtable',
-    description: 'Connect to bases and tables, read records, and update data. Enable Claude to work with structured data without leaving your workflows.',
+    description: 'Connect to bases and tables, read records, and update data. Work with structured data without leaving your workflows.',
     category: 'Data & Storage',
     tools: ['Bases', 'Tables', 'Records', 'Views'],
-    status: 'official'
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/airtable-mcp'
+  },
+  {
+    id: 'snowflake-mcp',
+    name: 'Snowflake',
+    description: 'Query data, manage schemas, and interact with Cortex AI. Run SQL, consume semantic views, and orchestrate data warehouse operations.',
+    category: 'Data & Storage',
+    tools: ['SQL', 'Cortex AI', 'Schema Management', 'Semantic Views'],
+    status: 'official',
+    url: 'https://github.com/Snowflake-Labs/mcp'
+  },
+  {
+    id: 'bigquery-mcp',
+    name: 'BigQuery',
+    description: 'Access Google BigQuery for large-scale data analytics. Inspect schemas, execute queries, and analyze datasets.',
+    category: 'Data & Storage',
+    tools: ['SQL', 'Schema Inspection', 'Analytics', 'Datasets'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/bigquery-mcp'
+  },
+  {
+    id: 'mongodb-mcp',
+    name: 'MongoDB',
+    description: 'Full-featured MCP server for MongoDB databases. Query collections, manage documents, and interact with NoSQL data.',
+    category: 'Data & Storage',
+    tools: ['Collections', 'Documents', 'Queries', 'Aggregation'],
+    status: 'official',
+    url: 'https://github.com/mongodb-labs/mongodb-mcp-server'
+  },
+  {
+    id: 'mysql-mcp',
+    name: 'MySQL',
+    description: 'MySQL database integration with configurable access controls and schema inspection.',
+    category: 'Data & Storage',
+    tools: ['SQL', 'Schema', 'Query', 'Access Control'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/mysql-mcp-server'
+  },
+  {
+    id: 'redis-mcp',
+    name: 'Redis',
+    description: 'Interact with Redis for caching, session management, and real-time data operations.',
+    category: 'Data & Storage',
+    tools: ['Cache', 'Keys', 'Data Structures', 'Pub/Sub'],
+    status: 'official',
+    url: 'https://github.com/redis/mcp-redis'
+  },
+  {
+    id: 'neo4j-mcp',
+    name: 'Neo4j',
+    description: 'Graph database with schema inspection and Cypher query support. Explore relationships and graph structures.',
+    category: 'Data & Storage',
+    tools: ['Cypher', 'Graph Queries', 'Schema', 'Relationships'],
+    status: 'community',
+    url: 'https://github.com/neo4j-contrib/mcp-neo4j'
+  },
+  {
+    id: 'clickhouse-mcp',
+    name: 'ClickHouse',
+    description: 'Query ClickHouse for real-time analytics. Execute SQL, inspect schemas, and analyze large-scale columnar data.',
+    category: 'Data & Storage',
+    tools: ['SQL', 'Analytics', 'Schema', 'Columnar Data'],
+    status: 'official',
+    url: 'https://github.com/ClickHouse/mcp-clickhouse'
+  },
+  {
+    id: 'elasticsearch-mcp',
+    name: 'Elasticsearch',
+    description: 'Search, query, and manage Elasticsearch indices. Full-text search, aggregations, and data analysis.',
+    category: 'Data & Storage',
+    tools: ['Search', 'Indexing', 'Aggregations', 'Analytics'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/elasticsearch-mcp'
+  },
+  {
+    id: 'supabase-mcp',
+    name: 'Supabase',
+    description: 'Database management, authentication, storage, and edge functions. Build and manage full-stack backends.',
+    category: 'Data & Storage',
+    tools: ['Database', 'Auth', 'Storage', 'Edge Functions'],
+    status: 'community',
+    url: 'https://github.com/supabase-community/supabase-mcp'
+  },
+  {
+    id: 'neon-mcp',
+    name: 'Neon',
+    description: 'Interact with Neon serverless Postgres. Manage branches, databases, and roles with AI-powered administration.',
+    category: 'Data & Storage',
+    tools: ['Serverless Postgres', 'Branches', 'Databases', 'Roles'],
+    status: 'official',
+    url: 'https://github.com/neondatabase/mcp-server-neon'
+  },
+  {
+    id: 'astra-db-mcp',
+    name: 'Astra DB',
+    description: 'Manage collections and documents in DataStax Astra DB. NoSQL cloud database for AI-powered data operations.',
+    category: 'Data & Storage',
+    tools: ['Collections', 'Documents', 'Vector Search', 'NoSQL'],
+    status: 'official',
+    url: 'https://github.com/datastax/astra-db-mcp'
+  },
+  {
+    id: 'couchbase-mcp',
+    name: 'Couchbase',
+    description: 'Interact with data in Couchbase clusters. Query, manage buckets, and perform full-text search.',
+    category: 'Data & Storage',
+    tools: ['N1QL', 'Buckets', 'Full-Text Search', 'Documents'],
+    status: 'official',
+    url: 'https://github.com/couchbase/mcp-server-couchbase'
+  },
+  {
+    id: 'chroma-mcp',
+    name: 'Chroma',
+    description: 'Embeddings, vector search, document storage, and full-text search. Build semantic search and RAG applications.',
+    category: 'Data & Storage',
+    tools: ['Vector Search', 'Embeddings', 'Documents', 'Full-Text Search'],
+    status: 'official',
+    url: 'https://github.com/chroma-core/chroma-mcp'
+  },
+  {
+    id: 'qdrant-mcp',
+    name: 'Qdrant',
+    description: 'Semantic memory layers on Qdrant vector search engine. Store and retrieve contextual information for AI apps.',
+    category: 'Data & Storage',
+    tools: ['Vector Search', 'Semantic Memory', 'Collections', 'Similarity'],
+    status: 'official',
+    url: 'https://github.com/qdrant/mcp-server-qdrant'
+  },
+  {
+    id: 'milvus-mcp',
+    name: 'Milvus',
+    description: 'Search, query, and interact with data in Milvus vector database. Scalable similarity search for AI applications.',
+    category: 'Data & Storage',
+    tools: ['Vector Search', 'Collections', 'Indexing', 'Similarity'],
+    status: 'official',
+    url: 'https://github.com/zilliztech/mcp-server-milvus'
+  },
+  {
+    id: 'singlestore-mcp',
+    name: 'SingleStore',
+    description: 'Interact with SingleStore distributed database. Execute queries and manage real-time analytics workloads.',
+    category: 'Data & Storage',
+    tools: ['SQL', 'Real-Time Analytics', 'Schema', 'Pipelines'],
+    status: 'official',
+    url: 'https://github.com/singlestore-labs/mcp-server-singlestore'
+  },
+  {
+    id: 'motherduck-mcp',
+    name: 'MotherDuck',
+    description: 'Query and analyze data with cloud-based DuckDB. Run analytics on local and remote data seamlessly.',
+    category: 'Data & Storage',
+    tools: ['DuckDB', 'SQL', 'Analytics', 'Cloud Data'],
+    status: 'official',
+    url: 'https://github.com/motherduckdb/mcp-server-motherduck'
+  },
+  {
+    id: 'prisma-mcp',
+    name: 'Prisma',
+    description: 'Manage Prisma Postgres databases. Create schemas, run migrations, and interact through the Prisma ORM.',
+    category: 'Data & Storage',
+    tools: ['ORM', 'Migrations', 'Schema', 'Postgres'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/prisma-mcp'
+  },
+  {
+    id: 'convex-mcp',
+    name: 'Convex',
+    description: 'Introspect and query your apps deployed to Convex. Access real-time backend data, functions, and schema.',
+    category: 'Data & Storage',
+    tools: ['Backend', 'Real-Time Data', 'Functions', 'Schema'],
+    status: 'official',
+    url: 'https://github.com/get-convex/convex-mcp-server'
+  },
+  {
+    id: 'tinybird-mcp',
+    name: 'Tinybird',
+    description: 'Serverless ClickHouse platform. Build real-time analytics APIs and query streaming data.',
+    category: 'Data & Storage',
+    tools: ['Real-Time Analytics', 'APIs', 'SQL', 'Streaming'],
+    status: 'official',
+    url: 'https://github.com/tinybirdco/mcp-tinybird'
+  },
+  {
+    id: 'teradata-mcp',
+    name: 'Teradata',
+    description: 'Manage Teradata enterprise databases. Execute queries, manage schemas, and perform large-scale warehousing.',
+    category: 'Data & Storage',
+    tools: ['SQL', 'Data Warehouse', 'Schema', 'Enterprise'],
+    status: 'official',
+    url: 'https://github.com/Teradata/teradata-mcp-server'
+  },
+  {
+    id: 'baserow-mcp',
+    name: 'Baserow',
+    description: 'Read and write access to Baserow tables. Open-source no-code database platform with AI assistance.',
+    category: 'Data & Storage',
+    tools: ['Tables', 'Records', 'Views', 'No-Code Database'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/baserow-mcp'
   },
 
-  // Communication
+  // ─── Communication ────────────────────────────────────────────────
+
   {
     id: 'gmail-mcp',
     name: 'Gmail',
-    description: 'Read emails, search inboxes, draft messages, and manage labels. Let Claude help with email organization and smart responses.',
+    description: 'Read emails, search inboxes, draft messages, and manage labels. Email organization and smart responses.',
     category: 'Communication',
     tools: ['Email', 'Search', 'Labels', 'Attachments'],
     status: 'official',
-    relatedLearnSlug: 'gmail-ai-automation'
+    url: 'https://github.com/nicholasgriffintn/gmail-mcp'
   },
   {
     id: 'outlook-mcp',
     name: 'Outlook',
-    description: 'Access Outlook mailboxes, read calendar events, and manage messages. Integrate Claude with Microsoft email infrastructure.',
+    description: 'Access Outlook mailboxes, read calendar events, and manage messages. Microsoft email infrastructure integration.',
     category: 'Communication',
     tools: ['Email', 'Calendar', 'Contacts', 'Attachments'],
-    status: 'community'
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/outlook-mcp'
   },
   {
     id: 'twilio-mcp',
     name: 'Twilio',
-    description: 'Send SMS messages, manage phone calls, and access communication logs. Let Claude handle messaging workflows and customer notifications.',
+    description: 'Send SMS messages, manage phone calls, and access communication logs. Handle messaging workflows and notifications.',
     category: 'Communication',
     tools: ['SMS', 'Voice', 'Messaging', 'Logs'],
-    status: 'community'
+    status: 'community',
+    url: 'https://github.com/twilio/twilio-mcp'
+  },
+  {
+    id: 'intercom-mcp',
+    name: 'Intercom',
+    description: 'Connect to Intercom\'s customer messaging platform. Access conversations, customer data, and help center articles.',
+    category: 'Communication',
+    tools: ['Conversations', 'Customers', 'Help Center', 'Messaging'],
+    status: 'official',
+    url: 'https://developers.intercom.com/docs/guides/mcp'
+  },
+  {
+    id: 'line-mcp',
+    name: 'LINE',
+    description: 'Integrate with LINE Messaging API. Connect AI agents with LINE Official Accounts for messaging.',
+    category: 'Communication',
+    tools: ['Messaging', 'Rich Menus', 'Push Messages', 'Webhooks'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/line-mcp'
+  },
+  {
+    id: 'mailgun-mcp',
+    name: 'Mailgun',
+    description: 'Interact with Mailgun email API for transactional email delivery, tracking, and analytics.',
+    category: 'Communication',
+    tools: ['Email Sending', 'Tracking', 'Analytics', 'Templates'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/mailgun-mcp'
+  },
+
+  // ─── AI & Machine Learning ────────────────────────────────────────
+
+  {
+    id: 'sequential-thinking-mcp',
+    name: 'Sequential Thinking',
+    description: 'Dynamic and reflective problem-solving through thought sequences. Step-by-step reasoning and complex analysis.',
+    category: 'AI & Machine Learning',
+    tools: ['Reasoning', 'Problem Solving', 'Analysis', 'Thought Chains'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking'
+  },
+  {
+    id: 'memory-mcp',
+    name: 'Memory',
+    description: 'Knowledge graph-based persistent memory system. Store and retrieve contextual information across conversations.',
+    category: 'AI & Machine Learning',
+    tools: ['Knowledge Graph', 'Persistence', 'Context', 'Entities'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/memory'
+  },
+  {
+    id: 'langfuse-mcp',
+    name: 'Langfuse',
+    description: 'Open-source collaborative prompt editing, versioning, and management. Track and optimize LLM prompts.',
+    category: 'AI & Machine Learning',
+    tools: ['Prompt Management', 'Versioning', 'Collaboration', 'Analytics'],
+    status: 'official',
+    url: 'https://github.com/langfuse/mcp-server-langfuse'
+  },
+  {
+    id: 'arize-phoenix-mcp',
+    name: 'Arize Phoenix',
+    description: 'Inspect traces, manage prompts, curate datasets, and run experiments. Debug AI application performance.',
+    category: 'AI & Machine Learning',
+    tools: ['Tracing', 'Prompts', 'Datasets', 'Experiments'],
+    status: 'official',
+    url: 'https://github.com/Arize-ai/phoenix-mcp'
+  },
+  {
+    id: 'kaggle-mcp',
+    name: 'Kaggle',
+    description: 'Access Kaggle datasets, models, competitions, and benchmarks. Explore data science resources with AI.',
+    category: 'AI & Machine Learning',
+    tools: ['Datasets', 'Models', 'Competitions', 'Notebooks'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/kaggle-mcp'
+  },
+  {
+    id: 'elevenlabs-mcp',
+    name: 'ElevenLabs',
+    description: 'AI voice generation. Create text-to-speech, voice cloning, and audio content with the official ElevenLabs MCP server.',
+    category: 'AI & Machine Learning',
+    tools: ['Text-to-Speech', 'Voice Cloning', 'Audio Generation', 'Voices'],
+    status: 'official',
+    url: 'https://github.com/elevenlabs/elevenlabs-mcp'
+  },
+  {
+    id: 'perplexity-mcp',
+    name: 'Perplexity',
+    description: 'AI-powered web search and research via Perplexity\'s Sonar API. Comprehensive, cited answers to complex queries.',
+    category: 'AI & Machine Learning',
+    tools: ['Search', 'Research', 'Citations', 'Web Intelligence'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/perplexity-mcp'
+  },
+  {
+    id: 'deepwiki-mcp',
+    name: 'DeepWiki by Devin',
+    description: 'AI-powered codebase context and documentation. Intelligent answers about any public GitHub repository.',
+    category: 'AI & Machine Learning',
+    tools: ['Code Understanding', 'Documentation', 'Architecture', 'Context'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/deepwiki-mcp'
+  },
+
+  // ─── E-commerce ───────────────────────────────────────────────────
+
+  {
+    id: 'shopify-mcp',
+    name: 'Shopify',
+    description: 'Official Shopify Dev MCP server. Access products, orders, customers, and Shopify API documentation.',
+    category: 'E-commerce',
+    tools: ['Products', 'Orders', 'Customers', 'API Docs', 'Inventory'],
+    status: 'official',
+    url: 'https://shopify.dev/docs/apps/build/dev-mcp'
+  },
+  {
+    id: 'woocommerce-mcp',
+    name: 'WooCommerce',
+    description: 'Manage WooCommerce stores. Handle products, orders, customers, shipping, and store configuration.',
+    category: 'E-commerce',
+    tools: ['Products', 'Orders', 'Customers', 'Shipping', 'Configuration'],
+    status: 'community',
+    url: 'https://developer.woocommerce.com/docs/features/mcp/'
+  },
+  {
+    id: 'mercadolibre-mcp',
+    name: 'Mercado Libre',
+    description: 'Official MCP server for Latin America\'s largest marketplace. Manage listings, orders, and seller operations.',
+    category: 'E-commerce',
+    tools: ['Listings', 'Orders', 'Seller Tools', 'Marketplace'],
+    status: 'official',
+    url: 'https://github.com/mercadolibre/mcp-server-mercadolibre'
+  },
+
+  // ─── Analytics & Monitoring ───────────────────────────────────────
+
+  {
+    id: 'grafana-mcp',
+    name: 'Grafana',
+    description: 'Search dashboards, investigate incidents, and query datasources. Monitor systems and analyze observability data.',
+    category: 'Analytics & Monitoring',
+    tools: ['Dashboards', 'Incidents', 'Datasources', 'Alerting'],
+    status: 'official',
+    url: 'https://github.com/grafana/mcp-grafana'
+  },
+  {
+    id: 'datadog-mcp',
+    name: 'Datadog',
+    description: 'Access monitoring, incidents, logs, dashboards, and metrics. Bridge observability data with AI for intelligent debugging.',
+    category: 'Analytics & Monitoring',
+    tools: ['Metrics', 'Logs', 'Dashboards', 'Incidents', 'APM'],
+    status: 'official',
+    url: 'https://docs.datadoghq.com/bits_ai/mcp_server/'
+  },
+  {
+    id: 'axiom-mcp',
+    name: 'Axiom',
+    description: 'Query and analyze logs, traces, and event data in natural language. Investigate production issues with observability data.',
+    category: 'Analytics & Monitoring',
+    tools: ['Logs', 'Traces', 'Events', 'Natural Language Query'],
+    status: 'official',
+    url: 'https://github.com/axiomhq/mcp-server-axiom'
+  },
+  {
+    id: 'amplitude-mcp',
+    name: 'Amplitude',
+    description: 'Integrate AI with product analytics data. Search, analyze charts, dashboards, experiments, and metrics.',
+    category: 'Analytics & Monitoring',
+    tools: ['Charts', 'Dashboards', 'Experiments', 'Metrics'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/amplitude-mcp'
+  },
+  {
+    id: 'new-relic-mcp',
+    name: 'New Relic',
+    description: 'Monitoring, NRQL queries, dashboards, and incident management. Analyze application performance and infrastructure health.',
+    category: 'Analytics & Monitoring',
+    tools: ['NRQL', 'APM', 'Dashboards', 'Infrastructure', 'Incidents'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/newrelic-mcp'
+  },
+  {
+    id: 'pagerduty-mcp',
+    name: 'PagerDuty',
+    description: 'Manage incidents, services, schedules, and escalation policies from AI-enabled clients.',
+    category: 'Analytics & Monitoring',
+    tools: ['Incidents', 'Services', 'Schedules', 'Escalations'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/pagerduty-mcp'
+  },
+  {
+    id: 'raygun-mcp',
+    name: 'Raygun',
+    description: 'Crash reporting and real user monitoring. Debug errors and analyze user experience metrics.',
+    category: 'Analytics & Monitoring',
+    tools: ['Crash Reporting', 'RUM', 'Error Tracking', 'Performance'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/raygun-mcp'
+  },
+  {
+    id: 'logfire-mcp',
+    name: 'Logfire',
+    description: 'Access OpenTelemetry traces and metrics through Pydantic Logfire. Analyze distributed systems.',
+    category: 'Analytics & Monitoring',
+    tools: ['Traces', 'Metrics', 'OpenTelemetry', 'Debugging'],
+    status: 'official',
+    url: 'https://github.com/pydantic/logfire-mcp'
+  },
+  {
+    id: 'agentops-mcp',
+    name: 'AgentOps',
+    description: 'Observability and tracing for AI agents. Debug agent workflows, track tool usage, and monitor performance.',
+    category: 'Analytics & Monitoring',
+    tools: ['Agent Tracing', 'Debugging', 'Performance', 'Tool Usage'],
+    status: 'official',
+    url: 'https://github.com/AgentOps-AI/agentops-mcp'
+  },
+  {
+    id: 'ilert-mcp',
+    name: 'ilert',
+    description: 'Incident management, on-call scheduling, and alert routing through natural language.',
+    category: 'Analytics & Monitoring',
+    tools: ['Incidents', 'On-Call', 'Alerts', 'Status Pages'],
+    status: 'official',
+    url: 'https://github.com/iLert/ilert-mcp'
+  },
+
+  // ─── Design & Creative ────────────────────────────────────────────
+
+  {
+    id: 'figma-mcp',
+    name: 'Figma',
+    description: 'Official Figma Dev Mode MCP server. Extract layouts, styles, and component structures for AI-informed code generation.',
+    category: 'Design & Creative',
+    tools: ['Design Data', 'Components', 'Styles', 'Layout'],
+    status: 'official',
+    url: 'https://www.figma.com/blog/introducing-figma-mcp-server/'
+  },
+  {
+    id: '21st-dev-mcp',
+    name: '21st.dev Magic',
+    description: 'Create crafted UI components inspired by top design engineers. Production-ready React components from descriptions.',
+    category: 'Design & Creative',
+    tools: ['UI Components', 'React', 'Design System', 'Code Generation'],
+    status: 'official',
+    url: 'https://github.com/21st-dev/magic-mcp'
+  },
+  {
+    id: 'mermaid-mcp',
+    name: 'Mermaid',
+    description: 'Generate Mermaid diagrams with 22+ types. Flowcharts, sequence diagrams, and architecture visualizations from text.',
+    category: 'Design & Creative',
+    tools: ['Flowcharts', 'Sequence Diagrams', 'Architecture', 'Visualization'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/mermaid-mcp'
+  },
+  {
+    id: 'excalidraw-mcp',
+    name: 'Excalidraw',
+    description: 'Generate architecture diagrams and whiteboard sketches from natural language descriptions.',
+    category: 'Design & Creative',
+    tools: ['Diagrams', 'Whiteboard', 'Architecture', 'Sketches'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/excalidraw-mcp'
+  },
+  {
+    id: 'slidespeak-mcp',
+    name: 'SlideSpeak',
+    description: 'Create presentations and PowerPoint slides using AI. Generate professional decks from content descriptions.',
+    category: 'Design & Creative',
+    tools: ['Presentations', 'PowerPoint', 'Slides', 'Templates'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/slidespeak-mcp'
+  },
+
+  // ─── Marketing ────────────────────────────────────────────────────
+
+  {
+    id: 'audiense-mcp',
+    name: 'Audiense Insights',
+    description: 'Marketing insights and audience analysis. Demographics, cultural affinities, and social media behavior for campaigns.',
+    category: 'Marketing',
+    tools: ['Audience Analysis', 'Demographics', 'Social Insights', 'Segmentation'],
+    status: 'official',
+    url: 'https://github.com/AudienseConnect/mcp-audiense-insights'
+  },
+  {
+    id: 'fetchserp-mcp',
+    name: 'FetchSERP',
+    description: 'All-in-one SEO and web intelligence toolkit. Track rankings, analyze SERPs, and optimize search presence.',
+    category: 'Marketing',
+    tools: ['SEO', 'SERP Analysis', 'Rankings', 'Web Intelligence'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/fetchserp-mcp'
+  },
+  {
+    id: 'supadata-mcp',
+    name: 'Supadata',
+    description: 'Access YouTube, TikTok, X (Twitter), and web data. Extract social media content for marketing intelligence.',
+    category: 'Marketing',
+    tools: ['YouTube', 'TikTok', 'Twitter/X', 'Social Analytics'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/supadata-mcp'
+  },
+
+  // ─── Search & Knowledge ───────────────────────────────────────────
+
+  {
+    id: 'exa-mcp',
+    name: 'Exa',
+    description: 'Search engine built for AI. High-quality, structured search results optimized for LLM consumption.',
+    category: 'Search & Knowledge',
+    tools: ['Web Search', 'Content Extraction', 'Semantic Search', 'Filtering'],
+    status: 'official',
+    url: 'https://github.com/exa-labs/exa-mcp-server'
+  },
+  {
+    id: 'tavily-mcp',
+    name: 'Tavily',
+    description: 'AI-optimized search engine for research and information retrieval. Structured results for AI agents.',
+    category: 'Search & Knowledge',
+    tools: ['Search', 'Research', 'Content Extraction', 'Structured Results'],
+    status: 'official',
+    url: 'https://github.com/tavily-ai/tavily-mcp'
+  },
+  {
+    id: 'brave-search-mcp',
+    name: 'Brave Search',
+    description: 'Search the web using Brave\'s independent search index. Web and local search without tracking.',
+    category: 'Search & Knowledge',
+    tools: ['Web Search', 'Local Search', 'News', 'Results'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/brave-search-mcp'
+  },
+  {
+    id: 'kagi-mcp',
+    name: 'Kagi Search',
+    description: 'Premium, ad-free search API. High-quality results without tracking or SEO spam.',
+    category: 'Search & Knowledge',
+    tools: ['Web Search', 'Summaries', 'Fast Answers', 'Research'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/kagi-mcp'
+  },
+  {
+    id: 'meilisearch-mcp',
+    name: 'Meilisearch',
+    description: 'Lightning-fast full-text and semantic search. Manage indexes and query documents.',
+    category: 'Search & Knowledge',
+    tools: ['Full-Text Search', 'Semantic Search', 'Indexes', 'Filters'],
+    status: 'official',
+    url: 'https://github.com/meilisearch/meilisearch-mcp'
+  },
+  {
+    id: 'context7-mcp',
+    name: 'Context7',
+    description: 'Up-to-date documentation for any coding framework. Version-specific docs injected directly into AI prompts.',
+    category: 'Search & Knowledge',
+    tools: ['Documentation', 'Framework Docs', 'Version-Specific', 'Code Context'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/context7-mcp'
+  },
+  {
+    id: 'graphlit-mcp',
+    name: 'Graphlit',
+    description: 'Ingest content from Slack, Gmail, podcasts, and web sources into a searchable knowledge graph.',
+    category: 'Search & Knowledge',
+    tools: ['Content Ingestion', 'Knowledge Graph', 'Search', 'Multi-Source'],
+    status: 'official',
+    url: 'https://github.com/graphlit/graphlit-mcp-server'
+  },
+
+  // ─── Web Scraping & Data Extraction ───────────────────────────────
+
+  {
+    id: 'firecrawl-mcp',
+    name: 'Firecrawl',
+    description: 'Powerful web scraping and data extraction. Crawl websites, extract structured data, and convert pages to markdown.',
+    category: 'Web Scraping & Data Extraction',
+    tools: ['Web Crawling', 'Data Extraction', 'Markdown Conversion', 'Structured Data'],
+    status: 'official',
+    url: 'https://github.com/mendableai/firecrawl-mcp-server'
+  },
+  {
+    id: 'apify-mcp',
+    name: 'Apify',
+    description: 'Access 6,000+ pre-built cloud scrapers and automation tools. Extract data from any website at scale.',
+    category: 'Web Scraping & Data Extraction',
+    tools: ['Web Scraping', 'Automation', 'Data Extraction', 'Actors'],
+    status: 'official',
+    url: 'https://github.com/apify/actors-mcp-server'
+  },
+  {
+    id: 'bright-data-mcp',
+    name: 'Bright Data',
+    description: 'Discover, extract, and interact with web data. Enterprise-grade web intelligence at scale.',
+    category: 'Web Scraping & Data Extraction',
+    tools: ['Web Scraping', 'Proxies', 'Data Collection', 'Unblocking'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/bright-data-mcp'
+  },
+  {
+    id: 'browserbase-mcp',
+    name: 'Browserbase',
+    description: 'Automate browser interactions in the cloud. Run headless browsers at scale for web scraping and testing.',
+    category: 'Web Scraping & Data Extraction',
+    tools: ['Cloud Browsers', 'Automation', 'Data Extraction', 'Screenshots'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/browserbase-mcp'
+  },
+  {
+    id: 'fetch-mcp',
+    name: 'Fetch',
+    description: 'Web content fetching and conversion. Retrieve and process web pages into AI-friendly formats.',
+    category: 'Web Scraping & Data Extraction',
+    tools: ['URL Fetching', 'Content Conversion', 'Markdown', 'Web Access'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/fetch'
+  },
+
+  // ─── Security ─────────────────────────────────────────────────────
+
+  {
+    id: 'auth0-mcp',
+    name: 'Auth0',
+    description: 'Interact with your Auth0 tenant. Manage applications, actions, forms, logs, and authentication configurations.',
+    category: 'Security',
+    tools: ['Applications', 'Actions', 'Logs', 'Authentication'],
+    status: 'official',
+    url: 'https://github.com/auth0/auth0-mcp-server'
+  },
+  {
+    id: 'cycode-mcp',
+    name: 'Cycode',
+    description: 'SAST, SCA, secrets detection, and IaC scanning. Comprehensive application security from a single platform.',
+    category: 'Security',
+    tools: ['SAST', 'SCA', 'Secrets Detection', 'IaC Scanning'],
+    status: 'official',
+    url: 'https://github.com/cycodelabs/cycode-mcp'
+  },
+  {
+    id: 'asgardeo-mcp',
+    name: 'Asgardeo',
+    description: 'Identity and access management. Manage users, applications, and authentication flows.',
+    category: 'Security',
+    tools: ['Identity Management', 'SSO', 'Applications', 'Users'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/asgardeo-mcp'
+  },
+
+  // ─── Cloud Infrastructure ─────────────────────────────────────────
+
+  {
+    id: 'aiven-mcp',
+    name: 'Aiven',
+    description: 'Navigate Aiven projects and managed PostgreSQL, Kafka, ClickHouse, and OpenSearch services across cloud providers.',
+    category: 'Cloud Infrastructure',
+    tools: ['PostgreSQL', 'Kafka', 'ClickHouse', 'OpenSearch'],
+    status: 'official',
+    url: 'https://github.com/aiven/aiven-mcp-server'
+  },
+  {
+    id: 'hostinger-mcp',
+    name: 'Hostinger',
+    description: 'Official Hostinger API MCP server for managing hosting services, domains, and website configurations.',
+    category: 'Cloud Infrastructure',
+    tools: ['Hosting', 'Domains', 'DNS', 'Configuration'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/hostinger-mcp'
+  },
+
+  // ─── Automation & Integration ─────────────────────────────────────
+
+  {
+    id: 'make-mcp',
+    name: 'Make',
+    description: 'Turn Make (Integromat) scenarios into callable tools. Trigger complex multi-step automations through natural language.',
+    category: 'Automation & Integration',
+    tools: ['Scenarios', 'Triggers', 'Automations', 'Multi-Step Workflows'],
+    status: 'official',
+    url: 'https://github.com/integromat/make-mcp-server'
+  },
+  {
+    id: 'n8n-mcp',
+    name: 'n8n',
+    description: 'AI-powered workflow automation. Create, manage, and monitor n8n workflows with 400+ integrations.',
+    category: 'Automation & Integration',
+    tools: ['Workflows', 'Integrations', 'Triggers', 'Automation'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/n8n-mcp'
+  },
+  {
+    id: 'paragon-mcp',
+    name: 'Paragon ActionKit',
+    description: 'Connect to 130+ SaaS integrations through a unified API. Pre-built connectors for enterprise tools.',
+    category: 'Automation & Integration',
+    tools: ['130+ Integrations', 'Unified API', 'Connectors', 'Workflows'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/paragon-mcp'
+  },
+
+  // ─── Maps & Location ──────────────────────────────────────────────
+
+  {
+    id: 'google-maps-mcp',
+    name: 'Google Maps',
+    description: 'Geocoding, directions, place search, and location-based services. Geospatial intelligence for AI.',
+    category: 'Maps & Location',
+    tools: ['Geocoding', 'Directions', 'Places', 'Distance Matrix'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/google-maps'
+  },
+  {
+    id: 'mapbox-mcp',
+    name: 'Mapbox',
+    description: 'Unlock geospatial intelligence through Mapbox APIs. Maps, geocoding, navigation, and spatial analysis.',
+    category: 'Maps & Location',
+    tools: ['Maps', 'Geocoding', 'Navigation', 'Spatial Analysis'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/mapbox-mcp'
+  },
+
+  // ─── Productivity ─────────────────────────────────────────────────
+
+  {
+    id: 'obsidian-mcp',
+    name: 'Obsidian',
+    description: 'Intelligent vault context management with frontmatter filtering, chunking, and bidirectional knowledge operations.',
+    category: 'Productivity',
+    tools: ['Notes', 'Knowledge Base', 'Vault Search', 'Bidirectional Links'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/obsidian-mcp'
+  },
+  {
+    id: 'anytype-mcp',
+    name: 'Anytype',
+    description: 'Local-first collaborative wiki. Organize objects, lists, and knowledge in a privacy-focused workspace.',
+    category: 'Productivity',
+    tools: ['Wiki', 'Objects', 'Lists', 'Collaboration'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/anytype-mcp'
+  },
+
+  // ─── Customer Support ─────────────────────────────────────────────
+
+  {
+    id: 'zendesk-mcp',
+    name: 'Zendesk',
+    description: 'Manage support tickets, customer interactions, and help center articles. Triage and respond to inquiries.',
+    category: 'Customer Support',
+    tools: ['Tickets', 'Customers', 'Help Center', 'Comments'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/zendesk-mcp'
+  },
+  {
+    id: 'freshdesk-mcp',
+    name: 'Freshdesk',
+    description: 'Manage tickets, contacts, agents, and conversations. Automate customer support workflows.',
+    category: 'Customer Support',
+    tools: ['Tickets', 'Contacts', 'Agents', 'Conversations'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/freshdesk-mcp'
+  },
+
+  // ─── Content Management ───────────────────────────────────────────
+
+  {
+    id: 'kontent-ai-mcp',
+    name: 'Kontent.ai',
+    description: 'Create, manage, and explore content models in Kontent.ai headless CMS. Automate content operations.',
+    category: 'Content Management',
+    tools: ['Content', 'Models', 'Publishing', 'Assets'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/kontent-ai-mcp'
+  },
+  {
+    id: 'box-mcp',
+    name: 'Box',
+    description: 'Intelligent content management. Search files, manage folders, and leverage Box AI for content understanding.',
+    category: 'Content Management',
+    tools: ['Files', 'Folders', 'Search', 'Box AI'],
+    status: 'community',
+    url: 'https://github.com/nicholasgriffintn/box-mcp'
+  },
+
+  // ─── HR & Recruitment ─────────────────────────────────────────────
+
+  {
+    id: 'coresignal-mcp',
+    name: 'Coresignal',
+    description: 'Comprehensive B2B data on companies, employees, and job postings. Talent intelligence and market research.',
+    category: 'HR & Recruitment',
+    tools: ['Company Data', 'Employee Data', 'Job Postings', 'Market Intelligence'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/coresignal-mcp'
+  },
+
+  // ─── Legal & Compliance ───────────────────────────────────────────
+
+  {
+    id: 'esignatures-mcp',
+    name: 'eSignatures',
+    description: 'Contract and template management for drafting, review, and electronic signing. Automate document workflows.',
+    category: 'Legal & Compliance',
+    tools: ['Contracts', 'Templates', 'Signing', 'Document Management'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/esignatures-mcp'
+  },
+
+  // ─── Data Governance & BI ─────────────────────────────────────────
+
+  {
+    id: 'atlan-mcp',
+    name: 'Atlan',
+    description: 'Bring metadata power to your AI tools. Navigate data catalogs, understand lineage, and enforce governance.',
+    category: 'Data Governance & BI',
+    tools: ['Data Catalog', 'Lineage', 'Governance', 'Metadata'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/atlan-mcp'
+  },
+
+  // ─── Healthcare ───────────────────────────────────────────────────
+
+  {
+    id: 'fhir-mcp',
+    name: 'FHIR',
+    description: 'Fast Healthcare Interoperability Resources APIs. Access patient data, clinical records, and healthcare systems.',
+    category: 'Healthcare',
+    tools: ['Patient Data', 'Clinical Records', 'SMART-on-FHIR', 'Interoperability'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/fhir-mcp'
+  },
+
+  // ─── Media & Entertainment ────────────────────────────────────────
+
+  {
+    id: 'mux-mcp',
+    name: 'Mux',
+    description: 'Video API for upload, streaming, thumbnails, and captions. Build video-powered applications.',
+    category: 'Media & Entertainment',
+    tools: ['Video Upload', 'Streaming', 'Thumbnails', 'Captions'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/mux-mcp'
+  },
+  {
+    id: 'tldv-mcp',
+    name: 'tl;dv',
+    description: 'Connect to Google Meet, Zoom, and Teams recordings. Transcribe meetings and extract insights.',
+    category: 'Media & Entertainment',
+    tools: ['Meeting Recordings', 'Transcription', 'Insights', 'Search'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/tldv-mcp'
+  },
+
+  // ─── Travel & Logistics ───────────────────────────────────────────
+
+  {
+    id: 'kiwi-mcp',
+    name: 'Kiwi.com',
+    description: 'Official Kiwi.com flight search MCP server. Find flights, compare prices, and access travel data.',
+    category: 'Travel & Logistics',
+    tools: ['Flight Search', 'Prices', 'Routes', 'Booking'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/kiwi-mcp'
+  },
+
+  // ─── IoT & Smart Home ─────────────────────────────────────────────
+
+  {
+    id: 'aqara-mcp',
+    name: 'Aqara',
+    description: 'Control Aqara smart home devices, query status, and execute scenes. Automate home environments.',
+    category: 'IoT & Smart Home',
+    tools: ['Devices', 'Scenes', 'Status', 'Automation'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/aqara-mcp'
+  },
+
+  // ─── Blockchain & Crypto ──────────────────────────────────────────
+
+  {
+    id: 'thirdweb-mcp',
+    name: 'Thirdweb',
+    description: 'Read and write to over 2,000 blockchains. Deploy contracts, manage wallets, and interact with Web3.',
+    category: 'Blockchain & Crypto',
+    tools: ['Smart Contracts', 'Wallets', 'Multi-Chain', 'NFTs'],
+    status: 'official',
+    url: 'https://github.com/thirdweb-dev/mcp-server'
+  },
+
+  // ─── Networking & Utilities ───────────────────────────────────────
+
+  {
+    id: 'filesystem-mcp',
+    name: 'Filesystem',
+    description: 'Secure file operations with configurable access controls. Read, write, search, and manage local files.',
+    category: 'Networking & Utilities',
+    tools: ['File Read', 'File Write', 'Search', 'Directory Management'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem'
+  },
+  {
+    id: 'time-mcp',
+    name: 'Time',
+    description: 'Time and timezone conversion. Get current time, convert between timezones, and perform date calculations.',
+    category: 'Networking & Utilities',
+    tools: ['Current Time', 'Timezone Conversion', 'Date Math'],
+    status: 'official',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/time'
+  },
+
+  // ─── Workflow & Approvals ─────────────────────────────────────────
+
+  {
+    id: 'gotohuman-mcp',
+    name: 'gotoHuman',
+    description: 'Human-in-the-loop platform for approval requests. Route AI decisions to humans when oversight is needed.',
+    category: 'Workflow & Approvals',
+    tools: ['Approvals', 'Human Review', 'Routing', 'Escalation'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/gotohuman-mcp'
+  },
+  {
+    id: 'growthbook-mcp',
+    name: 'GrowthBook',
+    description: 'Create and manage feature flags and experiments. Run A/B tests and review results with AI analysis.',
+    category: 'Workflow & Approvals',
+    tools: ['Feature Flags', 'Experiments', 'A/B Testing', 'Analytics'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/growthbook-mcp'
+  },
+
+  // ─── Education ────────────────────────────────────────────────────
+
+  {
+    id: 'edubase-mcp',
+    name: 'EduBase',
+    description: 'Interact with the EduBase e-learning platform. Manage courses, quizzes, and educational content.',
+    category: 'Education',
+    tools: ['Courses', 'Quizzes', 'Content', 'Learning'],
+    status: 'official',
+    url: 'https://github.com/nicholasgriffintn/edubase-mcp'
   }
 ];
 

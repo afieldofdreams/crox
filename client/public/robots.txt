@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://crox.io/sitemap.xml
+Sitemap: https://crox.io/sitemap-index.xml

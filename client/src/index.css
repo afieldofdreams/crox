@@ -4,7 +4,10 @@
 
 html {
 	font-size: 18px;
-	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html { scroll-behavior: smooth; }
 }
 
 body {
@@ -47,4 +50,15 @@ body::before {
 
 @media (max-width: 640px) {
 	html { font-size: 16px; }
+}
+
+/* Mobile hamburger → X animation */
+#menu-toggle.open .menu-bar:nth-child(1) {
+	transform: translateY(3px) rotate(45deg);
+}
+#menu-toggle.open .menu-bar:nth-child(2) {
+	opacity: 0;
+}
+#menu-toggle.open .menu-bar:nth-child(3) {
+	transform: translateY(-3px) rotate(-45deg);
 }

@@ -1,0 +1,176 @@
+---
+import '../index.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogType?: string;
+  ogImage?: string;
+  jsonLd?: object[];
+  articleMeta?: {
+    publishedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogType = 'website',
+  ogImage = 'https://crox.io/og.png',
+  jsonLd = [],
+  articleMeta,
+} = Astro.props;
+
+const canonicalUrl = canonical || Astro.url.href;
+const currentPath = Astro.url.pathname;
+
+function isActive(path: string) {
+  if (path === '/') return currentPath === '/';
+  return currentPath.startsWith(path);
+}
+
+const navLinks = [
+  { to: '/', label: 'Home' },
+  { to: '/blog', label: 'Insights' },
+  { to: '/learn', label: 'Learn' },
+  { to: '/servers', label: 'Servers' },
+  { to: '/ai-integration', label: 'Services' },
+];
+---
+
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Analytics -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-QQ7DMWG1VN"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QQ7DMWG1VN');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content="Crox" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {articleMeta?.publishedTime && <meta property="article:published_time" content={articleMeta.publishedTime} />}
+    {articleMeta?.author && <meta property="article:author" content={articleMeta.author} />}
+    {articleMeta?.tags && <meta property="article:tag" content={articleMeta.tags.join(', ')} />}
+
+    {jsonLd.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
+  </head>
+  <body class="bg-bg text-fg">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-accent focus:text-bg focus:px-4 focus:py-2">
+      Skip to content
+    </a>
+
+    <div class="max-w-content mx-auto px-8">
+      <nav aria-label="Main navigation" class="py-8 flex justify-between items-center border-b border-border relative">
+        <a href="/" class="font-mono font-medium text-[0.8rem] tracking-[0.15em] uppercase text-fg">
+          Crox
+        </a>
+
+        <!-- Desktop nav -->
+        <div class="hidden md:flex gap-8">
+          {navLinks.map(({ to, label }) => (
+            <a
+              href={to}
+              aria-current={isActive(to) ? 'page' : undefined}
+              class:list={[
+                'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
+                isActive(to) ? 'text-fg' : 'text-fg-dim hover:text-fg',
+              ]}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+
+        <!-- Mobile hamburger button -->
+        <button
+          id="menu-toggle"
+          class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px]"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
+          <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
+          <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
+        </button>
+
+        <!-- Mobile nav -->
+        <div id="mobile-menu" role="menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-bg border-b border-border z-50 -mx-8 px-8 pb-6 pt-4">
+          <div class="flex flex-col gap-1">
+            {navLinks.map(({ to, label }) => (
+              <a
+                href={to}
+                role="menuitem"
+                aria-current={isActive(to) ? 'page' : undefined}
+                class:list={[
+                  'text-[0.85rem] tracking-[0.1em] uppercase transition-colors py-3',
+                  isActive(to) ? 'text-fg' : 'text-fg-dim hover:text-fg',
+                ]}
+              >
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      <script is:inline>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+          const menu = document.getElementById('mobile-menu');
+          const btn = this;
+          const isOpen = !menu.classList.contains('hidden');
+          menu.classList.toggle('hidden');
+          btn.setAttribute('aria-expanded', !isOpen);
+          btn.classList.toggle('open', !isOpen);
+        });
+      </script>
+
+      <main id="main">
+        <slot />
+      </main>
+
+      <footer class="border-t border-border py-8 text-[0.7rem] text-fg-dim tracking-[0.05em] flex justify-between items-center">
+        <span>&copy; 2026 Crox Ltd</span>
+        <div class="flex gap-6">
+          <a href="/about" class="text-fg-dim hover:text-fg transition-colors no-underline">About</a>
+          <a href="/" class="text-fg-dim hover:text-fg transition-colors no-underline">crox.io</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

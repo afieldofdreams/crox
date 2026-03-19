@@ -9,7 +9,7 @@ Crox helps businesses connect AI systems like Claude and ChatGPT to their existi
 ## Services
 
 - **AI Integration**: Connect AI assistants to your business tools via MCP. Custom MCP server development for proprietary systems, legacy databases, and SaaS platforms.
-- **MCP Server Directory**: Reference guide to 20+ MCP servers for tools like Slack, HubSpot, Salesforce, Xero, GitHub, Stripe, and more.
+- **MCP Server Directory**: Comprehensive directory of 150+ MCP servers across business tools, finance, development, data, communication, AI, e-commerce, analytics, design, marketing, and more.
 - **Consulting**: Strategy and implementation guidance for AI adoption in regulated industries including accounting, legal, and finance.
 
 ## About

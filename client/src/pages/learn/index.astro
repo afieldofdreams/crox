@@ -1,0 +1,170 @@
+---
+import Base from '../../layouts/Base.astro';
+import BlogFaqAccordion from '../../components/BlogFaqAccordion.tsx';
+import { learnPosts } from '../../content/learnPosts';
+
+const baseUrl = 'https://crox.io';
+const canonicalUrl = `${baseUrl}/learn`;
+
+const faqs = [
+	{
+		question: 'What is MCP in simple terms?',
+		answer: 'Model Context Protocol (MCP) is a standard way for AI assistants to ask for and receive information from different systems. Think of it as a standardized language that lets Claude talk to your business tools (Slack, CRM, databases) safely and securely.',
+	},
+	{
+		question: 'Is Model Context Protocol the same as an API?',
+		answer: "No, they're different. APIs are technical interfaces that require developers to build custom integrations. MCP is higher-level and more standardized — it's designed so AI can use the same protocol with many different systems without custom coding.",
+	},
+	{
+		question: 'Do I need to know how MCP works to use it?',
+		answer: "No. You don't need to understand the technical details. If you can use Claude, you can use an MCP server. Just connect it and start asking Claude questions about your data — it handles the complexity.",
+	},
+	{
+		question: 'Which AI assistants support MCP?',
+		answer: 'Claude (both web and desktop) natively supports MCP. Other AI assistants are adding support as the standard gains adoption. The Anthropic ecosystem has the deepest integration.',
+	},
+	{
+		question: 'Is MCP secure for business data?',
+		answer: 'Yes. MCP is designed with security as a core principle. Your credentials stay on your machines, data requests are controlled, and you can audit everything that happens. It\'s built for enterprise use.',
+	},
+];
+
+const collectionPageSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'CollectionPage',
+	name: 'Learn | crox',
+	description: 'Technical authority on the Model Context Protocol and AI integration.',
+	url: canonicalUrl,
+	isPartOf: {
+		'@type': 'Website',
+		name: 'Crox',
+		url: baseUrl,
+	},
+};
+
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl },
+		{ '@type': 'ListItem', position: 2, name: 'Learn', item: canonicalUrl },
+	],
+};
+
+const itemListSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'ItemList',
+	name: 'Learn Posts',
+	url: canonicalUrl,
+	itemListElement: learnPosts.map((post, index) => ({
+		'@type': 'Article',
+		position: index + 1,
+		name: post.title,
+		description: post.description,
+		url: `${baseUrl}/learn/${post.slug}`,
+	})),
+};
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((faq) => ({
+		'@type': 'Question',
+		name: faq.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: faq.answer,
+		},
+	})),
+};
+
+const jsonLd = [collectionPageSchema, breadcrumbSchema, itemListSchema, faqSchema];
+---
+
+<Base
+	title="Learn | crox — AI Integration at Scale"
+	description="Technical authority on the Model Context Protocol and AI integration. Deep dives into MCP architecture, implementation patterns, and business strategy."
+	canonical={canonicalUrl}
+	jsonLd={jsonLd}
+>
+	<div class="w-full">
+		<!-- Hero Section -->
+		<section class="w-full px-6 py-24 flex items-center justify-center">
+			<div class="w-full max-w-[900px]">
+				<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] text-fg mb-6">
+					Learn
+				</h1>
+				<p class="text-[1.1rem] text-fg-dim leading-[1.8] max-w-[600px]">
+					Understanding the technology behind connected AI systems. Our technical reference for the Model Context Protocol—the open standard reshaping how businesses integrate AI with their tools.
+				</p>
+			</div>
+		</section>
+
+		<!-- Posts Grid -->
+		<section class="w-full px-6 py-16 flex items-center justify-center border-t border-border">
+			<div class="w-full max-w-[900px]">
+				<div class="grid gap-12">
+					{learnPosts.map((post) => (
+						<a
+							href={`/learn/${post.slug}`}
+							class="group block border border-border p-8 hover:border-accent transition-colors duration-300 hover:bg-surface/50"
+						>
+							<div class="flex items-start justify-between gap-6">
+								<div class="flex-1 min-w-0">
+									<h2 class="font-serif font-normal text-[1.6rem] leading-[1.2] text-fg mb-2 group-hover:text-accent transition-colors">
+										{post.title}
+									</h2>
+									<p class="text-accent text-[0.9rem] mb-4">
+										{post.subtitle}
+									</p>
+									<p class="text-[0.95rem] text-fg-dim leading-[1.6] mb-6">
+										{post.description}
+									</p>
+									<div class="flex items-center gap-6 text-[0.8rem] text-fg-dim">
+										<span>{post.date}</span>
+										<span>{post.readTime}</span>
+									</div>
+								</div>
+								<div class="flex-shrink-0">
+									<div class="text-accent text-[1.2rem] opacity-0 group-hover:opacity-100 transition-opacity">
+										&rarr;
+									</div>
+								</div>
+							</div>
+						</a>
+					))}
+				</div>
+			</div>
+		</section>
+
+		<!-- FAQ Section -->
+		<section class="w-full px-6 py-16 flex items-center justify-center border-t border-border">
+			<div class="w-full max-w-[900px]">
+				<div class="mb-16">
+					<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+						FAQ
+						<span class="flex-1 h-px bg-border"></span>
+					</div>
+					<BlogFaqAccordion faqs={faqs} client:load />
+				</div>
+			</div>
+		</section>
+
+		<!-- CTA Section -->
+		<section class="w-full px-6 py-24 flex items-center justify-center border-t border-border bg-surface/30">
+			<div class="w-full max-w-[900px]">
+				<div class="flex flex-col items-center text-center">
+					<p class="text-[1.1rem] text-fg-dim leading-[1.8] mb-8 max-w-[600px]">
+						Looking for a deeper partnership? We handle the integration and implementation so you can focus on deploying AI at scale.
+					</p>
+					<a
+						href="/ai-integration"
+						class="px-8 py-4 bg-accent text-[#0a0a0a] font-mono text-[0.9rem] font-medium hover:opacity-90 transition-opacity"
+					>
+						Explore AI Integration Services
+					</a>
+				</div>
+			</div>
+		</section>
+	</div>
+</Base>

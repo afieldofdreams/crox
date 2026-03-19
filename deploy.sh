@@ -2,7 +2,7 @@
 set -e
 
 echo "Building client..."
-cd client && npm run build:full && cd ..
+cd client && npm run build && cd ..
 
 echo "Staging dist..."
 git add client/dist -f
