@@ -1,6 +1,23 @@
+import { Helmet } from 'react-helmet-async';
+
 export default function AboutPage() {
 	return (
 		<>
+			<Helmet>
+				<title>About Adam Field — AI Product Leader, Former Commercial Pilot | Crox</title>
+				<meta name="description" content="Adam Field: 10+ years building AI in regulated industries. Former Ryanair pilot, Babylon Health AI PM, Head of Product at SideLight AI. BSc Software Engineering, First Class." />
+				<link rel="canonical" href="https://crox.io/about" />
+				<meta property="og:title" content="About Adam Field — AI Product Leader | Crox" />
+				<meta property="og:description" content="From the flight deck to the product floor. 10+ years shipping AI in healthcare, legal, insurance, and fintech." />
+				<meta property="og:url" content="https://crox.io/about" />
+				<meta property="og:type" content="profile" />
+				<meta property="og:image" content="https://crox.io/og.png" />
+				<meta name="twitter:card" content="summary_large_image" />
+				<meta name="twitter:title" content="About Adam Field — AI Product Leader | Crox" />
+				<meta name="twitter:description" content="From the flight deck to the product floor. 10+ years shipping AI in regulated industries." />
+				<meta name="twitter:image" content="https://crox.io/og.png" />
+			</Helmet>
+
 			{/* Hero */}
 			<div className="py-24 pb-16 border-b border-border">
 				<div className="text-[0.65rem] tracking-[0.2em] uppercase text-accent mb-6">About</div>

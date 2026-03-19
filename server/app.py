@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 
 def create_app() -> Flask:
 	# In production, serve the built client from ../client/dist
-	static_dir = os.path.join(os.path.dirname(__file__), '..', 'client', 'dist')
+	static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'client', 'dist'))
 	if os.path.isdir(static_dir):
 		app = Flask(__name__, static_folder=static_dir, static_url_path='')
 	else:

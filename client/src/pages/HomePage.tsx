@@ -1,4 +1,5 @@
 import { useState, FormEvent } from 'react';
+import { Helmet } from 'react-helmet-async';
 
 const testimonials = [
 	{
@@ -125,6 +126,21 @@ function ContactForm() {
 export default function HomePage() {
 	return (
 		<>
+			<Helmet>
+				<title>Crox — Adam Field | AI Product Leadership in Regulated Industries</title>
+				<meta name="description" content="Adam Field helps organisations build better AI products in regulated industries. Advisory, DODAR workshops, and hands-on build services. Healthcare, legal, fintech, insurance." />
+				<link rel="canonical" href="https://crox.io/" />
+				<meta property="og:title" content="Crox — Adam Field | AI Product Leadership" />
+				<meta property="og:description" content="Helping busy organisations build better AI products. Advisory, workshops, and hands-on build services for regulated industries." />
+				<meta property="og:url" content="https://crox.io/" />
+				<meta property="og:type" content="website" />
+				<meta property="og:image" content="https://crox.io/og.png" />
+				<meta name="twitter:card" content="summary_large_image" />
+				<meta name="twitter:title" content="Crox — Adam Field | AI Product Leadership" />
+				<meta name="twitter:description" content="Helping busy organisations build better AI products in regulated industries." />
+				<meta name="twitter:image" content="https://crox.io/og.png" />
+			</Helmet>
+
 			{/* Hero */}
 			<div className="py-24 pb-16 border-b border-border">
 				<h1 className="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
