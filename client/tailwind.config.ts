@@ -14,7 +14,7 @@ export default {
 			colors: {
 				bg: '#0a0a0a',
 				fg: '#e8e4de',
-				'fg-dim': '#a8a29e',
+				'fg-dim': '#b8b2ab',
 				accent: '#c4442a',
 				surface: '#141414',
 				border: '#333333',

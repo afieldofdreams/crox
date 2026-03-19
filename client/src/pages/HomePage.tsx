@@ -212,8 +212,8 @@ export default function HomePage() {
 							<p className="font-serif text-[1.05rem] text-fg leading-[1.5] mb-2">
 								"{t.quote}"
 							</p>
-							<p className="text-[0.75rem] text-fg-dim">
-								{t.name} <span className="text-fg-dim">— {t.role}</span>
+							<p className="text-[0.8rem]">
+								<span className="text-fg">{t.name}</span> <span className="text-fg-dim">— {t.role}</span>
 							</p>
 						</div>
 					))}

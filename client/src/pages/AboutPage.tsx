@@ -119,22 +119,22 @@ export default function AboutPage() {
 					<span className="flex-1 h-px bg-border" />
 				</div>
 
-				<div className="space-y-4">
-					<div className="flex justify-between items-baseline border-b border-border pb-4 gap-4 max-sm:flex-col max-sm:gap-1">
+				<div className="space-y-0">
+					<div className="flex justify-between items-baseline border-b border-border py-5 gap-4 max-sm:flex-col max-sm:gap-2">
 						<span className="font-serif text-[1rem] text-fg">BSc Software Engineering, First Class</span>
-						<span className="text-[0.75rem] text-fg-dim whitespace-nowrap">Middlesex University, 2014</span>
+						<span className="text-[0.8rem] text-fg-dim whitespace-nowrap">Middlesex University, 2014</span>
 					</div>
-					<div className="flex justify-between items-baseline border-b border-border pb-4 gap-4 max-sm:flex-col max-sm:gap-1">
+					<div className="flex justify-between items-baseline border-b border-border py-5 gap-4 max-sm:flex-col max-sm:gap-2">
 						<span className="font-serif text-[1rem] text-fg">Sustainable Business Management</span>
-						<span className="text-[0.75rem] text-fg-dim whitespace-nowrap">University of Cambridge, 2023</span>
+						<span className="text-[0.8rem] text-fg-dim whitespace-nowrap">University of Cambridge, 2023</span>
 					</div>
-					<div className="flex justify-between items-baseline border-b border-border pb-4 gap-4 max-sm:flex-col max-sm:gap-1">
+					<div className="flex justify-between items-baseline border-b border-border py-5 gap-4 max-sm:flex-col max-sm:gap-2">
 						<span className="font-serif text-[1rem] text-fg">Storytelling for Influence</span>
-						<span className="text-[0.75rem] text-fg-dim whitespace-nowrap">IDEO, 2021</span>
+						<span className="text-[0.8rem] text-fg-dim whitespace-nowrap">IDEO, 2021</span>
 					</div>
-					<div className="flex justify-between items-baseline gap-4 max-sm:flex-col max-sm:gap-1">
+					<div className="flex justify-between items-baseline gap-4 max-sm:flex-col max-sm:gap-2">
 						<span className="font-serif text-[1rem] text-fg">Commercial Pilots License</span>
-						<span className="text-[0.75rem] text-fg-dim whitespace-nowrap">Oxford Aviation, 2002</span>
+						<span className="text-[0.8rem] text-fg-dim whitespace-nowrap">Oxford Aviation, 2002</span>
 					</div>
 				</div>
 			</section>
