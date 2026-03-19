@@ -78,7 +78,7 @@ function ContactForm() {
 						id="name"
 						name="name"
 						required
-						className="w-full bg-surface border border-border px-4 py-3 text-[0.85rem] text-fg placeholder:text-fg-dim/40 transition-colors focus:border-accent outline-none"
+						className="w-full bg-surface border border-border px-4 py-3 text-[0.85rem] text-fg placeholder:text-fg-dim/50 transition-colors focus:border-accent outline-none"
 						placeholder="Your name"
 					/>
 				</div>
@@ -91,7 +91,7 @@ function ContactForm() {
 						id="email"
 						name="email"
 						required
-						className="w-full bg-surface border border-border px-4 py-3 text-[0.85rem] text-fg placeholder:text-fg-dim/40 transition-colors focus:border-accent outline-none"
+						className="w-full bg-surface border border-border px-4 py-3 text-[0.85rem] text-fg placeholder:text-fg-dim/50 transition-colors focus:border-accent outline-none"
 						placeholder="you@company.com"
 					/>
 				</div>
@@ -105,7 +105,7 @@ function ContactForm() {
 					name="message"
 					required
 					rows={4}
-					className="w-full bg-surface border border-border px-4 py-3 text-[0.85rem] text-fg placeholder:text-fg-dim/40 transition-colors focus:border-accent outline-none resize-none"
+					className="w-full bg-surface border border-border px-4 py-3 text-[0.85rem] text-fg placeholder:text-fg-dim/50 transition-colors focus:border-accent outline-none resize-none"
 					placeholder="Tell me about your project or challenge..."
 				/>
 			</div>
@@ -168,7 +168,7 @@ export default function HomePage() {
 							I work with founders and product teams as a fractional advisor — strategy, architecture
 							decisions, compliance navigation, and the hard calls about what to build next.
 						</p>
-						<p className="text-[0.75rem] text-fg-dim/70 leading-[1.6]">
+						<p className="text-[0.8rem] text-fg-dim leading-[1.6]">
 							Healthcare, legal tech, fintech, insurance. Async reviews, weekly syncs, or intensive sprints.
 						</p>
 					</div>
@@ -180,7 +180,7 @@ export default function HomePage() {
 							DODAR is how aviation stays the safest industry on earth. I run half-day sessions that
 							give your team a repeatable process they can use the following Monday.
 						</p>
-						<p className="text-[0.75rem] text-fg-dim/70 leading-[1.6]">
+						<p className="text-[0.8rem] text-fg-dim leading-[1.6]">
 							Remote or on-site. Up to 15 participants. Includes templates, facilitation guide, and written debrief.
 						</p>
 					</div>
@@ -192,7 +192,7 @@ export default function HomePage() {
 							code, prototype with LLMs, and ship end-to-end. From AI-powered workflows to full-stack
 							tools, I go from brief to working product.
 						</p>
-						<p className="text-[0.75rem] text-fg-dim/70 leading-[1.6]">
+						<p className="text-[0.8rem] text-fg-dim leading-[1.6]">
 							Python, Next.js, LLM integrations. Zero-to-one builds or targeted feature work.
 						</p>
 					</div>
@@ -213,7 +213,7 @@ export default function HomePage() {
 								"{t.quote}"
 							</p>
 							<p className="text-[0.75rem] text-fg-dim">
-								{t.name} <span className="text-fg-dim/60">— {t.role}</span>
+								{t.name} <span className="text-fg-dim">— {t.role}</span>
 							</p>
 						</div>
 					))}

@@ -14,10 +14,10 @@ export default {
 			colors: {
 				bg: '#0a0a0a',
 				fg: '#e8e4de',
-				'fg-dim': '#8a8680',
+				'fg-dim': '#a8a29e',
 				accent: '#c4442a',
 				surface: '#141414',
-				border: '#2a2a2a',
+				border: '#333333',
 			},
 			fontFamily: {
 				serif: ['"Instrument Serif"', 'Georgia', 'serif'],
