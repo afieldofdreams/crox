@@ -9,11 +9,16 @@ from werkzeug.utils import secure_filename
 
 
 def create_app() -> Flask:
-	app = Flask(__name__)
+	# In production, serve the built client from ../client/dist
+	static_dir = os.path.join(os.path.dirname(__file__), '..', 'client', 'dist')
+	if os.path.isdir(static_dir):
+		app = Flask(__name__, static_folder=static_dir, static_url_path='')
+	else:
+		app = Flask(__name__)
 
 	# Config
 	app.config['ENV'] = os.getenv('FLASK_ENV', 'development')
-	app.config['CORS_ORIGINS'] = os.getenv('CORS_ORIGINS', 'http://localhost:5173')
+	app.config['CORS_ORIGINS'] = os.getenv('CORS_ORIGINS', 'http://localhost:3099')
 
 	# CORS
 	CORS(app, resources={r"/api/*": {"origins": app.config['CORS_ORIGINS'].split(',')}})
@@ -102,11 +107,23 @@ def create_app() -> Flask:
 		return jsonify({"ok": True})
 
 	app.register_blueprint(api)
+
+	# Catch-all: serve index.html for client-side routes
+	@app.route('/', defaults={'path': ''})
+	@app.route('/<path:path>')
+	def serve_client(path):
+		if app.static_folder and os.path.isfile(os.path.join(app.static_folder, path)):
+			return app.send_static_file(path)
+		if app.static_folder and os.path.isfile(os.path.join(app.static_folder, 'index.html')):
+			return app.send_static_file('index.html')
+		return 'Not found', 404
+
 	return app
 
 
+app = create_app()
+
 if __name__ == '__main__':
-	app = create_app()
 	app.run(host='0.0.0.0', port=int(os.getenv('PORT', '5000')))
 
 
