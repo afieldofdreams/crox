@@ -22,7 +22,7 @@ const ContentLayout: React.FC<ContentLayoutProps> = ({ post, children }) => {
     '@type': 'Article',
     headline: post.title,
     description: post.description,
-    datePublished: post.date,
+    datePublished: post.dateISO,
     author: {
       '@type': 'Person',
       name: 'Adam Field',
@@ -69,7 +69,7 @@ const ContentLayout: React.FC<ContentLayoutProps> = ({ post, children }) => {
         <meta property="og:type" content="article" />
         <meta property="og:site_name" content="Crox" />
         <meta property="og:url" content={canonicalUrl} />
-        <meta property="article:published_time" content={post.date} />
+        <meta property="article:published_time" content={post.dateISO} />
         <meta property="article:author" content="Adam Field" />
         <meta property="article:tag" content={post.tags.join(", ")} />
         <script type="application/ld+json">
