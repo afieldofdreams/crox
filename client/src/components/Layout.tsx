@@ -1,4 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { usePageTracking } from '../hooks/usePageTracking';
 
 function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 	const { pathname } = useLocation();
@@ -17,6 +18,8 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 }
 
 export function Layout() {
+	usePageTracking();
+
 	return (
 		<div className="max-w-content mx-auto px-8">
 			<nav className="py-8 flex justify-between items-center border-b border-border">
