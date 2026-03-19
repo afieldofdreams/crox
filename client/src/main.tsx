@@ -6,6 +6,7 @@ import './index.css';
 import { Layout } from './components/Layout';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import AiIntegrationPage from './pages/AiIntegrationPage';
 
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')!).render(
 					<Route element={<Layout />}>
 						<Route index element={<HomePage />} />
 						<Route path="about" element={<AboutPage />} />
+						<Route path="ai-integration" element={<AiIntegrationPage />} />
 					</Route>
 				</Routes>
 			</BrowserRouter>

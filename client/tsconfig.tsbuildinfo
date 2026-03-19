@@ -1,1 +1,1 @@
-{"root":["./src/main.tsx","./src/components/layout.tsx","./src/hooks/usepagetracking.ts","./src/pages/aboutpage.tsx","./src/pages/homepage.tsx"],"version":"5.9.2"}
+{"root":["./src/main.tsx","./src/components/layout.tsx","./src/hooks/usepagetracking.ts","./src/pages/aboutpage.tsx","./src/pages/aiintegrationpage.tsx","./src/pages/homepage.tsx"],"version":"5.9.2"}

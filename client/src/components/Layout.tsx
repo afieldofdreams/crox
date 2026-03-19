@@ -8,7 +8,7 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 	return (
 		<Link
 			to={to}
-			className={`text-[0.75rem] tracking-[0.1em] uppercase transition-colors ${
+			className={`text-[0.8rem] tracking-[0.1em] uppercase transition-colors ${
 				active ? 'text-fg' : 'text-fg-dim hover:text-fg'
 			}`}
 		>
@@ -29,6 +29,7 @@ export function Layout() {
 				<div className="flex gap-8">
 					<NavLink to="/">Home</NavLink>
 					<NavLink to="/about">About</NavLink>
+					<NavLink to="/ai-integration">AI Integration</NavLink>
 				</div>
 			</nav>
 
@@ -36,7 +37,7 @@ export function Layout() {
 				<Outlet />
 			</main>
 
-			<footer className="border-t border-border py-8 text-[0.65rem] text-fg-dim tracking-[0.05em] flex justify-between">
+			<footer className="border-t border-border py-8 text-[0.7rem] text-fg-dim tracking-[0.05em] flex justify-between">
 				<span>© 2026 Crox Ltd</span>
 				<span>
 					<Link to="/" className="text-fg-dim hover:text-fg transition-colors no-underline">

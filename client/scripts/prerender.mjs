@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const distDir = resolve(__dirname, '..', 'dist');
 
-const routes = ['/', '/about'];
+const routes = ['/', '/about', '/ai-integration'];
 
 async function prerender() {
 	const { default: handler } = await import('serve-handler');
@@ -70,7 +70,7 @@ async function prerender() {
 					line-height: 1.15;
 					margin-bottom: 24px;
 				}
-				h1 em { color: #c4442a; font-style: italic; }
+				h1 em { color: #e05a3a; font-style: italic; }
 				p {
 					font-size: 22px;
 					color: #8a8680;

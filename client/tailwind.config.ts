@@ -14,8 +14,8 @@ export default {
 			colors: {
 				bg: '#0a0a0a',
 				fg: '#e8e4de',
-				'fg-dim': '#b8b2ab',
-				accent: '#c4442a',
+				'fg-dim': '#d0cbc5',
+				accent: '#e05a3a',
 				surface: '#141414',
 				border: '#333333',
 			},
@@ -24,7 +24,7 @@ export default {
 				mono: ['"DM Mono"', '"Courier New"', 'monospace'],
 			},
 			maxWidth: {
-				content: '720px',
+				content: '900px',
 			},
 		},
 	},
