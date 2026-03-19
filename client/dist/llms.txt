@@ -1,26 +1,45 @@
-# Crox — Adam Field
+# Crox
 
-> AI product leadership in regulated industries. Consulting, workshops, and advisory through Crox Ltd.
+> AI integration for businesses. We connect AI assistants to your existing tools using the Model Context Protocol (MCP).
 
-## About
+## What We Do
 
-Adam Field is a builder, founder and AI product leader with 10+ years building and deploying machine learning systems in highly regulated environments. He launched the UK's first BSI-audited AI clinical chatbot across 12 countries at Babylon Health, built ML risk stratification models that reduced NHS readmissions by 35% at Health Navigator, and designed automated FinTech scoring systems that cut underwriting from two weeks to two days at Forward Partners. He is a former Ryanair commercial pilot (737 fleet, 2002-2013).
-
-Currently Head of Product at SideLight AI, building medical and medical-legal AI systems. Based in London, UK.
+Crox helps businesses connect AI systems like Claude and ChatGPT to their existing software — CRMs, accounting tools, project management, communication platforms — using the Model Context Protocol. We build custom MCP servers, handle implementation, and ensure security and compliance.
 
 ## Services
 
-- **AI Product Advisory**: Fractional product thinking for founders building AI in regulated spaces. Strategy, architecture decisions, compliance navigation. Healthcare, legal tech, fintech, insurance.
-- **DODAR Workshops**: Structured decision-making for teams who make high-stakes calls. Half-day sessions using the aviation framework. Remote or on-site, up to 15 participants.
-- **Build & Ship**: Production code, LLM prototyping, full-stack tools. Python, Next.js, LLM integrations. Zero-to-one builds or targeted feature work.
+- **AI Integration**: Connect AI assistants to your business tools via MCP. Custom MCP server development for proprietary systems, legacy databases, and SaaS platforms.
+- **MCP Server Directory**: Reference guide to 20+ MCP servers for tools like Slack, HubSpot, Salesforce, Xero, GitHub, Stripe, and more.
+- **Consulting**: Strategy and implementation guidance for AI adoption in regulated industries including accounting, legal, and finance.
+
+## About
+
+Founded by Adam Field. 10+ years building and deploying machine learning systems in regulated environments. Former AI product leader at Babylon Health (clinical AI across 12 countries), Health Navigator (NHS readmission reduction), and Forward Partners (FinTech scoring systems). Currently Head of Product at SideLight AI. Based in London, UK.
 
 ## Contact
 
 - Email: adam@crox.io
-- LinkedIn: linkedin.com/in/afieldio
 - Website: https://crox.io
 
 ## Pages
 
 - Home: https://crox.io/
 - About: https://crox.io/about
+- AI Integration: https://crox.io/ai-integration
+- MCP Server Directory: https://crox.io/servers
+- Blog: https://crox.io/blog
+- Learn: https://crox.io/learn
+
+## Blog Posts
+
+- How to Connect AI to Your Business Tools Without Writing Code: https://crox.io/blog/connect-ai-to-business-tools
+- Why Your AI Assistant Can't See Your CRM (And How to Fix It): https://crox.io/blog/why-ai-cant-see-your-crm
+- AI for Accounting Firms: What's Actually Possible in 2026: https://crox.io/blog/ai-for-accounting-firms
+- 5 Ways Small Businesses Are Using AI to Save 10+ Hours a Week: https://crox.io/blog/ai-saving-small-business-time
+- AI for UK Legal Practices: Automation That Stays Compliant: https://crox.io/blog/ai-for-legal-practices
+
+## Learn
+
+- What Is the Model Context Protocol? A Plain English Guide: https://crox.io/learn/what-is-mcp
+- MCP vs APIs vs Plugins: Which Integration Approach Should Your Business Use?: https://crox.io/learn/mcp-vs-apis-vs-plugins
+- How AI Assistants Connect to Your Tools: MCP Architecture Explained: https://crox.io/learn/mcp-architecture-explained
