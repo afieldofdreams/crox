@@ -27,16 +27,16 @@ Founded by Adam Field. 10+ years building and deploying machine learning systems
 - About: https://crox.io/about
 - AI Integration: https://crox.io/ai-integration
 - MCP Server Directory: https://crox.io/servers
-- Blog: https://crox.io/blog
+- Blog: https://crox.io/insights
 - Learn: https://crox.io/learn
 
 ## Blog Posts
 
-- How to Connect AI to Your Business Tools Without Writing Code: https://crox.io/blog/connect-ai-to-business-tools
-- Why Your AI Assistant Can't See Your CRM (And How to Fix It): https://crox.io/blog/why-ai-cant-see-your-crm
-- AI for Accounting Firms: What's Actually Possible in 2026: https://crox.io/blog/ai-for-accounting-firms
-- 5 Ways Small Businesses Are Using AI to Save 10+ Hours a Week: https://crox.io/blog/ai-saving-small-business-time
-- AI for UK Legal Practices: Automation That Stays Compliant: https://crox.io/blog/ai-for-legal-practices
+- How to Connect AI to Your Business Tools Without Writing Code: https://crox.io/insights/connect-ai-to-business-tools
+- Why Your AI Assistant Can't See Your CRM (And How to Fix It): https://crox.io/insights/why-ai-cant-see-your-crm
+- AI for Accounting Firms: What's Actually Possible in 2026: https://crox.io/insights/ai-for-accounting-firms
+- 5 Ways Small Businesses Are Using AI to Save 10+ Hours a Week: https://crox.io/insights/ai-saving-small-business-time
+- AI for UK Legal Practices: Automation That Stays Compliant: https://crox.io/insights/ai-for-legal-practices
 
 ## Learn
 

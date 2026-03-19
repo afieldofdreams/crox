@@ -4,7 +4,7 @@ import BlogFaqAccordion from '../../components/BlogFaqAccordion.tsx';
 import { blogPosts } from '../../content/blogPosts';
 
 const baseUrl = 'https://crox.io';
-const canonicalUrl = `${baseUrl}/blog`;
+const canonicalUrl = `${baseUrl}/insights`;
 
 const faqs = [
 	{
@@ -61,7 +61,7 @@ const itemListSchema = {
 		position: index + 1,
 		name: post.title,
 		description: post.description,
-		url: `${baseUrl}/blog/${post.slug}`,
+		url: `${baseUrl}/insights/${post.slug}`,
 	})),
 };
 
@@ -98,11 +98,11 @@ const jsonLd = [collectionPageSchema, breadcrumbSchema, itemListSchema, faqSchem
 			</p>
 		</header>
 
-		<!-- Blog Posts List -->
+		<!-- Insights List -->
 		<div class="space-y-8 mb-16">
 			{blogPosts.map((post) => (
 				<a
-					href={`/blog/${post.slug}`}
+					href={`/insights/${post.slug}`}
 					class="block group"
 				>
 					<article class="border border-border p-6 sm:p-8 hover:border-accent transition-colors duration-300 bg-surface/30">
