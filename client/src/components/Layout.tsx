@@ -3,7 +3,7 @@ import { usePageTracking } from '../hooks/usePageTracking';
 
 function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 	const { pathname } = useLocation();
-	const active = pathname === to;
+	const active = to === '/' ? pathname === '/' : pathname.startsWith(to);
 
 	return (
 		<Link
@@ -28,8 +28,10 @@ export function Layout() {
 				</Link>
 				<div className="flex gap-8">
 					<NavLink to="/">Home</NavLink>
-					<NavLink to="/about">About</NavLink>
-					<NavLink to="/ai-integration">AI Integration</NavLink>
+					<NavLink to="/blog">Blog</NavLink>
+					<NavLink to="/learn">Learn</NavLink>
+					<NavLink to="/servers">Servers</NavLink>
+					<NavLink to="/ai-integration">Services</NavLink>
 				</div>
 			</nav>
 
