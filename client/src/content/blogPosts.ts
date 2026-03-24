@@ -71,6 +71,18 @@ export const blogPosts: BlogPost[] = [
     keywords: ['ai for solicitors uk', 'legal ai tools compliant', 'ai document review law firm', 'sra compliant ai', 'ai for legal practices gdpr', 'automate legal admin with ai'],
     tags: ['Legal Tech', 'Compliance', 'SRA', 'GDPR'],
   },
+  {
+    slug: 'dodar-structured-reasoning-benchmark',
+    title: 'We Gave Cheap AI Models a Pilot\'s Decision Framework. They Outperformed the Best.',
+    subtitle: 'How the DODAR structured reasoning pipeline enables small language models to match or exceed frontier model quality at 89% lower cost.',
+    date: 'March 2026',
+    dateISO: '2026-03-24',
+    readTime: '10 min read',
+    description:
+      'Our benchmark of 8 LLMs shows that structured reasoning scaffolding (DODAR pipeline) enables GPT-4.1 Mini to score 104% of Claude Opus zero-shot quality at a fraction of the cost.',
+    keywords: ['dodar framework ai', 'structured reasoning llm', 'ai benchmark 2026', 'cheap ai models better results', 'llm pipeline architecture', 'ai decision making framework'],
+    tags: ['Research', 'AI Architecture', 'Benchmarking', 'DODAR'],
+  },
 ];
 
 export const getBlogPostBySlug = (slug: string): BlogPost | undefined => {

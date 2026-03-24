@@ -11,12 +11,12 @@ export default {
 		},
 		extend: {
 			colors: {
-				bg: '#0a0a0a',
+				bg: '#12100e',
 				fg: '#e8e4de',
 				'fg-dim': '#d0cbc5',
-				accent: '#e05a3a',
-				surface: '#141414',
-				border: '#333333',
+				accent: '#e07070',
+				surface: '#1a1716',
+				border: '#332e2b',
 			},
 			fontFamily: {
 				serif: ['"Instrument Serif"', 'Georgia', 'serif'],

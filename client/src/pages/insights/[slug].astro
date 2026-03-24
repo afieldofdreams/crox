@@ -6,6 +6,7 @@ import { AiAccountingPost } from '../../views/blog/AiAccountingPost';
 import { AiCrmPost } from '../../views/blog/AiCrmPost';
 import { AiSavingTimePost } from '../../views/blog/AiSavingTimePost';
 import { AiLegalPost } from '../../views/blog/AiLegalPost';
+import { DodarBenchmarkPost } from '../../views/blog/DodarBenchmarkPost';
 
 export function getStaticPaths() {
 	return blogPosts.map((post) => ({
@@ -64,6 +65,7 @@ const postComponents: Record<string, any> = {
 	'why-ai-cant-see-your-crm': AiCrmPost,
 	'ai-saving-small-business-time': AiSavingTimePost,
 	'ai-for-legal-practices': AiLegalPost,
+	'dodar-structured-reasoning-benchmark': DodarBenchmarkPost,
 };
 
 const PostContent = postComponents[slug];
