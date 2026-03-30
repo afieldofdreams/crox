@@ -83,6 +83,18 @@ export const blogPosts: BlogPost[] = [
     keywords: ['dodar framework ai', 'structured reasoning llm', 'ai benchmark 2026', 'cheap ai models better results', 'llm pipeline architecture', 'ai decision making framework'],
     tags: ['Research', 'AI Architecture', 'Benchmarking', 'DODAR'],
   },
+  {
+    slug: 'dodar-reasoning-structure-failure',
+    title: 'Benchmark Study: Does Reasoning Structure Shape Failure, Not Just Accuracy?',
+    subtitle: '1,500 benchmark tests show DODAR-based prompting doesn\'t improve accuracy — but it measurably changes how models fail (p = 0.0003).',
+    date: 'March 2026',
+    dateISO: '2026-03-30',
+    readTime: '8 min read',
+    description:
+      'We ran 1,500 benchmark tests on GPT-4.1-mini to test whether DODAR-based prompting improves LLM reasoning. Accuracy is flat, but error distributions are significantly different — structured phases create anchoring traps.',
+    keywords: ['dodar benchmark study', 'llm reasoning structure', 'ai error analysis', 'phase-gated reasoning', 'llm anchoring bias', 'structured prompting benchmark'],
+    tags: ['Research', 'AI Architecture', 'Benchmarking', 'DODAR'],
+  },
 ];
 
 export const getBlogPostBySlug = (slug: string): BlogPost | undefined => {
