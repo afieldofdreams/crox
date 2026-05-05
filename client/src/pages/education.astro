@@ -1,0 +1,189 @@
+---
+import Base from '../layouts/Base.astro';
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Service',
+		name: 'AI Education',
+		description: 'Practical AI training for teams operating in regulated environments. Half or full day, remote or on-site.',
+		provider: { '@type': 'Organization', name: 'Crox', url: 'https://crox.io' },
+		url: 'https://crox.io/education',
+		areaServed: 'GB',
+		offers: {
+			'@type': 'Offer',
+			price: '3500',
+			priceCurrency: 'GBP',
+		},
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+			{ '@type': 'ListItem', position: 2, name: 'Education', item: 'https://crox.io/education' },
+		],
+	},
+];
+---
+
+<Base
+	title="AI Education — Practical training for teams in regulated industries | Crox"
+	description="Half or full-day training for teams using AI day to day. How it works, where it fails, how to use it safely in regulated environments. £3,500."
+	canonical="https://crox.io/education"
+	jsonLd={jsonLd}
+>
+	<!-- Hero -->
+	<div class="py-24 pb-16 border-b border-border">
+		<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
+		<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
+			AI <em class="italic text-accent">Education.</em>
+		</h1>
+		<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
+			Practical training for the people who will actually use AI day to day.
+		</p>
+		<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
+			<span class="text-fg">£3,500</span>
+			<span class="text-fg-dim">Your whole team</span>
+			<span class="text-fg-dim">Half or full day</span>
+		</div>
+		<a
+			href="/contact"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Start with a conversation &rarr;
+		</a>
+	</div>
+
+	<!-- Problem -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			The problem this solves
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="text-[0.95rem] text-fg-dim leading-[1.8] space-y-4">
+			<p>
+				Your team has been told to "use AI more." Half of them are quietly pasting client data
+				into ChatGPT. The other half are avoiding it entirely. Neither group knows what good
+				looks like, what bad looks like, or where the line is in your specific context.
+			</p>
+			<p class="text-fg">
+				Training that ignores your sector is training that won't stick.
+			</p>
+		</div>
+	</section>
+
+	<!-- What you get -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			What you get
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<ul class="space-y-4">
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				A half or full-day session, remote or on-site, for up to your whole team
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				Practical exercises using real tools, not slideware
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				Sector-specific guidance on what's safe, what's risky, and what's against the rules in regulated environments
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				A short written reference your team can come back to afterwards
+			</li>
+		</ul>
+	</section>
+
+	<!-- How it works -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			How it works
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="space-y-10">
+			<div class="grid grid-cols-[120px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Pre-session</span>
+				<div>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						We have a 30-minute call with you to understand your team, your sector, and the
+						tools they already use.
+					</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-[120px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">The session</span>
+				<div>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						Half day or full day, depending on depth. Mix of teaching, demos, and hands-on practice.
+					</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-[120px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Reference</span>
+				<div>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						Written document sent within a week. Your team has something to refer back to.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Who this is for -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Is this for you?
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Right for you if</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						Your team is using AI inconsistently and you want a baseline
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You operate in a regulated sector and need people to understand the boundaries
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You'd rather your team learn from someone who's shipped this in your context than from a generic course
+					</li>
+				</ul>
+			</div>
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Not right if</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						You're looking for a single AI champion to be trained, rather than a team
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						You want a one-hour overview rather than working depth
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA -->
+	<section class="py-24">
+		<h2 class="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.6rem]">
+			Get your team on the same <em class="italic text-accent">page.</em>
+		</h2>
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
+			One day. The whole team. A baseline they can build on.
+		</p>
+		<a
+			href="/contact"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Start with a conversation &rarr;
+		</a>
+	</section>
+</Base>

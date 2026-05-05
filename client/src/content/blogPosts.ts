@@ -12,6 +12,18 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'static-controls-live-models',
+    title: 'Static Controls, Live Models',
+    subtitle: 'A briefing for boards and exec teams adopting AI in regulated industries. Free to read. No email gate. Free to forward.',
+    date: 'May 2026',
+    dateISO: '2026-05-05',
+    readTime: '18 min read',
+    description:
+      'Five lenses for board-level AI governance. Why the conventional policy-and-committee playbook is structurally insufficient, what the August 2026 EU AI Act high-risk timetable actually requires, and the diagnostic question most board packs are missing: when the model your firm depends on changes silently next Thursday, what is your process?',
+    keywords: ['ai board governance', 'eu ai act 2026', 'ai high risk obligations', 'board ai oversight regulated industries', 'ai supply chain risk', 'ai change detection', 'ai compliance briefing'],
+    tags: ['Briefing', 'Board Governance', 'Regulated Industries', 'EU AI Act'],
+  },
+  {
     slug: 'connect-ai-to-business-tools',
     title: 'How to Connect AI to Your Business Tools Without Writing Code',
     subtitle: 'A step-by-step guide to linking ChatGPT, Claude, and Copilot to your CRM, accounting software, and project management tools using Model Context Protocol.',

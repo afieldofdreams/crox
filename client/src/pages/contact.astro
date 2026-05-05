@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+
+const BOOKING_URL = 'https://calendar.app.google/vsgd7Zseewh1AMCP7';
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'ContactPage',
+		name: 'Contact Crox',
+		url: 'https://crox.io/contact',
+		description: 'Book a 30-minute call or email Adam directly.',
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+			{ '@type': 'ListItem', position: 2, name: 'Contact', item: 'https://crox.io/contact' },
+		],
+	},
+];
+---
+
+<Base
+	title="Contact — Start with a conversation | Crox"
+	description="Book a 30-minute call to walk through where you are and whether Crox is the right fit. Or send a note to adam@crox.io."
+	canonical="https://crox.io/contact"
+	jsonLd={jsonLd}
+>
+	<!-- Hero -->
+	<div class="py-24 pb-16 border-b border-border">
+		<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
+			Start with a <em class="italic text-accent">conversation.</em>
+		</h1>
+		<p class="text-[1rem] text-fg-dim leading-[1.8]">
+			No discovery call gauntlet. No qualification questionnaire. Pick a time that works,
+			or send a note.
+		</p>
+	</div>
+
+	<!-- Book a call -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Book a call
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-8">
+			30 minutes. Walk through where you are and whether Crox is the right fit. No prep needed.
+		</p>
+
+		<a
+			href={BOOKING_URL}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Book a 30-minute call &rarr;
+		</a>
+	</section>
+
+	<!-- Send a note -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Or send a note
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-6">
+			For people who'd rather write than book.
+		</p>
+
+		<a
+			href="mailto:adam@crox.io"
+			class="font-serif text-[1.5rem] text-fg no-underline border-b border-border pb-1 hover:border-accent transition-colors max-sm:text-[1.2rem]"
+		>
+			adam@crox.io &rarr;
+		</a>
+	</section>
+
+	<!-- What happens next -->
+	<section class="py-16">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			What happens next
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="space-y-6">
+			<div class="grid grid-cols-[40px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="text-[1.3rem] font-serif text-accent leading-[1.3]">1.</span>
+				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+					We talk for 30 minutes.
+				</p>
+			</div>
+
+			<div class="grid grid-cols-[40px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="text-[1.3rem] font-serif text-accent leading-[1.3]">2.</span>
+				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+					If there's a fit, you get a written proposal within a week.
+				</p>
+			</div>
+
+			<div class="grid grid-cols-[40px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="text-[1.3rem] font-serif text-accent leading-[1.3]">3.</span>
+				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+					If there isn't, we tell you and recommend who to talk to instead.
+				</p>
+			</div>
+		</div>
+	</section>
+</Base>

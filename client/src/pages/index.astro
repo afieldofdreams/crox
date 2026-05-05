@@ -1,31 +1,45 @@
 ---
 import Base from '../layouts/Base.astro';
 
-const BOOKING_URL = 'https://calendar.app.google/3avUXyXnctfWpyHF7';
+const services = [
+	{
+		name: 'Readiness',
+		price: '£5,000',
+		meta: '1–2 people from you · 2–3 weeks',
+		blurb: 'Know exactly where you stand before you spend anything. Data, processes, team, risk.',
+		href: '/readiness',
+	},
+	{
+		name: 'Experiments',
+		price: '£15,000',
+		meta: '1 technical stakeholder · 4–6 weeks',
+		blurb: 'We take one high-value process and build an AI version of it. Connected to your real systems. Governance built in.',
+		href: '/experiments',
+	},
+	{
+		name: 'Education',
+		price: '£3,500',
+		meta: 'Your whole team · Half or full day',
+		blurb: 'Practical training for the people who will use AI day to day. How it works, where it fails, how to use it safely.',
+		href: '/education',
+	},
+	{
+		name: 'Board / Exec',
+		price: 'From £2,500',
+		meta: 'Board, exec team, or leadership · Single session or programme',
+		blurb: 'Briefings, working sessions, and ongoing guidance for the people deciding what AI does in your organisation.',
+		href: '/board-exec',
+	},
+];
 
-const testimonials = [
+const homepageTestimonials = [
 	{
 		quote: 'Adam cares deeply about the quality and impact of his work.',
 		name: 'Jasel Mehta',
 		role: 'COO',
 	},
 	{
-		quote: 'He was amazingly fast and uncomplicated in delivering an extensive, clear, and detailed report.',
-		name: 'Romina Buchel',
-		role: 'Marketing Manager',
-	},
-	{
-		quote: 'A man of many talents who can focus on the job in hand with precision and get results.',
-		name: 'Sam Smith',
-		role: 'Design Lead',
-	},
-	{
-		quote: 'He was very professional, I\'d highly recommend on projects that need an eye for detail.',
-		name: 'Scott Beat',
-		role: 'Quality Manager',
-	},
-	{
-		quote: 'Extremely knowledgeable who provided fantastic and thorough outputs!',
+		quote: 'Extremely knowledgeable who provided fantastic and thorough outputs.',
 		name: 'Maria Birkmyre',
 		role: 'Director',
 	},
@@ -38,7 +52,7 @@ const jsonLd = [
 		name: 'Crox',
 		url: 'https://crox.io',
 		logo: 'https://crox.io/og.png',
-		description: 'Crox helps small and mid-sized businesses connect AI assistants to their existing tools using the Model Context Protocol.',
+		description: 'Crox helps organisations in regulated industries adopt AI safely. Readiness assessments, experiments, education, and board-level guidance.',
 		founder: { '@type': 'Person', name: 'Adam Field' },
 		sameAs: ['https://linkedin.com/in/afieldio'],
 	},
@@ -52,8 +66,8 @@ const jsonLd = [
 ---
 
 <Base
-	title="Crox — AI That Actually Does Work in Your Business | AI Integration Sprint"
-	description="We connect AI to your CRM, accounts, and workflows in two weeks. No more copy-paste. No more isolated chatbots. Real AI integration for small and mid-sized businesses."
+	title="Crox — Practical AI for Regulated Industries"
+	description="Readiness, Experiments, Education, and Board-level guidance for organisations adopting AI in regulated sectors. Pricing upfront. No retainers. No ambiguity."
 	canonical="https://crox.io/"
 	ogType="website"
 	jsonLd={jsonLd}
@@ -61,108 +75,107 @@ const jsonLd = [
 	<!-- Hero -->
 	<div class="py-24 pb-16 border-b border-border">
 		<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
-			AI that actually does work in your <em class="italic text-accent">business.</em><br />Not just answers questions.
+			Most businesses are doing AI <em class="italic text-accent">wrong.</em>
 		</h1>
 		<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
-			We connect AI directly to your business systems — your CRM, accounts, project tools, and data —
-			so it can pull real information, take real actions, and save real time. Most businesses are live
-			within two weeks.
+			Not because they lack ambition. Because nobody told them where to start, what to put
+			in place, or how to know if it's actually working.
 		</p>
-		<a
-			href="/ai-integration"
-			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
-		>
-			Start your AI Integration Sprint &rarr;
-		</a>
-	</div>
-
-	<!-- The Problem -->
-	<section class="py-16 border-b border-border">
-		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
-			Most businesses are stuck here
-			<span class="flex-1 h-px bg-border"></span>
-		</div>
-
-		<div class="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
-			<div class="bg-surface border border-border p-6">
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">Using ChatGPT in isolation — no connection to real business data.</p>
-			</div>
-			<div class="bg-surface border border-border p-6">
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">Copying and pasting between tools instead of automating.</p>
-			</div>
-			<div class="bg-surface border border-border p-6">
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">No connection to CRM, accounts, or workflows.</p>
-			</div>
-			<div class="bg-surface border border-border p-6">
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">No measurable impact — AI feels like a toy, not a tool.</p>
-			</div>
-		</div>
-	</section>
-
-	<!-- AI Integration Sprint — The Spear -->
-	<section class="py-16 border-b border-border">
-		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
-			AI Integration Sprint
-			<span class="flex-1 h-px bg-border"></span>
-		</div>
-
-		<div class="bg-surface border-2 border-accent p-8 mb-6">
-			<h2 class="font-serif font-normal text-[1.8rem] mb-4 max-sm:text-[1.4rem]">Two weeks. AI connected to your business.</h2>
-			<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-6">
-				We connect AI directly to your business systems using the Model Context Protocol so it can:
-			</p>
-			<div class="grid grid-cols-3 gap-6 mb-6 max-sm:grid-cols-1">
-				<div>
-					<p class="font-serif text-[1.1rem] text-fg mb-1">Pull real data</p>
-					<p class="text-[0.85rem] text-fg-dim leading-[1.6]">From your CRM, accounts, project tools, and databases.</p>
-				</div>
-				<div>
-					<p class="font-serif text-[1.1rem] text-fg mb-1">Take real actions</p>
-					<p class="text-[0.85rem] text-fg-dim leading-[1.6]">Create records, send updates, trigger workflows.</p>
-				</div>
-				<div>
-					<p class="font-serif text-[1.1rem] text-fg mb-1">Save real time</p>
-					<p class="text-[0.85rem] text-fg-dim leading-[1.6]">Hours back every week for your team, measurably.</p>
-				</div>
-			</div>
+		<div class="flex gap-6 items-center max-sm:flex-col max-sm:items-start">
 			<a
-				href="/ai-integration"
+				href="/contact"
 				class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
 			>
-				Start your AI Integration Sprint &rarr;
+				Start with a conversation &rarr;
+			</a>
+			<a
+				href="#briefing"
+				class="text-[0.95rem] text-fg no-underline border-b border-border pb-px hover:border-accent transition-colors"
+			>
+				Read the briefing &rarr;
 			</a>
 		</div>
-	</section>
+	</div>
 
-	<!-- Supporting Services -->
+	<!-- Pain -->
 	<section class="py-16 border-b border-border">
 		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
-			Also available
+			Sound familiar?
 			<span class="flex-1 h-px bg-border"></span>
 		</div>
 
-		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
-			<div class="bg-surface border border-border p-8 transition-colors hover:border-accent">
-				<h3 class="font-serif font-normal text-[1.3rem] mb-2">AI Strategy Advisory</h3>
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">
-					Fractional product guidance for founders building AI products or bringing AI into operations.
-					Strategy, architecture, and compliance — so you make the right decisions early.
-				</p>
-				<p class="text-[0.9rem] text-fg-dim leading-[1.6]">
-					The strategic layer. Ideal before or alongside an integration sprint.
-				</p>
-			</div>
+		<div class="text-[0.95rem] text-fg-dim leading-[1.8] space-y-4 mb-10">
+			<p>
+				You've tried a few AI tools. Maybe ran a pilot. It felt promising, then it stalled.
+				Now you have a board asking why you're behind, a team that's sceptical, and no clear
+				path forward.
+			</p>
+			<p class="text-fg">
+				The problem isn't the technology. It's the missing layer — governance, guardrails,
+				and a realistic plan.
+			</p>
+		</div>
 
-			<div class="bg-surface border border-border p-8 transition-colors hover:border-accent">
-				<h3 class="font-serif font-normal text-[1.3rem] mb-2">DODAR Workshops</h3>
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">
-					Half-day sessions teaching your team a structured decision-making framework from aviation.
-					Walk away with a repeatable process your team can use every day.
-				</p>
-				<p class="text-[0.9rem] text-fg-dim leading-[1.6]">
-					Team enablement. Up to 15 participants, remote or on-site.
-				</p>
-			</div>
+		<div class="border-l-2 border-accent pl-6 py-1">
+			<p class="font-serif text-[1.1rem] text-fg leading-[1.5] mb-2">
+				&ldquo;He was amazingly fast and uncomplicated in delivering an extensive, clear,
+				and detailed report.&rdquo;
+			</p>
+			<p class="text-[0.9rem] text-fg-dim">&mdash; Romina Buchel, Marketing Manager</p>
+		</div>
+	</section>
+
+	<!-- Flagship briefing -->
+	<section id="briefing" class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Briefing &middot; May 2026
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<a href="/insights/static-controls-live-models" class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group">
+			<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">Briefing</p>
+			<h2 class="font-serif font-normal text-[1.8rem] mb-4 max-sm:text-[1.4rem] text-fg group-hover:text-accent transition-colors">
+				Static Controls, Live Models
+			</h2>
+			<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-6">
+				A briefing for boards and exec teams adopting AI in regulated industries. Five lenses
+				more useful than the conventional checklist, the August 2026 forcing function, and the
+				diagnostic question most board packs are missing. Free to read. No email gate. Free to forward.
+			</p>
+			<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
+				Read the briefing &rarr;
+			</span>
+		</a>
+	</section>
+
+	<!-- What we do -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			What we do
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<h2 class="font-serif font-normal text-[1.6rem] mb-10 max-sm:text-[1.3rem]">
+			No retainers. No ambiguity. Here's what it costs.
+		</h2>
+
+		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+			{services.map((s) => (
+				<a
+					href={s.href}
+					class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group"
+				>
+					<h3 class="font-serif font-normal text-[1.3rem] mb-2 text-fg group-hover:text-accent transition-colors">
+						{s.name}
+					</h3>
+					<p class="font-mono text-[1rem] text-fg mb-1">{s.price}</p>
+					<p class="text-[0.8rem] text-fg-dim mb-4">{s.meta}</p>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">{s.blurb}</p>
+					<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
+						Learn more &rarr;
+					</span>
+				</a>
+			))}
 		</div>
 	</section>
 
@@ -173,51 +186,28 @@ const jsonLd = [
 			<span class="flex-1 h-px bg-border"></span>
 		</div>
 
-		<div class="space-y-10">
-			<div>
-				<h3 class="font-serif font-normal text-[1.3rem] mb-2">A decade in regulated industries.</h3>
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
-					We've shipped AI products in healthcare, legal tech, fintech, and insurance — sectors where
-					compliance isn't optional and getting it wrong has real consequences. That experience shapes
-					everything we do.
-				</p>
-			</div>
+		<h2 class="font-serif font-normal text-[1.6rem] mb-6 max-sm:text-[1.3rem]">
+			A decade in regulated industries.
+		</h2>
 
-			<div>
-				<h3 class="font-serif font-normal text-[1.3rem] mb-2">Decision-making rigour from aviation.</h3>
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
-					Our founder is a former commercial pilot. The DODAR framework we use — Diagnose, Options,
-					Decide, Action, Review — comes from Crew Resource Management. It means we think before we
-					build, and we build what actually matters.
-				</p>
-			</div>
-
-			<div>
-				<h3 class="font-serif font-normal text-[1.3rem] mb-2">Technical depth, business language.</h3>
-				<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
-					We speak both. Your board gets a clear recommendation. Your dev team gets architecture that
-					works. Nobody gets jargon they don't need.
-				</p>
-			</div>
-		</div>
-	</section>
-
-	<!-- What People Say -->
-	<section class="py-16 border-b border-border">
-		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
-			What people say
-			<span class="flex-1 h-px bg-border"></span>
+		<div class="text-[0.95rem] text-fg-dim leading-[1.8] space-y-4 mb-10">
+			<p>
+				Healthcare, legal, fintech, insurance. Sectors where getting AI wrong has real
+				consequences. That experience is in everything we do.
+			</p>
+			<p>
+				Our founder is a former commercial pilot. Structured thinking, clear decisions,
+				no shortcuts.
+			</p>
 		</div>
 
-		<div class="space-y-6">
-			{testimonials.map((t) => (
+		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+			{homepageTestimonials.map((t) => (
 				<div class="border-l-2 border-accent pl-6 py-1">
 					<p class="font-serif text-[1.1rem] text-fg leading-[1.5] mb-2">
 						&ldquo;{t.quote}&rdquo;
 					</p>
-					<p class="text-[0.9rem]">
-						<span class="text-fg-dim">&mdash; {t.name}, {t.role}</span>
-					</p>
+					<p class="text-[0.9rem] text-fg-dim">&mdash; {t.name}, {t.role}</p>
 				</div>
 			))}
 		</div>
@@ -247,7 +237,7 @@ const jsonLd = [
 		</a>
 	</section>
 
-	<!-- From the Founder -->
+	<!-- From the founder -->
 	<section class="py-16 border-b border-border">
 		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
 			From the founder
@@ -255,35 +245,28 @@ const jsonLd = [
 		</div>
 
 		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-4">
-			Crox was founded by Adam Field — a product leader, former commercial pilot, and builder who's
-			spent a decade shipping products where compliance is mandatory and safety is critical.
+			Crox was founded by Adam Field — a product leader, former commercial pilot, and builder
+			who's spent a decade shipping products where compliance is mandatory and safety is
+			critical.
 		</p>
 		<a href="/about" class="text-[0.95rem] text-accent no-underline hover:text-fg transition-colors">
 			More about Adam and why Crox exists &rarr;
 		</a>
 	</section>
 
-	<!-- Let's Talk -->
+	<!-- Final CTA -->
 	<section class="py-24">
 		<h2 class="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.6rem]">
-			Ready to connect AI to your <em class="italic text-accent">business?</em>
+			Not sure where to <em class="italic text-accent">start?</em>
 		</h2>
 		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
-			Tell us what tools your team uses and we'll show you what's possible in two weeks.
+			Most people aren't. That's what the Readiness Assessment is for.
 		</p>
-		<div class="flex gap-6 items-center max-sm:flex-col max-sm:items-start">
-			<a
-				href="/ai-integration"
-				class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
-			>
-				Start your AI Integration Sprint &rarr;
-			</a>
-			<a
-				href="mailto:adam@crox.io"
-				class="text-[0.95rem] text-fg no-underline border-b border-border pb-px hover:border-accent transition-colors"
-			>
-				adam@crox.io &rarr;
-			</a>
-		</div>
+		<a
+			href="/contact"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Start with a conversation &rarr;
+		</a>
 	</section>
 </Base>

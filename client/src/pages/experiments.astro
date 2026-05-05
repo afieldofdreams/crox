@@ -1,0 +1,271 @@
+---
+import Base from '../layouts/Base.astro';
+import FaqAccordion from '../components/FaqAccordion.tsx';
+
+const faqs = [
+	{
+		q: 'Do we need technical staff to use this?',
+		a: "You need one technical contact who can give us systems access and answer integration questions. We handle the build.",
+	},
+	{
+		q: 'What AI tools does this work with?',
+		a: "Claude, ChatGPT, Microsoft Copilot, Gemini, and most other AI assistants that support the Model Context Protocol. We'll recommend the best fit for your context.",
+	},
+	{
+		q: 'Is our data safe?',
+		a: "Yes. Connections run in your own environment. Your data doesn't pass through our servers. For regulated industries, we configure access controls so AI can only see what it should.",
+	},
+	{
+		q: 'How long does it actually take?',
+		a: 'Four to six weeks end to end. Build is the middle three weeks; week one is scoping, the final week is test and handover.',
+	},
+	{
+		q: "What if it doesn't work?",
+		a: "If we get to week three and it's clear the approach won't work, we tell you and stop. Better to know early than ship something fragile. We've never had this happen, but the door is open.",
+	},
+	{
+		q: 'Do we need to do a Readiness Assessment first?',
+		a: "Not always. If you already know which process you want to tackle and your data is in reasonable shape, you can go straight to Experiments. If you're unsure, Readiness is the cheaper place to find out.",
+	},
+];
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Service',
+		name: 'AI Experiments',
+		description: 'A four-to-six-week engagement that delivers a working AI-powered version of one high-value process, connected to your real systems with governance built in.',
+		provider: { '@type': 'Organization', name: 'Crox', url: 'https://crox.io' },
+		url: 'https://crox.io/experiments',
+		areaServed: 'GB',
+		offers: {
+			'@type': 'Offer',
+			price: '15000',
+			priceCurrency: 'GBP',
+		},
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map(faq => ({
+			'@type': 'Question',
+			name: faq.q,
+			acceptedAnswer: { '@type': 'Answer', text: faq.a },
+		})),
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+			{ '@type': 'ListItem', position: 2, name: 'Experiments', item: 'https://crox.io/experiments' },
+		],
+	},
+];
+---
+
+<Base
+	title="AI Experiments — One process, connected, working in weeks | Crox"
+	description="A four-to-six-week engagement that delivers a working AI-powered version of one high-value process, connected to your real systems with governance built in. £15,000."
+	canonical="https://crox.io/experiments"
+	jsonLd={jsonLd}
+>
+	<!-- Hero -->
+	<div class="py-24 pb-16 border-b border-border">
+		<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
+		<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
+			AI <em class="italic text-accent">Experiments.</em>
+		</h1>
+		<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
+			One high-value process. AI-powered. Connected to your real systems. Working in weeks.
+		</p>
+		<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
+			<span class="text-fg">£15,000</span>
+			<span class="text-fg-dim">1 technical stakeholder from you</span>
+			<span class="text-fg-dim">4–6 weeks</span>
+		</div>
+		<a
+			href="/contact"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Start with a conversation &rarr;
+		</a>
+	</div>
+
+	<!-- Problem -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			The problem this solves
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="text-[0.95rem] text-fg-dim leading-[1.8] space-y-4">
+			<p>
+				You've seen demos. You've read the case studies. None of them are about your business,
+				your data, or your constraints. You need to know whether AI actually works for the thing
+				you'd actually use it for — and you need to know in weeks, not quarters.
+			</p>
+			<p class="text-fg">
+				A pilot that takes six months to fail is worse than no pilot at all.
+			</p>
+		</div>
+	</section>
+
+	<!-- What you get -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			What you get
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<ul class="space-y-4">
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				A working AI-powered version of one process you choose
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				Connected to your real systems (CRM, accounts, project tools, internal data)
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				Governance and guardrails built in from day one — not bolted on after
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				A written handover covering what was built, how it works, and what it would take to run in production
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				A clear recommendation on whether to take it further
+			</li>
+		</ul>
+	</section>
+
+	<!-- How it works -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			How it works
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="space-y-10">
+			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Week 1</span>
+				<div>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Scope</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						We pick the process together. One that matters and is small enough to ship.
+					</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Weeks 2–4</span>
+				<div>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Build</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						We build it. You give us access and one named technical contact.
+					</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Week 5</span>
+				<div>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Test in your environment</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						You use it. We adjust.
+					</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Week 6</span>
+				<div>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Handover</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						Working tool, written documentation, recommendation on what comes next.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<p class="text-[0.95rem] text-fg-dim leading-[1.7] mt-10 pt-8 border-t border-border">
+			Time from you: roughly one hour a week from your technical contact, plus a few hours
+			across the team during the test week.
+		</p>
+	</section>
+
+	<!-- Who this is for -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Is this for you?
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Right for you if</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You've already decided AI is part of your roadmap and want to prove it works
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You can name one process where AI would clearly help if it could plug into your real data
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You have at least one technical stakeholder who can give us systems access
+					</li>
+				</ul>
+			</div>
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Not right if</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						You haven't done a Readiness Assessment and don't know what your risk exposure looks like
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						You want a generic chatbot disconnected from your actual business
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Proof -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Proof
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="border-l-2 border-accent pl-6 py-1">
+			<p class="font-serif text-[1.3rem] text-fg leading-[1.5] mb-3">
+				&ldquo;A man of many talents who can focus on the job in hand with precision and get results.&rdquo;
+			</p>
+			<p class="text-[0.9rem] text-fg-dim">&mdash; Sam Smith, Design Lead</p>
+		</div>
+	</section>
+
+	<!-- FAQ -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Frequently asked questions
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<FaqAccordion faqs={faqs} client:load />
+	</section>
+
+	<!-- CTA -->
+	<section class="py-24">
+		<h2 class="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.6rem]">
+			Ready to find out if it actually <em class="italic text-accent">works?</em>
+		</h2>
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
+			Tell us the process. We'll tell you whether an Experiment is the right shape for it.
+		</p>
+		<a
+			href="/contact"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Start with a conversation &rarr;
+		</a>
+	</section>
+</Base>

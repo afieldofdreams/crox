@@ -8,6 +8,9 @@ export default defineConfig({
     react(),
     sitemap(),
   ],
+  redirects: {
+    '/ai-integration': '/experiments',
+  },
   build: {
     format: 'directory',
   },
