@@ -29,6 +29,16 @@ const baseUrl = 'https://crox.io';
 const canonicalUrl = `${baseUrl}/insights/${slug}`;
 const dateISO = post.dateISO || '2026-03-15';
 
+const sortedByDate = [...blogPosts].sort((a, b) =>
+	(b.dateISO || '').localeCompare(a.dateISO || '')
+);
+const currentIdx = sortedByDate.findIndex((p) => p.slug === slug);
+const newerPost = currentIdx > 0 ? sortedByDate[currentIdx - 1] : null;
+const olderPost =
+	currentIdx >= 0 && currentIdx < sortedByDate.length - 1
+		? sortedByDate[currentIdx + 1]
+		: null;
+
 const articleSchema = {
 	'@context': 'https://schema.org',
 	'@type': 'Article',
@@ -147,21 +157,40 @@ const PostContent = postComponents[slug];
 			</a>
 		</div>
 
-		<!-- More from Insights -->
-		<div class="border-t border-border pt-12">
-			<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
-				More from Insights
-				<span class="flex-1 h-px bg-border"></span>
-			</div>
-			<p class="text-[0.95rem] text-fg-dim">
-				Explore more insights and guides.
-			</p>
-			<a
-				href="/insights"
-				class="inline-block mt-4 font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg border-b border-border pb-px hover:border-accent transition-colors"
-			>
-				View All Insights
-			</a>
-		</div>
+		<!-- Previous / Next -->
+		{(olderPost || newerPost) && (
+			<nav aria-label="Article navigation" class="border-t border-border pt-12">
+				<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+					{olderPost ? (
+						<a
+							href={`/insights/${olderPost.slug}`}
+							class="block bg-surface border border-border p-6 transition-colors hover:border-accent no-underline group"
+						>
+							<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-3">
+								&larr; Previous
+							</div>
+							<h3 class="font-serif font-normal text-[1.2rem] text-fg leading-[1.3] group-hover:text-accent transition-colors">
+								{olderPost.title}
+							</h3>
+						</a>
+					) : (
+						<span class="hidden sm:block" aria-hidden="true"></span>
+					)}
+					{newerPost && (
+						<a
+							href={`/insights/${newerPost.slug}`}
+							class="block bg-surface border border-border p-6 transition-colors hover:border-accent no-underline group text-right"
+						>
+							<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-3">
+								Next &rarr;
+							</div>
+							<h3 class="font-serif font-normal text-[1.2rem] text-fg leading-[1.3] group-hover:text-accent transition-colors">
+								{newerPost.title}
+							</h3>
+						</a>
+					)}
+				</div>
+			</nav>
+		)}
 	</article>
 </Base>
