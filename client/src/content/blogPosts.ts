@@ -12,6 +12,30 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'second-brain-typed-entities',
+    title: 'Why Fibery, Not Obsidian, for My Second Brain',
+    subtitle: 'Notes on why typed entities beat flat files once the goal is thinking, not just capture.',
+    date: 'May 2026',
+    dateISO: '2026-05-11',
+    readTime: '4 min read',
+    description:
+      'Obsidian thinks in notes. Fibery thinks in typed entities. Why that distinction matters once your second brain has to do real work — and once you want an AI co-pilot to read from it.',
+    keywords: ['fibery vs obsidian', 'second brain', 'personal knowledge management', 'pkm', 'note-taking apps', 'typed entities', 'knowledge graph', 'ai second brain'],
+    tags: ['Essay', 'Knowledge Management', 'Tools', 'AI Workflow'],
+  },
+  {
+    slug: 'ai-vendor-dependency-risk',
+    title: 'Your AI Vendor\'s Bad Day Is Your Regulatory Exposure',
+    subtitle: 'On platform dependency risk in regulated AI products.',
+    date: 'March 2026',
+    dateISO: '2026-03-31',
+    readTime: '5 min read',
+    description:
+      'When Anthropic exposed 512,000 lines of internal source via a public npm package, no customer data leaked — but for teams building regulated AI products, the incident reveals the risk structure they\'re standing in.',
+    keywords: ['ai vendor risk', 'platform dependency', 'regulated ai', 'ai compliance', 'healthcare ai', 'ai supply chain risk', 'anthropic leak', 'ai vendor liability'],
+    tags: ['Regulated AI', 'Vendor Risk', 'Compliance', 'Platform Dependency'],
+  },
+  {
     slug: 'static-controls-live-models',
     title: 'Static Controls, Live Models',
     subtitle: 'A briefing for boards and exec teams adopting AI in regulated industries. Free to read. No email gate. Free to forward.',
