@@ -32,6 +32,8 @@ Founded by Adam Field. 10+ years building and deploying machine learning systems
 
 ## Blog Posts
 
+- Why Fibery, Not Obsidian, for My Second Brain: https://crox.io/insights/second-brain-typed-entities
+- Your AI Vendor's Bad Day Is Your Regulatory Exposure: https://crox.io/insights/ai-vendor-dependency-risk
 - How to Connect AI to Your Business Tools Without Writing Code: https://crox.io/insights/connect-ai-to-business-tools
 - Why Your AI Assistant Can't See Your CRM (And How to Fix It): https://crox.io/insights/why-ai-cant-see-your-crm
 - AI for Accounting Firms: What's Actually Possible in 2026: https://crox.io/insights/ai-for-accounting-firms

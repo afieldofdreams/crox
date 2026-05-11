@@ -9,6 +9,8 @@ import { AiLegalPost } from '../../views/blog/AiLegalPost';
 import { DodarBenchmarkPost } from '../../views/blog/DodarBenchmarkPost';
 import { DodarBenchmarkFailurePost } from '../../views/blog/DodarBenchmarkFailurePost';
 import { StaticControlsLiveModelsBriefing } from '../../views/blog/StaticControlsLiveModelsBriefing';
+import { AiVendorDependencyRiskPost } from '../../views/blog/AiVendorDependencyRiskPost';
+import { SecondBrainTypedEntitiesPost } from '../../views/blog/SecondBrainTypedEntitiesPost';
 
 export function getStaticPaths() {
 	return blogPosts.map((post) => ({
@@ -70,6 +72,8 @@ const postComponents: Record<string, any> = {
 	'dodar-structured-reasoning-benchmark': DodarBenchmarkPost,
 	'dodar-reasoning-structure-failure': DodarBenchmarkFailurePost,
 	'static-controls-live-models': StaticControlsLiveModelsBriefing,
+	'ai-vendor-dependency-risk': AiVendorDependencyRiskPost,
+	'second-brain-typed-entities': SecondBrainTypedEntitiesPost,
 };
 
 const PostContent = postComponents[slug];
