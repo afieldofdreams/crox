@@ -35,24 +35,68 @@ const jsonLd = [
 >
 	<!-- Hero -->
 	<div class="py-24 pb-16 border-b border-border">
-		<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
-		<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
-			AI <em class="italic text-accent">Education.</em>
-		</h1>
-		<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
-			Practical training for the people who will actually use AI day to day.
-		</p>
-		<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
-			<span class="text-fg">£3,500</span>
-			<span class="text-fg-dim">Your whole team</span>
-			<span class="text-fg-dim">Half or full day</span>
+		<div class="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-start">
+			<div>
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
+				<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
+					AI <em class="italic text-accent">Education.</em>
+				</h1>
+				<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
+					Practical training for the people who will actually use AI day to day.
+				</p>
+				<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
+					<span class="text-fg">£3,500</span>
+					<span class="text-fg-dim">Your whole team</span>
+					<span class="text-fg-dim">Half or full day</span>
+				</div>
+				<a
+					href="/contact"
+					class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+				>
+					Start with a conversation &rarr;
+				</a>
+			</div>
+			<div class="hidden md:block mt-2 border border-border bg-surface overflow-hidden">
+				<svg viewBox="0 0 300 220" style="width: 100%; height: auto;" preserveAspectRatio="xMidYMid meet">
+				  <defs>
+				    <pattern id="e-stripes" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(-30)">
+				      <rect x="0" y="0" width="5" height="10" fill="#332e2b"/>
+				    </pattern>
+				  </defs>
+				  <rect x="0" y="0" width="300" height="220" fill="url(#e-stripes)" opacity="0.18"/>
+				  <g transform="translate(90, 110)">
+				    <circle cx="0" cy="0" r="75" fill="#1a1716" stroke="#e07070" stroke-width="4"/>
+				    <text x="0" y="-52" font-family="DM Mono, monospace" font-size="14" font-weight="500" fill="#e07070" text-anchor="middle">N</text>
+				    <text x="55" y="5" font-family="DM Mono, monospace" font-size="10" fill="#d0cbc5" text-anchor="middle">E</text>
+				    <text x="0" y="62" font-family="DM Mono, monospace" font-size="10" fill="#d0cbc5" text-anchor="middle">S</text>
+				    <text x="-55" y="5" font-family="DM Mono, monospace" font-size="10" fill="#d0cbc5" text-anchor="middle">W</text>
+				    <g stroke="#5a5550" stroke-width="1">
+				      <line x1="0" y1="-75" x2="0" y2="-68"/>
+				      <line x1="53" y1="-53" x2="48" y2="-48"/>
+				      <line x1="75" y1="0" x2="68" y2="0"/>
+				      <line x1="53" y1="53" x2="48" y2="48"/>
+				      <line x1="0" y1="75" x2="0" y2="68"/>
+				      <line x1="-53" y1="53" x2="-48" y2="48"/>
+				      <line x1="-75" y1="0" x2="-68" y2="0"/>
+				      <line x1="-53" y1="-53" x2="-48" y2="-48"/>
+				    </g>
+				    <g fill="#e07070">
+				      <polygon points="0,-22 -3,-8 -22,-3 -22,3 -3,3 0,18 3,3 22,3 22,-3 -3,-8 3,-8"/>
+				    </g>
+				    <line x1="0" y1="0" x2="35" y2="-35" stroke="#c4472e" stroke-width="3" opacity="0.6" stroke-dasharray="3,3"/>
+				  </g>
+				  <text x="200" y="80" font-family="DM Mono, monospace" font-size="52" font-weight="500" fill="#e8e4de" letter-spacing="2">045°</text>
+				  <g font-family="DM Mono, monospace" font-size="9" letter-spacing="1.5">
+				    <text x="200" y="115" fill="#e07070">CURRICULUM</text>
+				    <line x1="200" y1="122" x2="285" y2="122" stroke="#e07070" stroke-width="1"/>
+				    <text x="200" y="140" fill="#d0cbc5">▸ FUNDAMENTALS</text>
+				    <text x="200" y="158" fill="#d0cbc5">▸ APPLIED USE</text>
+				    <text x="200" y="176" fill="#d0cbc5">▸ GUARDRAILS</text>
+				    <text x="200" y="194" fill="#d0cbc5">▸ ASSESSMENT</text>
+				  </g>
+				</svg>
+			</div>
 		</div>
-		<a
-			href="/contact"
-			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
-		>
-			Start with a conversation &rarr;
-		</a>
 	</div>
 
 	<!-- Problem -->
