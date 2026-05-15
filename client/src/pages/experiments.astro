@@ -72,7 +72,7 @@ const jsonLd = [
 >
 	<!-- Hero -->
 	<div class="py-24 pb-16 border-b border-border">
-		<div class="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-start">
+		<div class="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-stretch">
 			<div>
 				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
 				<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
@@ -93,8 +93,8 @@ const jsonLd = [
 					Start with a conversation &rarr;
 				</a>
 			</div>
-			<div class="hidden md:block mt-2 border border-border bg-surface overflow-hidden">
-				<svg viewBox="0 0 300 220" style="width: 100%; height: auto;" preserveAspectRatio="xMidYMid meet">
+			<div class="hidden md:block relative bg-surface border border-border overflow-hidden">
+				<svg viewBox="0 0 300 220" style="position: absolute; inset: 0; width: 100%; height: 100%;" preserveAspectRatio="xMidYMid slice">
 				  <circle cx="220" cy="60" r="90" fill="#e07070" opacity="0.10"/>
 				  <g transform="translate(100, 130)">
 				    <path d="M -80,0 A 80,80 0 0 1 80,0" fill="none" stroke="#e07070" stroke-width="4"/>
