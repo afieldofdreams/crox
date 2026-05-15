@@ -3,32 +3,44 @@ import Base from '../layouts/Base.astro';
 
 const services = [
 	{
+		num: '01',
 		name: 'Readiness',
+		duration: '2–3 WEEKS',
 		price: '£5,000',
-		meta: '1–2 people from you · 2–3 weeks',
 		blurb: 'Know exactly where you stand before you spend anything. Data, processes, team, risk.',
+		bullets: ['Written readiness report', 'Risk register', 'Prioritised next steps'],
 		href: '/readiness',
+		icon: `<svg viewBox="0 0 36 36" fill="none" stroke="#e07070" stroke-width="2"><rect x="5" y="3" width="18" height="24" rx="1"/><polyline points="9,13 12,16 17,10"/><line x1="20" y1="13" x2="26" y2="13"/><polyline points="9,20 12,23 17,17"/><line x1="20" y1="20" x2="26" y2="20"/></svg>`,
 	},
 	{
+		num: '02',
 		name: 'Experiments',
+		duration: '4–6 WEEKS',
 		price: '£15,000',
-		meta: '1 technical stakeholder · 4–6 weeks',
-		blurb: 'We take one high-value process and build an AI version of it. Connected to your real systems. Governance built in.',
+		blurb: 'One high-value process, AI-powered, connected to your real systems.',
+		bullets: ['Working AI prototype', 'Connected to real systems', 'Governance built in'],
 		href: '/experiments',
+		icon: `<svg viewBox="0 0 36 36" fill="none" stroke="#e07070" stroke-width="2"><path d="M 14,6 L 14,14 L 6,30 L 30,30 L 22,14 L 22,6 Z"/><line x1="14" y1="6" x2="22" y2="6"/><circle cx="13" cy="22" r="1.5" fill="#e07070"/><circle cx="19" cy="25" r="1.2" fill="#e07070"/><circle cx="16" cy="19" r="1" fill="#e07070"/></svg>`,
 	},
 	{
+		num: '03',
 		name: 'Education',
+		duration: 'HALF / FULL DAY',
 		price: '£3,500',
-		meta: 'Your whole team · Half or full day',
-		blurb: 'Practical training for the people who will use AI day to day. How it works, where it fails, how to use it safely.',
+		blurb: 'Practical training for the people who will use AI day to day.',
+		bullets: ['Hands-on, not slideware', 'Sector-specific context', 'Safe usage guidelines'],
 		href: '/education',
+		icon: `<svg viewBox="0 0 36 36" fill="none" stroke="#e07070" stroke-width="2"><path d="M 4,14 L 18,8 L 32,14 L 18,20 Z"/><path d="M 9,17 L 9,24 Q 18,30 27,24 L 27,17"/><line x1="32" y1="14" x2="32" y2="20"/></svg>`,
 	},
 	{
+		num: '04',
 		name: 'Board / Exec',
+		duration: 'PROGRAMME',
 		price: 'From £2,500',
-		meta: 'Board, exec team, or leadership · Single session or programme',
-		blurb: 'Briefings, working sessions, and ongoing guidance for the people deciding what AI does in your organisation.',
+		blurb: 'Briefings and working sessions for the people deciding what AI does in your organisation.',
+		bullets: ['Board-tailored briefings', 'Working sessions', 'Ongoing programme option'],
 		href: '/board-exec',
+		icon: `<svg viewBox="0 0 36 36" fill="none" stroke="#e07070" stroke-width="2"><path d="M 18,4 L 30,8 L 30,18 Q 30,28 18,32 Q 6,28 6,18 L 6,8 Z"/><polyline points="12,18 16,22 24,14"/></svg>`,
 	},
 ];
 
@@ -116,8 +128,8 @@ const jsonLd = [
 			</p>
 		</div>
 
-		<div class="border-l-2 border-accent pl-6 py-1">
-			<p class="font-serif text-[1.1rem] text-fg leading-[1.5] mb-2">
+		<div class="border-l-[3px] border-accent pl-6 py-1">
+			<p class="font-serif text-[1.4rem] text-fg leading-[1.4] mb-2">
 				&ldquo;He was amazingly fast and uncomplicated in delivering an extensive, clear,
 				and detailed report.&rdquo;
 			</p>
@@ -159,21 +171,28 @@ const jsonLd = [
 			No retainers. No ambiguity. Here's what it costs.
 		</h2>
 
-		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+		<div class="grid grid-cols-2 gap-4 max-sm:grid-cols-1">
 			{services.map((s) => (
 				<a
 					href={s.href}
-					class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group"
+					class="flex flex-col bg-surface border border-border min-h-[280px] transition-colors hover:border-accent no-underline group"
 				>
-					<h3 class="font-serif font-normal text-[1.3rem] mb-2 text-fg group-hover:text-accent transition-colors">
-						{s.name}
-					</h3>
-					<p class="font-mono text-[1rem] text-fg mb-1">{s.price}</p>
-					<p class="text-[0.8rem] text-fg-dim mb-4">{s.meta}</p>
-					<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">{s.blurb}</p>
-					<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
-						Learn more &rarr;
-					</span>
+					<div class="flex justify-between items-start px-5 pt-5">
+						<span class="font-mono text-[0.65rem] tracking-[0.25em] text-accent">{s.num} · {s.name.toUpperCase()}</span>
+						<span class="font-mono text-[0.55rem] tracking-[0.2em] uppercase text-fg-dim border border-border px-2 py-1">{s.duration}</span>
+					</div>
+					<div class="px-5 pt-4" set:html={s.icon} />
+					<h3 class="font-mono font-medium text-[1rem] tracking-[0.05em] uppercase px-5 pt-4 text-fg group-hover:text-accent transition-colors">{s.name}</h3>
+					<p class="text-[0.75rem] leading-[1.6] text-fg-dim px-5 pt-2 flex-1">{s.blurb}</p>
+					<ul class="px-5 pt-4 space-y-1">
+						{s.bullets.map((b) => (
+							<li class="text-[0.7rem] text-fg-dim leading-[1.5] pl-4 relative before:content-['▸'] before:text-accent before:absolute before:left-0">{b}</li>
+						))}
+					</ul>
+					<div class="flex justify-between items-center px-5 py-4 mt-4 border-t border-border">
+						<span class="font-mono text-[0.65rem] tracking-[0.2em] uppercase text-accent">{s.price}</span>
+						<span class="text-fg text-[0.8rem]">&rarr;</span>
+					</div>
 				</a>
 			))}
 		</div>
@@ -203,8 +222,8 @@ const jsonLd = [
 
 		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
 			{homepageTestimonials.map((t) => (
-				<div class="border-l-2 border-accent pl-6 py-1">
-					<p class="font-serif text-[1.1rem] text-fg leading-[1.5] mb-2">
+				<div class="border-l-[3px] border-accent pl-6 py-1">
+					<p class="font-serif text-[1.4rem] text-fg leading-[1.4] mb-2">
 						&ldquo;{t.quote}&rdquo;
 					</p>
 					<p class="text-[0.9rem] text-fg-dim">&mdash; {t.name}, {t.role}</p>
