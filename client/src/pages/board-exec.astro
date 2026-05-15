@@ -30,25 +30,56 @@ const jsonLd = [
 >
 	<!-- Hero -->
 	<div class="py-24 pb-16 border-b border-border">
-		<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
-		<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
-			Board / <em class="italic text-accent">Exec.</em>
-		</h1>
-		<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
-			Briefings, working sessions, and ongoing guidance for the people deciding what AI does
-			in your organisation.
-		</p>
-		<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
-			<span class="text-fg">From £2,500</span>
-			<span class="text-fg-dim">Board, exec team, or leadership group</span>
-			<span class="text-fg-dim">Single session or programme</span>
+		<div class="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-start">
+			<div>
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
+				<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
+					Board / <em class="italic text-accent">Exec.</em>
+				</h1>
+				<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
+					Briefings, working sessions, and ongoing guidance for the people deciding what AI does
+					in your organisation.
+				</p>
+				<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
+					<span class="text-fg">From £2,500</span>
+					<span class="text-fg-dim">Board, exec team, or leadership group</span>
+					<span class="text-fg-dim">Single session or programme</span>
+				</div>
+				<a
+					href="/contact"
+					class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+				>
+					Start with a conversation &rarr;
+				</a>
+			</div>
+			<div class="hidden md:block mt-2 border border-border bg-surface overflow-hidden">
+				<svg viewBox="0 0 300 220" style="width: 100%; height: auto;" preserveAspectRatio="xMidYMid meet">
+				  <rect x="200" y="-10" width="120" height="60" fill="#c4472e" transform="rotate(4, 260, 20)"/>
+				  <text x="260" y="28" font-family="DM Mono, monospace" font-size="11" font-weight="500" fill="#12100e" text-anchor="middle" letter-spacing="2" transform="rotate(4, 260, 28)">CLASSIFIED</text>
+				  <g font-family="DM Mono, monospace" font-size="8" letter-spacing="1">
+				    <rect x="20" y="70" width="80" height="26" fill="none" stroke="#e07070" stroke-width="2.5"/>
+				    <text x="60" y="87" fill="#e07070" text-anchor="middle" font-weight="500">DECISION</text>
+				    <line x1="100" y1="83" x2="140" y2="50" stroke="#e07070" stroke-width="2"/>
+				    <line x1="100" y1="83" x2="140" y2="120" stroke="#c4472e" stroke-width="2"/>
+				    <line x1="100" y1="83" x2="140" y2="185" stroke="#9d6b53" stroke-width="2"/>
+				    <rect x="140" y="38" width="80" height="24" fill="#1a1716" stroke="#e07070" stroke-width="2"/>
+				    <text x="180" y="53" fill="#d0cbc5" text-anchor="middle">A · INVEST</text>
+				    <text x="225" y="53" fill="#e07070" font-weight="500">↗</text>
+				    <rect x="140" y="108" width="80" height="24" fill="#1a1716" stroke="#c4472e" stroke-width="2"/>
+				    <text x="180" y="123" fill="#d0cbc5" text-anchor="middle">B · DEFER</text>
+				    <text x="225" y="123" fill="#c4472e">→</text>
+				    <rect x="140" y="173" width="80" height="24" fill="#1a1716" stroke="#5a5550" stroke-width="2" stroke-dasharray="3,2"/>
+				    <text x="180" y="188" fill="#d0cbc5" text-anchor="middle" opacity="0.6">C · REJECT</text>
+				    <text x="225" y="188" fill="#5a5550">↘</text>
+				  </g>
+				  <text x="20" y="200" font-family="DM Mono, monospace" font-size="8" fill="#5a5550" letter-spacing="2">DOC.B-04 · BRIEF · 05.26</text>
+				  <g stroke="#e07070" stroke-width="1.5" fill="none">
+				    <line x1="10" y1="10" x2="25" y2="10"/>
+				    <line x1="10" y1="10" x2="10" y2="25"/>
+				  </g>
+				</svg>
+			</div>
 		</div>
-		<a
-			href="/contact"
-			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
-		>
-			Start with a conversation &rarr;
-		</a>
 	</div>
 
 	<!-- Problem -->

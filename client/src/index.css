@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	/* Illustration palette */
+	--color-rust: #c4472e;
+	--color-clay: #9d6b53;
+	--color-slate: #5a5550;
+	--color-ash: #3d3936;
+	--color-cream: #d4cfc5;
+
+	/* Data viz colors */
+	--viz-1: #e07070;
+	--viz-2: #c4472e;
+	--viz-3: #9d6b53;
+	--viz-4: #5a5550;
+	--viz-5: #d0cbc5;
+
+	/* Typography vars */
+	--font-mono: 'DM Mono', 'Courier New', monospace;
+	--font-serif: 'Instrument Serif', Georgia, serif;
+}
+
 html {
 	font-size: 18px;
 }
@@ -50,6 +70,63 @@ body::before {
 
 @media (max-width: 640px) {
 	html { font-size: 16px; }
+}
+
+/* Visual language utilities */
+.diagonal-divide {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.geo-block {
+  background: #1a1716;
+  border: 2px solid #e07070;
+  transform: rotate(-2deg);
+}
+
+.halftone-bg {
+  background-image: radial-gradient(circle, #332e2b 1px, transparent 1px);
+  background-size: 8px 8px;
+  opacity: 0.3;
+}
+
+.diagonal-lines {
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, #332e2b 10px, #332e2b 11px);
+  opacity: 0.15;
+}
+
+.chart-bar {
+  background: #e07070;
+  border: 1px solid #332e2b;
+  transition: all 200ms;
+}
+.chart-bar:hover {
+  background: #c4472e;
+  transform: translateY(-2px);
+}
+
+.corner-accent {
+  position: relative;
+}
+.corner-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  border-top: 3px solid #e07070;
+  border-right: 3px solid #e07070;
+}
+
+.icon {
+  width: 1.2em;
+  height: 1.2em;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  vertical-align: middle;
 }
 
 /* Mobile hamburger → X animation */
