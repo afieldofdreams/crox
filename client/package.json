@@ -13,6 +13,7 @@
     "@astrojs/react": "^5.0.1",
     "@astrojs/sitemap": "^3.7.1",
     "astro": "^6.0.6",
+    "posthog-js": "^1.373.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   ASSESSMENT_QUESTIONS,
   BANDS,
@@ -8,6 +8,16 @@ import {
 } from '../lib/assessment';
 
 type Step = 'questions' | 'result' | 'submitting' | 'done' | 'error';
+
+interface PostHogLike {
+  capture: (event: string, props?: Record<string, unknown>) => void;
+  identify: (id: string, props?: Record<string, unknown>) => void;
+}
+
+function ph(): PostHogLike | null {
+  if (typeof window === 'undefined') return null;
+  return (window as unknown as { posthog?: PostHogLike }).posthog ?? null;
+}
 
 interface SubmitPayload {
   name: string;
@@ -29,6 +39,7 @@ export default function AssessmentQuiz() {
   const [company, setCompany] = useState('');
   const [website, setWebsite] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const startedTracked = useRef(false);
 
   const score = useMemo(() => calculateScore(answers), [answers]);
   const band = useMemo(() => scoreToBand(score), [score]);
@@ -38,6 +49,10 @@ export default function AssessmentQuiz() {
   const allAnswered = ASSESSMENT_QUESTIONS.every((q) => typeof answers[q.id] === 'number');
 
   function selectAnswer(qid: string, optionIdx: number) {
+    if (!startedTracked.current) {
+      startedTracked.current = true;
+      ph()?.capture('assessment_started');
+    }
     const next = { ...answers, [qid]: optionIdx };
     setAnswers(next);
     if (questionIdx < total - 1) {
@@ -90,6 +105,20 @@ export default function AssessmentQuiz() {
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || `Submit failed (${res.status})`);
+      }
+      const posthog = ph();
+      if (posthog) {
+        posthog.identify(payload.email, {
+          name: payload.name,
+          company: payload.company || undefined,
+          email: payload.email,
+        });
+        posthog.capture('assessment_completed', {
+          score: payload.score,
+          max_score: MAX_SCORE,
+          band: payload.band,
+          has_company: Boolean(payload.company),
+        });
       }
       setStep('done');
     } catch (err) {

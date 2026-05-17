@@ -53,3 +53,10 @@ services:
   - key: ASSESSMENT_FROM_EMAIL
     scope: RUN_TIME
     value: "Crox Assessment <onboarding@resend.dev>"
+  - key: PUBLIC_POSTHOG_KEY
+    scope: BUILD_TIME
+    type: SECRET
+    value: "REPLACE_ME"
+  - key: PUBLIC_POSTHOG_HOST
+    scope: BUILD_TIME
+    value: "https://eu.i.posthog.com"
