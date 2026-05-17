@@ -48,6 +48,7 @@ const navLinks = [
   { to: '/insights', label: 'Insights' },
   { to: '/learn', label: 'Learn' },
   { to: '/servers', label: 'Servers' },
+  { to: '/assessment', label: 'Scorecard' },
   { to: '/contact', label: 'Contact' },
 ];
 ---
@@ -184,6 +185,16 @@ const navLinks = [
             ]}
           >
             Servers
+          </a>
+          <a
+            href="/assessment"
+            aria-current={isActive('/assessment') ? 'page' : undefined}
+            class:list={[
+              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
+              isActive('/assessment') ? 'text-fg' : 'text-fg-dim hover:text-fg',
+            ]}
+          >
+            Scorecard
           </a>
           <a
             href="/contact"

@@ -15,14 +15,41 @@ ingress:
         prefix: /
 name: crox
 region: lon
-static_sites:
-- build_command: cd client && npm install && npm run build
+services:
+- name: crox
   environment_slug: node-js
   github:
     branch: main
     deploy_on_push: true
     repo: afieldofdreams/crox
-  name: crox
-  output_dir: client/dist
   source_dir: /
-  catchall_document: index.html
+  build_command: cd client && npm install && npm run build
+  run_command: node client/dist/server/entry.mjs
+  http_port: 4321
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  envs:
+  - key: HOST
+    scope: RUN_TIME
+    value: "0.0.0.0"
+  - key: PORT
+    scope: RUN_TIME
+    value: "4321"
+  - key: FIBERY_HOST
+    scope: RUN_TIME
+    type: SECRET
+    value: "REPLACE_ME"
+  - key: FIBERY_TOKEN
+    scope: RUN_TIME
+    type: SECRET
+    value: "REPLACE_ME"
+  - key: RESEND_API_KEY
+    scope: RUN_TIME
+    type: SECRET
+    value: "REPLACE_ME"
+  - key: ASSESSMENT_TO_EMAIL
+    scope: RUN_TIME
+    value: "adam@crox.io"
+  - key: ASSESSMENT_FROM_EMAIL
+    scope: RUN_TIME
+    value: "Crox Assessment <onboarding@resend.dev>"

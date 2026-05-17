@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import AssessmentQuiz from '../components/AssessmentQuiz.tsx';
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Quiz',
+		name: 'AI Readiness Scorecard',
+		about: { '@type': 'Thing', name: 'AI adoption readiness' },
+		educationalUse: 'Self-assessment',
+		provider: { '@type': 'Organization', name: 'Crox', url: 'https://crox.io' },
+		url: 'https://crox.io/assessment',
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+			{ '@type': 'ListItem', position: 2, name: 'Assessment', item: 'https://crox.io/assessment' },
+		],
+	},
+];
+---
+
+<Base
+	title="AI Readiness Scorecard — Five questions, an honest read | Crox"
+	description="A five-question self-assessment of where your organisation actually stands on AI: data, processes, team, governance, and use-case clarity. Free. Two minutes."
+	canonical="https://crox.io/assessment"
+	jsonLd={jsonLd}
+>
+	<!-- Hero -->
+	<div class="py-24 pb-16 border-b border-border">
+		<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Scorecard</p>
+		<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
+			AI Readiness <em class="italic text-accent">Scorecard.</em>
+		</h1>
+		<p class="text-[1rem] text-fg-dim leading-[1.8] mb-6">
+			Five questions. Honest answers. A read on where you actually stand before you spend
+			anything on AI.
+		</p>
+		<div class="flex flex-wrap gap-x-8 gap-y-3 font-mono text-[0.85rem]">
+			<span class="text-fg">5 questions</span>
+			<span class="text-fg-dim">~2 minutes</span>
+			<span class="text-fg-dim">No newsletter sign-up</span>
+		</div>
+	</div>
+
+	<!-- Quiz -->
+	<section class="py-16 border-b border-border">
+		<AssessmentQuiz client:load />
+	</section>
+
+	<!-- What this is / isn't -->
+	<section class="py-16">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			What this is
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">It is</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						A two-minute prompt to think about five things most teams skip
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						A way to start a conversation that isn't "we should do something with AI"
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						The shape of the conversation we'd have on a 30-minute call
+					</li>
+				</ul>
+			</div>
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">It isn't</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						The paid <a href="/readiness" class="text-accent no-underline hover:text-fg">Readiness Assessment</a> — that's three weeks and a written report
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						A psychometric instrument, a benchmark, or a certification
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						A funnel into a CRM. Adam reads every submission himself.
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+</Base>

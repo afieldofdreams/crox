@@ -25,6 +25,7 @@ Founded by Adam Field. 10+ years building and deploying machine learning systems
 
 - Home: https://crox.io/
 - About: https://crox.io/about
+- AI Readiness Scorecard (free, 5 questions): https://crox.io/assessment
 - AI Integration: https://crox.io/ai-integration
 - MCP Server Directory: https://crox.io/servers
 - Blog: https://crox.io/insights
