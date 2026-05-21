@@ -1,161 +1,77 @@
-# Flight Deck Widget #4 — Cost dashboard
+# Flight Deck Widget #4 (Cost) — how crox-chat ties in
 
-**This spec lives in `crox-chat` for now because the cost concerns that
-motivated it surfaced here. When picked up, move to
-`flight-deck/spec/widget-4-cost.md`.**
+Widget #4 **already exists** in flight-deck. As of 2026-05-21 there's:
 
-## What it does
+- `dashboard/db/migrations/003_provider_cost.sql` — `provider_cost_daily`
+  table keyed by (provider × model × day) with input/output tokens and
+  USD cost.
+- `dashboard/lib/fetchers/anthropic-cost.ts` — pulls
+  `/v1/organizations/cost_report` and `/v1/organizations/usage_report/messages`
+  via an Anthropic admin key.
+- `dashboard/lib/fetchers/openai-cost.ts` — same shape for OpenAI.
+- `dashboard/lib/fetchers/{digitalocean,cloudflare,coolify}.ts` — infra
+  cost + state.
+- `dashboard/components/widgets/cost.tsx` — month-to-date cost widget
+  shown on the dashboard root.
+- `dashboard/app/api/internal/sync-provider-costs/route.ts` — nightly
+  cron entry-point.
 
-A widget on `flight-deck.crox.io/` showing daily spend across every paid
-provider Crox uses, broken down by:
+**This supersedes the spec that used to live here.** What follows is
+just how crox-chat appears in that dashboard.
 
-- **Provider** (Anthropic, OpenAI, DigitalOcean, Cloudflare, Resend,
-  Stripe fees, etc.)
-- **App** (which Crox app burned the spend — crox-chat, canary, ...)
-- **Day** for the last 30 days
+## What crox-chat needs to do
 
-The MVP is just the chart + a "this month so far" total. Drill-downs
-come later.
+Nothing new in code. The widget pulls from the **provider** side
+(Anthropic's cost API), not from crox-chat's own logs. So crox-chat
+just needs:
 
-## Why a widget, not per-app dashboards
+1. **Its own dedicated Anthropic API key.** Mint a new key in the
+   Anthropic console labelled "Crox Chat". Don't share with other
+   Crox projects — so the widget can attribute spend cleanly.
+2. **The admin key for the puller.** Flight-deck's sync job needs
+   `ANTHROPIC_ADMIN_API_KEY` (sk-ant-admin01-...) set. This is an
+   **org-level** key, mint once at console.anthropic.com → Organization
+   → Admin Keys, store in 1Password as "Anthropic — Flight Deck Admin".
+   One key covers reporting for every Crox app's project keys.
+3. **The widget will then show crox-chat's Haiku 4.5 spend** as part of
+   the Anthropic line, broken down by model.
 
-Adam's stated preference (memory: feedback-cost-monitoring): cost
-observability is one of the things flight-deck exists for. Building a
-spend chart inside every Crox app creates drift — different conventions,
-duplicated API calls, missed providers. One canonical place.
+The current widget aggregates by (provider × model), not by app. If you
+want per-app attribution shown separately ("crox-chat", "canary",
+"dodar"), the `provider_cost_daily` schema would need an `app_slug`
+column and the fetcher would need to read the API key label / workspace
+from each cost bucket. That's a small extension to flight-deck —
+out of scope for this delivery, but worth a note in the dashboard
+backlog if app-level attribution becomes useful.
 
-## Architecture
+## What crox-chat does to stay cheap
 
-```
-                  ┌──────────────────────────────────────────┐
-                  │ flight-deck (Next.js + Postgres)         │
-                  │                                          │
-                  │   nightly cron (Coolify scheduled task)  │
-                  │     pulls usage from each provider's API │
-                  │     → upsert into `provider_usage` table │
-                  │                                          │
-                  │   GET /api/widgets/cost  ────► reads     │
-                  │     provider_usage, returns JSON         │
-                  │                                          │
-                  │   <CostWidget />  ◄── fetches /api/...   │
-                  │     Recharts line/stacked-bar            │
-                  └──────────────────────────────────────────┘
-```
+These belong here in the chat backend, not in the cost dashboard:
 
-The reason cost is **pulled** not **pushed**: each provider has a usage
-API that already does the per-day rollup correctly (handles cache hits,
-prorations, refunds). Pushing events from each app means we have to
-replicate that math, and we get it wrong.
+- **Haiku 4.5 default** (`ANTHROPIC_MODEL=claude-haiku-4-5`).
+- **Prompt caching** on the ~3.5k-token system prompt (~10× cheaper
+  input on cache hits).
+- **`DAILY_INPUT_TOKEN_BUDGET=2000000`** — hard refuse new chats once
+  exhausted. ~£1.60/day worst case at Haiku rates.
+- **`max_tokens=1024`** per response — no runaway long outputs.
+- **80-message conversation cap** in the pydantic schema.
 
-## Providers — MVP scope
+The widget tells you "is the trend looking right" over days/weeks. The
+budget tells you "is something on fire right now." Both belong.
 
-| Provider     | API endpoint                                                          | Auth                                | Granularity        |
-|--------------|-----------------------------------------------------------------------|-------------------------------------|--------------------|
-| Anthropic    | `/v1/organizations/usage_report/messages`                             | `x-api-key: <ADMIN_API_KEY>`        | day × model × key  |
-| OpenAI       | `/v1/usage` (admin key)                                               | `Authorization: Bearer <ADMIN_KEY>` | day × model × project |
-| DigitalOcean | `/v2/customers/my/balance` + `/v2/customers/my/billing_history`       | `Authorization: Bearer <DO_TOKEN>`  | invoice/day        |
-| Cloudflare   | GraphQL Analytics (zone-level) — for traffic/bandwidth, free anyway   | `Authorization: Bearer <CF_TOKEN>`  | day                |
-| Resend       | `/emails?` count (paid-tier email sends)                              | `Authorization: Bearer <RESEND>`    | manual rollup      |
-| Stripe       | `/v1/balance_transactions` (Crox's own Stripe revenue, not a cost)    | (skip MVP)                          | —                  |
+## If the trend looks wrong
 
-**Attribution to apps:** Anthropic and OpenAI both bill per **API key**.
-The trick: mint a dedicated key per Crox app (e.g. `crox-chat`,
-`canary`, `dodar`) and label it in the provider dashboard. The usage
-endpoint then surfaces spend keyed by `api_key_id` which the dashboard
-can resolve back to an app via a lookup table.
+Walk back through this list in order:
 
-For DigitalOcean / Cloudflare / Resend, attribution is by app where the
-billing entity has a sensible label; otherwise it's lumped under
-"shared infra."
-
-## Postgres schema
-
-Add to `flight-deck/dashboard/db/migrations/`:
-
-```sql
--- Daily spend rollup, one row per (provider × app × day × cost_type).
--- cost_type = "input_tokens" | "output_tokens" | "cache_write" | "cache_read"
--- | "compute_hours" | "bandwidth_gb" | "email_sends" | "flat" depending on
--- provider. Keep granular so per-token-type cost ratios stay queryable.
-CREATE TABLE provider_usage (
-    id           BIGSERIAL PRIMARY KEY,
-    provider     TEXT NOT NULL,         -- anthropic | openai | digitalocean | ...
-    app_slug     TEXT NOT NULL,         -- crox-chat | canary | shared | ...
-    day          DATE NOT NULL,
-    cost_type    TEXT NOT NULL,
-    units        NUMERIC NOT NULL,      -- raw count (tokens, hours, etc.)
-    cost_gbp     NUMERIC NOT NULL,      -- pre-computed at FX-of-the-day; we don't recompute
-    raw          JSONB,                 -- provider response row for auditability
-    pulled_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE (provider, app_slug, day, cost_type)
-);
-
-CREATE INDEX provider_usage_day_idx ON provider_usage (day DESC);
-CREATE INDEX provider_usage_app_idx ON provider_usage (app_slug);
-```
-
-`UNIQUE` lets the puller use `INSERT … ON CONFLICT … DO UPDATE` to be
-re-run safely.
-
-## Files to add to `flight-deck/dashboard`
-
-```
-dashboard/
-  lib/cost/
-    anthropic.ts       # fetcher: provider-shaped → provider_usage rows
-    openai.ts
-    digitalocean.ts
-    cloudflare.ts
-    rollup.ts          # entry-point: foreach provider → write rows
-  app/api/widgets/cost/route.ts   # GET handler the widget calls
-  app/components/CostWidget.tsx   # Recharts stacked bar by app
-  scripts/pull-costs.ts           # nightly cron entry-point
-  db/migrations/00X_provider_usage.sql
-```
-
-## Cron schedule
-
-Coolify scheduled task on flight-deck, daily at 04:00 UTC (after the
-03:00 UTC Postgres backup):
-
-```
-0 4 * * *  cd /app && node scripts/pull-costs.js
-```
-
-The Anthropic usage report endpoint is ~24h delayed, so a 04:00 UTC pull
-captures yesterday completely. Re-runs are idempotent via the unique
-constraint.
-
-## Env vars (flight-deck)
-
-```
-ANTHROPIC_ADMIN_API_KEY=    # admin key, NOT a project key — different perms
-OPENAI_ADMIN_API_KEY=
-DO_API_TOKEN=               # already set per .env.example
-CF_API_TOKEN=               # already set per .env.example
-RESEND_API_KEY=             # optional MVP
-```
-
-## Out of scope for MVP
-
-- Real-time alerting on budget overruns (the per-app daily caps —
-  e.g. `DAILY_INPUT_TOKEN_BUDGET` on crox-chat — already cover that
-  in the short term)
-- Forecasting / projection
-- Per-conversation drill-down (the per-contact admin timeline already
-  shows individual events)
-
-## Rough effort
-
-Half a day for the chart + Anthropic + DigitalOcean. Other providers
-~1h each. Schema migration is 15min.
-
-## What to do until Widget #4 exists
-
-- Watch the daily Anthropic console (`console.anthropic.com/usage`)
-- The crox-chat `/health` endpoint exposes today's `used_input_tokens`
-- The hard daily budget refuses new chats if exhausted
-
-These three are enough to catch a runaway. Widget #4 is for the
-"is the trend looking right?" question, not the "is something on fire
-right now?" question.
+1. Is `ANTHROPIC_MODEL` still set to `claude-haiku-4-5`? (Easy to
+   accidentally pin to Sonnet/Opus during a debug session.)
+2. Is the cache-creation token count high relative to cache-reads? If
+   yes, the system prompt is being treated as fresh on every request —
+   either prompts/system.md was edited and the cache hasn't reformed,
+   or `cache_control` got removed.
+3. Is conversation length climbing? Check the per-request input tokens
+   in `/health`. If they're 10k+ on first turn, the system prompt grew
+   without anyone noticing.
+4. Is one bad actor burning a lot of requests? Add IP rate-limiting (not
+   currently configured — deliberate trade-off, the daily budget covers
+   the worst case).
