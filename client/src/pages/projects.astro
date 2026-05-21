@@ -1,0 +1,212 @@
+---
+import Base from '../layouts/Base.astro';
+import { blogPosts } from '../content/blogPosts';
+import { learnPosts } from '../content/learnPosts';
+
+// Hand-curated section beyond the blog/learn content: the projects that
+// don't live as a single post — a separate product (Canary), a directory
+// (Servers), an open research artifact (DODAR research site), and the
+// site's flagship board briefing.
+const flagship = blogPosts.find((p) => p.slug === 'static-controls-live-models');
+
+const products = [
+	{
+		name: 'Canary',
+		kind: 'Product',
+		blurb: 'Automated CQC monitoring for the UK care sector. Free email alerts on inspection changes. Pro tier adds AI-powered analysis, multi-area monitoring, and a monthly national brief. A working example of AI applied where the stakes are real.',
+		href: 'https://canary.crox.io',
+		external: true,
+		meta: 'Live at canary.crox.io',
+	},
+	{
+		name: 'MCP Servers Directory',
+		kind: 'Directory',
+		blurb: '150+ integrations between AI assistants and business tools — Xero, HubSpot, Salesforce, Slack, GitHub, more. Categorised and searchable. Useful when someone asks "can I connect AI to [our tool]?"',
+		href: '/servers',
+		external: false,
+		meta: '150+ servers · categorised',
+	},
+];
+
+const research = blogPosts
+	.filter((p) => p.tags.includes('Research') || p.tags.includes('Briefing'))
+	.sort((a, b) => (b.dateISO || '').localeCompare(a.dateISO || ''));
+
+const guides = blogPosts
+	.filter((p) => !p.tags.includes('Research') && !p.tags.includes('Briefing'))
+	.sort((a, b) => (b.dateISO || '').localeCompare(a.dateISO || ''));
+
+const learn = [...learnPosts].sort((a, b) => b.dateISO.localeCompare(a.dateISO));
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'CollectionPage',
+		name: 'Projects — Crox',
+		url: 'https://crox.io/projects',
+		description: 'Research, briefings, products, and writing from Crox.',
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+			{ '@type': 'ListItem', position: 2, name: 'Projects', item: 'https://crox.io/projects' },
+		],
+	},
+];
+---
+
+<Base
+	title="Projects — Research, products, and writing | Crox"
+	description="A working catalogue of Crox projects: the DODAR reasoning benchmark, the Static Controls briefing for boards, Canary (CQC monitoring), the MCP servers directory, and the Learn series."
+	canonical="https://crox.io/projects"
+	jsonLd={jsonLd}
+>
+	<!-- Hero -->
+	<div class="py-24 pb-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Projects</div>
+		<h1 class="font-serif font-normal text-[2.8rem] leading-[1.15] mb-8 max-sm:text-[2rem]">
+			What I'm <em class="italic text-accent">building.</em>
+		</h1>
+		<p class="text-[1rem] text-fg-dim leading-[1.8]">
+			Crox isn't just a consultancy. It's a place where I research, build, and write
+			about how AI actually works inside regulated businesses. Here's what's public.
+		</p>
+	</div>
+
+	<!-- Flagship briefing -->
+	{flagship && (
+		<section class="py-16 border-b border-border">
+			<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+				Flagship briefing
+				<span class="flex-1 h-px bg-border"></span>
+			</div>
+
+			<a href={`/insights/${flagship.slug}`} class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group">
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">{flagship.date}</p>
+				<h2 class="font-serif font-normal text-[1.8rem] mb-4 max-sm:text-[1.4rem] text-fg group-hover:text-accent transition-colors">
+					{flagship.title}
+				</h2>
+				<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-6">
+					{flagship.subtitle}
+				</p>
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
+					Read the briefing &rarr;
+				</span>
+			</a>
+		</section>
+	)}
+
+	<!-- Products & directories -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Products & directories
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+			{products.map((p) => (
+				<a
+					href={p.href}
+					target={p.external ? '_blank' : undefined}
+					rel={p.external ? 'noopener noreferrer' : undefined}
+					class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group"
+				>
+					<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">{p.kind}</p>
+					<h3 class="font-serif font-normal text-[1.3rem] mb-3 text-fg group-hover:text-accent transition-colors">{p.name}</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">{p.blurb}</p>
+					<span class="font-mono text-[0.75rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
+						{p.meta} &rarr;
+					</span>
+				</a>
+			))}
+		</div>
+	</section>
+
+	<!-- Research -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Research
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="space-y-8">
+			{research.filter((p) => p.slug !== flagship?.slug).map((p) => (
+				<a href={`/insights/${p.slug}`} class="block group">
+					<div class="flex items-center gap-3 mb-2">
+						<span class="text-[0.75rem] font-mono tracking-[0.1em] uppercase text-accent">{p.tags[0]}</span>
+						<span class="text-[0.8rem] text-fg-dim">{p.date}</span>
+					</div>
+					<h3 class="font-serif font-normal text-[1.3rem] text-fg mb-2 leading-[1.3] group-hover:text-accent transition-colors">
+						{p.title}
+					</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">{p.subtitle}</p>
+				</a>
+			))}
+		</div>
+	</section>
+
+	<!-- Guides & writing -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Guides
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="space-y-8">
+			{guides.map((p) => (
+				<a href={`/insights/${p.slug}`} class="block group">
+					<div class="flex items-center gap-3 mb-2">
+						<span class="text-[0.75rem] font-mono tracking-[0.1em] uppercase text-accent">{p.tags[0]}</span>
+						<span class="text-[0.8rem] text-fg-dim">{p.date}</span>
+					</div>
+					<h3 class="font-serif font-normal text-[1.2rem] text-fg mb-2 leading-[1.3] group-hover:text-accent transition-colors">
+						{p.title}
+					</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">{p.subtitle}</p>
+				</a>
+			))}
+		</div>
+	</section>
+
+	<!-- Learn series -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Learn series — MCP from first principles
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="space-y-8">
+			{learn.map((p) => (
+				<a href={`/learn/${p.slug}`} class="block group">
+					<div class="flex items-center gap-3 mb-2">
+						<span class="text-[0.75rem] font-mono tracking-[0.1em] uppercase text-accent">{p.tags[0]}</span>
+						<span class="text-[0.8rem] text-fg-dim">{p.date}</span>
+					</div>
+					<h3 class="font-serif font-normal text-[1.2rem] text-fg mb-2 leading-[1.3] group-hover:text-accent transition-colors">
+						{p.title}
+					</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">{p.subtitle}</p>
+				</a>
+			))}
+		</div>
+	</section>
+
+	<!-- CTA -->
+	<section class="py-24">
+		<h2 class="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.6rem]">
+			Curious about any of <em class="italic text-accent">this?</em>
+		</h2>
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
+			Pick one and read it, or start a conversation — the chat in the corner knows what
+			I've built and can point you at the right one for what you're trying to do.
+		</p>
+		<a
+			href="/contact"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Start with a conversation &rarr;
+		</a>
+	</section>
+</Base>
