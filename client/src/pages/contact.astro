@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
+import ContactForm from '../components/ContactForm';
 
 const BOOKING_URL = 'https://calendar.app.google/vsgd7Zseewh1AMCP7';
+const chatBaseUrl = import.meta.env.PUBLIC_CHAT_BASE_URL || 'https://chat.crox.io';
 
 const jsonLd = [
 	{
@@ -60,23 +62,22 @@ const jsonLd = [
 		</a>
 	</section>
 
-	<!-- Send a note -->
+	<!-- Send a note via form -->
 	<section class="py-16 border-b border-border">
 		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
 			Or send a note
 			<span class="flex-1 h-px bg-border"></span>
 		</div>
 
-		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-6">
-			For people who'd rather write than book.
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-8">
+			A few lines about what you're working on. I read every message.
 		</p>
 
-		<a
-			href="mailto:adam@crox.io"
-			class="font-serif text-[1.5rem] text-fg no-underline border-b border-border pb-1 hover:border-accent transition-colors max-sm:text-[1.2rem]"
-		>
-			adam@crox.io &rarr;
-		</a>
+		<ContactForm chatBaseUrl={chatBaseUrl} client:load />
+
+		<p class="text-[0.85rem] text-fg-dim leading-[1.7] mt-8">
+			Or just email: <a href="mailto:adam@crox.io" class="text-fg no-underline border-b border-border pb-px hover:border-accent transition-colors">adam@crox.io</a>
+		</p>
 	</section>
 
 	<!-- What happens next -->
