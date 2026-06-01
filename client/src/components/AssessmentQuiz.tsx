@@ -179,19 +179,24 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
             <span className="flex-1 h-px bg-border"></span>
           </div>
 
-          <div className="border border-border p-6 mb-8">
+          <a
+            href={band.service.href}
+            className="group block border border-border p-6 mb-8 no-underline transition-all hover:border-accent hover:bg-surface/40"
+          >
             <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">
               Recommended service
             </p>
-            <h3 className="font-serif font-normal text-[1.5rem] leading-[1.2] mb-3 max-sm:text-[1.25rem]">
-              <a href={band.service.href} className="text-fg no-underline border-b border-border hover:border-accent transition-colors">
-                {band.service.name}
-              </a>
+            <h3 className="font-serif font-normal text-[1.5rem] leading-[1.2] mb-3 text-fg group-hover:text-accent transition-colors max-sm:text-[1.25rem]">
+              {band.service.name}
             </h3>
-            <p className="text-[0.95rem] text-fg-dim leading-[1.7]">
+            <p className="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">
               {band.service.blurb}
             </p>
-          </div>
+            <span className="inline-flex items-center font-mono text-[0.8rem] font-medium tracking-[0.1em] uppercase text-accent">
+              See how we can help
+              <span className="ml-2 transition-transform group-hover:translate-x-1">&rarr;</span>
+            </span>
+          </a>
 
           <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-8">
             Best way to figure out if this is the right fit is a 30-minute call.
@@ -207,12 +212,6 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
               className="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
             >
               Book 30 minutes with Adam &rarr;
-            </a>
-            <a
-              href={band.service.href}
-              className="text-[0.85rem] text-fg-dim hover:text-fg transition-colors"
-            >
-              Read more about {band.service.name} &rarr;
             </a>
           </div>
         </div>
