@@ -159,18 +159,27 @@ async def assessment(req: AssessmentRequest) -> AssessmentResponse:
     email_addr = str(req.email)
 
     # 1. Hand to flight-deck (canonical contact upsert).
+    #
+    # Flight-deck expects form_fields values as strings (it stores them
+    # as JSON, but the validator complained on numeric values in
+    # testing). Coerce everything to str.
     visitor_id = flight_deck.ensure_visitor_id(req.visitor_id)
     form_fields: dict[str, object] = {
         "email": email_addr,
         "name": req.name.strip(),
         "source": "assessment",
-        "score": score,
-        "max_score": MAX_SCORE,
+        "score": str(score),
+        "max_score": str(MAX_SCORE),
         "band": band.name,
     }
     if req.company:
         form_fields["company"] = req.company.strip()
 
+    # Flight-deck failures are logged but do not 5xx the visitor — they
+    # already filled in the form, refusing them a score now would be
+    # rude. The score is honest data they earned; the CRM side is
+    # ops noise from their POV.
+    contact_id: str | None = None
     try:
         result = await flight_deck.submit_form(
             visitor_id=visitor_id,
@@ -178,66 +187,78 @@ async def assessment(req: AssessmentRequest) -> AssessmentResponse:
             form_fields=form_fields,
             contact_ref=req.contact_ref,
         )
+        contact_id = result.get("contact_id")
     except httpx.HTTPStatusError as exc:
-        body = exc.response.text[:200] if exc.response is not None else ""
+        body = exc.response.text[:300] if exc.response is not None else ""
         print(f"[assessment] flight-deck rejected {exc.response.status_code if exc.response else '?'}: {body}")
-        raise HTTPException(status_code=502, detail="upstream_rejected") from exc
     except httpx.RequestError as exc:
         print(f"[assessment] flight-deck unreachable: {type(exc).__name__}: {str(exc)[:200]}")
-        raise HTTPException(status_code=502, detail="upstream_unreachable") from exc
-
-    contact_id = result.get("contact_id")
+    except Exception as exc:
+        # Defensive — anything unexpected in the upsert path shouldn't
+        # take down the response.
+        import traceback
+        print(f"[assessment] unexpected flight-deck error: {type(exc).__name__}: {str(exc)[:300]}")
+        traceback.print_exc()
 
     # 2. Activity Stream (best-effort).
-    if contact_id:
-        activity_md = _render_activity_md(
-            score=score,
-            band_name=band.name,
-            band_headline=band.headline,
-            band_description=band.description,
-            band_recommendation=band.recommendation,
-            breakdown=breakdown,
-            company=req.company,
-        )
-        await fibery.append_assessment_capture(contact_id, activity_md)
+    try:
+        if contact_id:
+            activity_md = _render_activity_md(
+                score=score,
+                band_name=band.name,
+                band_headline=band.headline,
+                band_description=band.description,
+                band_recommendation=band.recommendation,
+                breakdown=breakdown,
+                company=req.company,
+            )
+            await fibery.append_assessment_capture(contact_id, activity_md)
+    except Exception as exc:
+        print(f"[assessment] activity stream append failed: {type(exc).__name__}: {str(exc)[:200]}")
 
     # 3. Email Adam (best-effort).
-    if email.is_configured():
-        email_subject = (
-            f"[Scorecard] {req.name.strip()} — {score}/{MAX_SCORE} ({band.name})"
-            + (f" — {req.company.strip()}" if req.company else "")
-        )
-        email_text = _render_email_text(
-            name=req.name.strip(),
-            email_addr=email_addr,
-            company=req.company.strip() if req.company else None,
-            score=score,
-            band_name=band.name,
-            band_recommendation=band.recommendation,
-            breakdown=breakdown,
-            submitted_at=submitted_at,
-        )
-        await email.send(
-            to=settings.assessment_to_email,
-            subject=email_subject,
-            text=email_text,
-            reply_to=email_addr,
-        )
+    try:
+        if email.is_configured():
+            email_subject = (
+                f"[Scorecard] {req.name.strip()} — {score}/{MAX_SCORE} ({band.name})"
+                + (f" — {req.company.strip()}" if req.company else "")
+            )
+            email_text = _render_email_text(
+                name=req.name.strip(),
+                email_addr=email_addr,
+                company=req.company.strip() if req.company else None,
+                score=score,
+                band_name=band.name,
+                band_recommendation=band.recommendation,
+                breakdown=breakdown,
+                submitted_at=submitted_at,
+            )
+            await email.send(
+                to=settings.assessment_to_email,
+                subject=email_subject,
+                text=email_text,
+                reply_to=email_addr,
+            )
+    except Exception as exc:
+        print(f"[assessment] email send failed: {type(exc).__name__}: {str(exc)[:200]}")
 
     # 4. PostHog (best-effort).
-    if contact_id:
-        await analytics.fire_event(
-            distinct_id=contact_id,
-            event="assessment_completed",
-            properties={
-                "score": score,
-                "max_score": MAX_SCORE,
-                "band": band.name,
-                "has_company": bool(req.company),
-                "page_url": req.page_url,
-                "visitor_id": visitor_id,
-            },
-        )
+    try:
+        if contact_id:
+            await analytics.fire_event(
+                distinct_id=contact_id,
+                event="assessment_completed",
+                properties={
+                    "score": score,
+                    "max_score": MAX_SCORE,
+                    "band": band.name,
+                    "has_company": bool(req.company),
+                    "page_url": req.page_url,
+                    "visitor_id": visitor_id,
+                },
+            )
+    except Exception as exc:
+        print(f"[assessment] posthog fire failed: {type(exc).__name__}: {str(exc)[:200]}")
 
     return AssessmentResponse(
         ok=True,
