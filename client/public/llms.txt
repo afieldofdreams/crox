@@ -45,3 +45,7 @@ Founded by Adam Field. 10+ years building and deploying machine learning systems
 - What Is the Model Context Protocol? A Plain English Guide: https://crox.io/learn/what-is-mcp
 - MCP vs APIs vs Plugins: Which Integration Approach Should Your Business Use?: https://crox.io/learn/mcp-vs-apis-vs-plugins
 - How AI Assistants Connect to Your Tools: MCP Architecture Explained: https://crox.io/learn/mcp-architecture-explained
+- Where Should We Start With AI Automation? How to Pick the First Process: https://crox.io/learn/where-to-start-ai-automation
+- What's the ROI of AI Automation — And How Do We Prove It?: https://crox.io/learn/ai-automation-roi
+- Build, Buy, or Partner? Choosing How to Add AI to Your Operations: https://crox.io/learn/build-buy-or-partner-ai
+- What Could Go Wrong? Governing AI Automation Without Killing It: https://crox.io/learn/ai-automation-risks-governance
