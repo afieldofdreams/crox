@@ -51,46 +51,7 @@ const jsonLd = [
 	</div>
 
 	<!-- Quiz -->
-	<section class="py-16 border-b border-border">
-		<AssessmentQuiz client:load chatBaseUrl={chatBaseUrl} />
-	</section>
-
-	<!-- What this is / isn't -->
 	<section class="py-16">
-		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
-			What this is
-			<span class="flex-1 h-px bg-border"></span>
-		</div>
-
-		<div class="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
-			<div>
-				<h3 class="font-serif font-normal text-[1.2rem] mb-4">It is</h3>
-				<ul class="space-y-3">
-					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-						A two-minute prompt to think about five things most teams skip
-					</li>
-					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-						A way to start a conversation that isn't "we should do something with AI"
-					</li>
-					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-						The shape of the conversation we'd have on a 30-minute call
-					</li>
-				</ul>
-			</div>
-			<div>
-				<h3 class="font-serif font-normal text-[1.2rem] mb-4">It isn't</h3>
-				<ul class="space-y-3">
-					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
-						The paid <a href="/readiness" class="text-accent no-underline hover:text-fg">Readiness Assessment</a> — that's three weeks and a written report
-					</li>
-					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
-						A psychometric instrument, a benchmark, or a certification
-					</li>
-					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
-						A funnel into a CRM. Adam reads every submission himself.
-					</li>
-				</ul>
-			</div>
-		</div>
+		<AssessmentQuiz client:load chatBaseUrl={chatBaseUrl} />
 	</section>
 </Base>
