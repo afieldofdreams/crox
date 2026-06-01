@@ -117,10 +117,10 @@ function MarkdownMessage({ content }: { content: string }) {
         ol: ({ children }) => <ol className="list-decimal pl-5 mb-2 last:mb-0 space-y-1">{children}</ol>,
         li: ({ children }) => <li>{children}</li>,
         code: ({ children }) => (
-          <code className="font-mono text-[0.8rem] bg-surface px-1 py-0.5 rounded">{children}</code>
+          <code className="font-mono text-[0.8rem] bg-bg px-1 py-0.5 rounded">{children}</code>
         ),
         pre: ({ children }) => (
-          <pre className="font-mono text-[0.8rem] bg-surface p-2 rounded overflow-x-auto mb-2 last:mb-0">
+          <pre className="font-mono text-[0.8rem] bg-bg p-2 rounded overflow-x-auto mb-2 last:mb-0">
             {children}
           </pre>
         ),
@@ -414,7 +414,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
         <div
           role="dialog"
           aria-label="Chat with Fred"
-          className="fixed bottom-4 right-4 z-50 w-[min(420px,calc(100vw-2rem))] h-[min(640px,calc(100vh-2rem))] bg-bg border border-border shadow-2xl flex flex-col"
+          className="fixed inset-0 z-50 flex flex-col w-full h-[100dvh] bg-surface sm:inset-auto sm:bottom-4 sm:right-4 sm:w-[min(420px,calc(100vw-2rem))] sm:h-[min(640px,calc(100vh-2rem))] sm:border sm:border-border sm:shadow-2xl"
         >
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
@@ -507,7 +507,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
                   <div
                     className={
                       m.role === 'user'
-                        ? 'max-w-[85%] bg-surface border border-border px-4 py-3 text-[0.9rem] leading-[1.6] text-fg whitespace-pre-wrap'
+                        ? 'max-w-[85%] bg-bg border border-border px-4 py-3 text-[0.9rem] leading-[1.6] text-fg whitespace-pre-wrap'
                         : 'max-w-[85%] px-1 py-1 text-[0.9rem] leading-[1.7] text-fg'
                     }
                   >
