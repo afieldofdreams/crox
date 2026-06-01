@@ -54,6 +54,9 @@ POSTHOG_PROJECT_API_KEY=phc_...        # 1Password: PostHog — Crox Chat (write
 
 CORS_ALLOWED_ORIGINS=https://crox.io,https://www.crox.io
 BASE_URL=https://chat.crox.io
+
+DATABASE_URL=postgresql://...                # See "Postgres" below
+BOOKING_URL=https://calendar.app.google/dmmq9bdFyc11G8Km8
 ```
 
 **`ANTHROPIC_API_KEY`:** mint a fresh, dedicated key for this app. Don't
@@ -67,7 +70,43 @@ flight-deck can attribute usage cleanly per app.
 **`POSTHOG_PROJECT_API_KEY`:** the write-only project key, NOT the
 personal API key (which is only on flight-deck for reads).
 
-### 4. Add crox.io to flight-deck's `project_host` table
+### 4. Postgres for chat persistence
+
+Each chat session lands in Postgres so Adam has a raw archive that
+survives Fibery being down and catches anonymous/abandoned chats
+(Fibery only sees the ones that hit `/capture`).
+
+In Coolify:
+
+1. Project → **+ New Resource** → **PostgreSQL** (any recent version,
+   16+ is fine). Name it `crox-chat-db`.
+2. Wait for it to come up. Coolify shows an internal connection string
+   like `postgresql://postgres:<pass>@crox-chat-db:5432/postgres`.
+3. Paste that into the `DATABASE_URL` env var on the `crox-chat` app.
+4. Redeploy the app. On startup it logs
+   `[db] connection pool ready, schema applied` and creates the
+   `conversations` + `messages` tables on first boot (idempotent DDL,
+   no Alembic needed at this scale).
+
+To peek at conversations, use Coolify's built-in psql tab or:
+
+```sql
+SELECT id, name, email, captured_at, started_at, last_message_at
+FROM conversations
+ORDER BY started_at DESC
+LIMIT 20;
+
+SELECT role, content, created_at
+FROM messages
+WHERE conversation_id = $1
+ORDER BY id;
+```
+
+The app degrades gracefully if `DATABASE_URL` is unset — the chat still
+works, conversations just aren't archived. Use that mode for local dev
+when you don't want to run Postgres.
+
+### 5. Add crox.io to flight-deck's `project_host` table
 
 If not already present, on flight-deck's Postgres:
 
@@ -81,7 +120,7 @@ The Pensive project UUID is whatever the `crox.io` `Pensive/Node` with
 `Node Type = Project` has as its `fibery/id`. Without this row,
 `/api/forms` rejects submissions with `unknown_project_host`.
 
-### 5. Update flight-deck `FORM_ALLOWED_ORIGINS`
+### 6. Update flight-deck `FORM_ALLOWED_ORIGINS`
 
 Make sure `https://chat.crox.io` is **not** added to flight-deck's
 `FORM_ALLOWED_ORIGINS` — origin checks happen on the *browser-origin*,
@@ -100,10 +139,16 @@ After Coolify reports the deploy healthy:
 curl https://chat.crox.io/health
 # → {"status":"ok","budget":{"day":"2026-05-21","used_input_tokens":0}}
 
+curl -X POST https://chat.crox.io/chat/start \
+  -H 'content-type: application/json' \
+  -H 'origin: https://crox.io' \
+  -d '{"name":"Smoke Test","email":"smoke@example.com","page_url":"https://crox.io"}'
+# → {"conversation_id":<int>,"greeting":"Hi Smoke — Fred here..."}
+
 curl -N -X POST https://chat.crox.io/chat \
   -H 'content-type: application/json' \
   -H 'origin: https://crox.io' \
-  -d '{"messages":[{"role":"user","content":"hi"}]}'
+  -d '{"messages":[{"role":"user","content":"hi"}],"visitor_name":"Smoke","visitor_email":"smoke@example.com"}'
 # → streaming token events
 ```
 

@@ -22,7 +22,7 @@ from fastapi import APIRouter, HTTPException
 import httpx
 
 from app.api.chat import ChatMessage
-from app.services import analytics, fibery, flight_deck
+from app.services import analytics, db, fibery, flight_deck
 
 router = APIRouter()
 
@@ -34,6 +34,7 @@ class CaptureRequest(BaseModel):
     visitor_id: str | None = None  # window.croxAttribution.visitorId if present
     contact_ref: str | None = None  # tracking token / fibery_id if known
     conversation: list[ChatMessage] = Field(..., min_length=1, max_length=80)
+    conversation_id: int | None = None  # Postgres conversation row, if /chat/start was used
 
 
 class CaptureResponse(BaseModel):
@@ -51,8 +52,7 @@ def _render_transcript(messages: list[ChatMessage]) -> str:
     """
     lines: list[str] = []
     for m in messages:
-        label = "**Visitor**" if m.role == "user" else "**Adam-bot**"
-        # Indent every line of the content to keep the block visually owned.
+        label = "**Visitor**" if m.role == "user" else "**Fred**"
         body = "\n".join(f"> {line}" for line in m.content.strip().splitlines())
         lines.append(f"{label}\n{body}")
     return "\n\n".join(lines)
@@ -93,6 +93,8 @@ async def capture(req: CaptureRequest) -> CaptureResponse:
         # Flight-deck queued the form (Fibery was down on their side). The
         # widget should still treat this as success — they will retry.
         print(f"[capture] flight-deck queued for retry: {result}")
+        if req.conversation_id:
+            await db.mark_captured(req.conversation_id, None)
         return CaptureResponse(contact_id=None, captured=True)
 
     # 2. Append transcript to the contact's Activity Stream (best-effort).
@@ -101,7 +103,11 @@ async def capture(req: CaptureRequest) -> CaptureResponse:
     if not appended:
         print(f"[capture] activity-stream append failed for contact={contact_id}")
 
-    # 3. Fire PostHog event keyed by contact_id (best-effort).
+    # 3. Link the Postgres conversation row to the resolved contact (best-effort).
+    if req.conversation_id:
+        await db.mark_captured(req.conversation_id, contact_id)
+
+    # 4. Fire PostHog event keyed by contact_id (best-effort).
     await analytics.fire_event(
         distinct_id=contact_id,
         event="chat_lead_captured",

@@ -2,7 +2,6 @@
 name = "crox-chat"
 version = "0.1.0"
 description = "Crox chat widget backend — streams Claude responses, captures leads to Fibery via flight-deck /api/forms"
-readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.115.0",
@@ -12,6 +11,7 @@ dependencies = [
     "anthropic>=0.40.0",
     "httpx>=0.28.0",
     "posthog>=3.7.0",
+    "asyncpg>=0.30.0",
 ]
 
 [dependency-groups]

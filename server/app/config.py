@@ -23,6 +23,13 @@ class Settings(BaseSettings):
     cors_allowed_origins: str = "http://localhost:3099,https://crox.io,https://www.crox.io"
     base_url: str = "http://localhost:8001"
 
+    # Postgres DSN, e.g. postgresql://user:pass@host:5432/dbname
+    # Empty string disables the DB layer (chat still works; conversations
+    # just aren't persisted). In prod this MUST be set.
+    database_url: str = ""
+
+    booking_url: str = "https://calendar.app.google/dmmq9bdFyc11G8Km8"
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_allowed_origins.split(",") if o.strip()]
