@@ -20,7 +20,7 @@ import {
   scoreToBand,
 } from '../lib/assessment';
 
-type Step = 'questions' | 'result' | 'submitting' | 'done' | 'error';
+type Step = 'questions' | 'gate' | 'submitting' | 'done' | 'error';
 
 interface CroxAttribution {
   visitorId?: string;
@@ -77,12 +77,12 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
     if (questionIdx < total - 1) {
       setTimeout(() => setQuestionIdx(questionIdx + 1), 180);
     } else {
-      setTimeout(() => setStep('result'), 180);
+      setTimeout(() => setStep('gate'), 180);
     }
   }
 
   function goBack() {
-    if (step === 'result') {
+    if (step === 'gate' || step === 'error') {
       setStep('questions');
       return;
     }
@@ -151,99 +151,105 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
     }
   }
 
-  // --- Done state --------------------------------------------------------
+  // --- Done state: reveal score, band, and recommendation ---------------
   if (step === 'done') {
     return (
-      <div className="border-l-2 border-accent pl-6 py-2">
-        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-4">Submitted</p>
-        <h2 className="font-serif font-normal text-[1.8rem] leading-[1.2] mb-4 max-sm:text-[1.4rem]">
+      <div>
+        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-4">
           Thanks, {name.split(' ')[0]}.
-        </h2>
-        <p className="text-[0.95rem] text-fg-dim leading-[1.8]">
-          Your score is <span className="text-fg">{score} / {MAX_SCORE}</span> — {band.headline.toLowerCase().replace(/\.$/, '')}. Adam will read your answers and reply within two working days from <span className="text-fg">adam@crox.io</span>.
         </p>
+        <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-12">
+          Adam will read your answers and reply within two working days from{' '}
+          <span className="text-fg">adam@crox.io</span>. In the meantime, here's the read.
+        </p>
+
+        <ScoreSummary
+          score={score}
+          bandName={band.name}
+          headline={band.headline}
+          description={band.description}
+          recommendation={band.recommendation}
+        />
       </div>
     );
   }
 
-  // --- Result + email gate ------------------------------------------------
-  if (step === 'result' || step === 'submitting' || step === 'error') {
+  // --- Gate: collect name + work email before revealing the score -------
+  if (step === 'gate' || step === 'submitting' || step === 'error') {
     return (
       <div>
-        <ScoreSummary score={score} bandName={band.name} headline={band.headline} description={band.description} recommendation={band.recommendation} />
+        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">
+          Almost there
+        </p>
+        <h2 className="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.5rem]">
+          Where should we send your result?
+        </h2>
+        <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
+          Leave your name and work email to see your score, band, and the one or two things that
+          would move it most. Adam reads every submission and replies within two working days.
+          No newsletter sign-up. No call gauntlet.
+        </p>
 
-        <div className="mt-12 pt-10 border-t border-border">
-          <div className="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
-            See the detail
-            <span className="flex-1 h-px bg-border"></span>
+        <form onSubmit={submit} noValidate className="space-y-5">
+          <Field
+            id="aq-name"
+            label="Name"
+            value={name}
+            onChange={setName}
+            autoComplete="name"
+            required
+          />
+          <Field
+            id="aq-email"
+            label="Work email"
+            type="email"
+            value={email}
+            onChange={setEmail}
+            autoComplete="email"
+            required
+            placeholder="you@yourcompany.com"
+          />
+          <Field
+            id="aq-company"
+            label="Company (optional)"
+            value={company}
+            onChange={setCompany}
+            autoComplete="organization"
+          />
+
+          {/* Honeypot — hidden from humans */}
+          <div className="absolute -left-[10000px] w-px h-px overflow-hidden" aria-hidden="true">
+            <label htmlFor="aq-website">Website</label>
+            <input
+              id="aq-website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
           </div>
 
-          <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-8">
-            Leave your details and Adam will reply within two working days with a short read on
-            what your answers actually point to — including the one or two things that would
-            move your score most. No newsletter sign-up. No call gauntlet.
-          </p>
+          {error && (
+            <p role="alert" className="text-[0.85rem] text-accent">{error}</p>
+          )}
 
-          <form onSubmit={submit} noValidate className="space-y-5">
-            <Field
-              id="aq-name"
-              label="Name"
-              value={name}
-              onChange={setName}
-              autoComplete="name"
-              required
-            />
-            <Field
-              id="aq-email"
-              label="Email"
-              type="email"
-              value={email}
-              onChange={setEmail}
-              autoComplete="email"
-              required
-            />
-            <Field
-              id="aq-company"
-              label="Company (optional)"
-              value={company}
-              onChange={setCompany}
-              autoComplete="organization"
-            />
-
-            {/* Honeypot — hidden from humans */}
-            <div className="absolute -left-[10000px] w-px h-px overflow-hidden" aria-hidden="true">
-              <label htmlFor="aq-website">Website</label>
-              <input
-                id="aq-website"
-                tabIndex={-1}
-                autoComplete="off"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-              />
-            </div>
-
-            {error && (
-              <p role="alert" className="text-[0.85rem] text-accent">{error}</p>
-            )}
-
-            <div className="flex flex-wrap items-center gap-6 pt-2">
-              <button
-                type="submit"
-                disabled={step === 'submitting'}
-                className="font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px disabled:opacity-60 disabled:hover:translate-y-0 cursor-pointer border-0"
-              >
-                {step === 'submitting' ? 'Sending…' : 'Send my answers →'}
-              </button>
-              <button
-                type="button"
-                onClick={goBack}
-                className="text-[0.85rem] text-fg-dim hover:text-fg transition-colors bg-transparent border-0 cursor-pointer"
-              >
-                &larr; Change my answers
-              </button>
-            </div>
-          </form>
-        </div>
+          <div className="flex flex-wrap items-center gap-6 pt-2">
+            <button
+              type="submit"
+              disabled={step === 'submitting'}
+              className="font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px disabled:opacity-60 disabled:hover:translate-y-0 cursor-pointer border-0"
+            >
+              {step === 'submitting' ? 'Sending…' : 'See my result →'}
+            </button>
+            <button
+              type="button"
+              onClick={goBack}
+              className="text-[0.85rem] text-fg-dim hover:text-fg transition-colors bg-transparent border-0 cursor-pointer"
+            >
+              &larr; Change my answers
+            </button>
+          </div>
+        </form>
       </div>
     );
   }
@@ -313,7 +319,7 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
         {allAnswered && questionIdx === total - 1 && (
           <button
             type="button"
-            onClick={() => setStep('result')}
+            onClick={() => setStep('gate')}
             className="font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-8 py-3 transition-all hover:bg-[#c4472e] hover:-translate-y-px cursor-pointer border-0"
           >
             See my score &rarr;
@@ -390,6 +396,7 @@ function Field({
   type = 'text',
   required = false,
   autoComplete,
+  placeholder,
 }: {
   id: string;
   label: string;
@@ -398,6 +405,7 @@ function Field({
   type?: string;
   required?: boolean;
   autoComplete?: string;
+  placeholder?: string;
 }) {
   return (
     <div>
@@ -409,9 +417,10 @@ function Field({
         type={type}
         required={required}
         autoComplete={autoComplete}
+        placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full bg-surface border border-border focus:border-accent text-fg px-4 py-3 text-[0.95rem] outline-none transition-colors"
+        className="w-full bg-surface border border-border focus:border-accent text-fg px-4 py-3 text-[0.95rem] placeholder:text-fg-dim outline-none transition-colors"
       />
     </div>
   );
