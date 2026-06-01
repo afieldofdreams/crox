@@ -169,6 +169,63 @@ async def append_messages(
         return False
 
 
+async def list_recent_conversations(limit: int = 50) -> list[dict]:
+    """Return the most recent conversations for the admin view.
+
+    Each row carries the conversation header plus the message count.
+    Cheap query (one SELECT with a subquery) — fine for a few hundred
+    rows; if conversations ever grow into the thousands we'd want a
+    materialised count column instead.
+    """
+    if not _pool:
+        return []
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT
+                    c.id,
+                    c.name,
+                    c.email,
+                    c.page_url,
+                    c.contact_id,
+                    c.started_at,
+                    c.last_message_at,
+                    c.captured_at,
+                    (SELECT COUNT(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count
+                FROM conversations c
+                ORDER BY c.started_at DESC
+                LIMIT $1
+                """,
+                limit,
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] list_recent_conversations failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return []
+
+
+async def get_conversation_messages(conversation_id: int) -> list[dict]:
+    """Return every message in a conversation, oldest first."""
+    if not _pool:
+        return []
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT role, content, created_at
+                FROM messages
+                WHERE conversation_id = $1
+                ORDER BY id
+                """,
+                conversation_id,
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] get_conversation_messages failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return []
+
+
 async def mark_captured(conversation_id: int, contact_id: str | None) -> bool:
     """Record that the conversation has been pushed to flight-deck/Fibery.
 

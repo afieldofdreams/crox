@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.admin import router as admin_router
 from app.api.capture import router as capture_router
 from app.api.chat import router as chat_router
 from app.api.contact_form import router as contact_form_router
@@ -44,3 +45,4 @@ def health() -> dict:
 app.include_router(chat_router)
 app.include_router(capture_router)
 app.include_router(contact_form_router)
+app.include_router(admin_router)

@@ -30,6 +30,10 @@ class Settings(BaseSettings):
 
     booking_url: str = "https://calendar.app.google/dmmq9bdFyc11G8Km8"
 
+    # Bearer token for /admin/* endpoints. If empty, admin routes
+    # refuse with 503 (rather than silently allowing access).
+    admin_token: str = ""
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_allowed_origins.split(",") if o.strip()]
