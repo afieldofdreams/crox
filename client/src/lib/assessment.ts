@@ -85,7 +85,16 @@ export interface Band {
   headline: string;
   description: string;
   recommendation: string;
+  // The Crox service that matches this band — shown on the result
+  // screen as a recommended next step alongside the book-a-call CTA.
+  service: {
+    name: string;
+    href: string;
+    blurb: string;
+  };
 }
+
+export const BOOKING_URL = 'https://calendar.app.google/dmmq9bdFyc11G8Km8';
 
 export const BANDS: Band[] = [
   {
@@ -95,6 +104,11 @@ export const BANDS: Band[] = [
     description:
       "You're at the start of the journey. Most teams here over-spend on AI tooling before the basics — data, documented processes, and a shared view of risk — are in place. Doing that groundwork first makes everything later cheaper and faster.",
     recommendation: 'Education and basic governance before any pilot. Avoid signing AI contracts this quarter.',
+    service: {
+      name: 'Education',
+      href: '/education',
+      blurb: 'Practical training for the team that will actually use AI day to day — how it works, where it fails, how to use it safely.',
+    },
   },
   {
     name: 'Mixed',
@@ -103,6 +117,11 @@ export const BANDS: Band[] = [
     description:
       "You have some of the pieces but they're uneven. A common pattern: solid data in one area, tacit knowledge in another; some appetite, no shared plan. The risk isn't doing nothing — it's doing the wrong thing first.",
     recommendation: 'A structured Readiness Assessment to sequence what to fix and what to try.',
+    service: {
+      name: 'Readiness Assessment',
+      href: '/readiness',
+      blurb: 'A proper three-week assessment of where you actually stand — data, processes, team, risk. Written report. Prioritised next steps.',
+    },
   },
   {
     name: 'Strong',
@@ -111,6 +130,11 @@ export const BANDS: Band[] = [
     description:
       "You have the foundations. The work now is choosing the right first use-case, wiring it to your real systems, and building guardrails that survive contact with production. This is the stage where most organisations either compound their advantage or burn time on the wrong pilot.",
     recommendation: 'Run a tightly-scoped Experiment on one high-value use-case with governance baked in from day one.',
+    service: {
+      name: 'Experiments',
+      href: '/experiments',
+      blurb: 'Pick one high-value process. Build the AI version of it. Connect it to your real systems with governance built in. A working thing in production that you own.',
+    },
   },
 ];
 

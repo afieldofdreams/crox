@@ -39,9 +39,6 @@ function isActive(path: string) {
   return currentPath.startsWith(path);
 }
 
-const servicePaths = ['/readiness', '/experiments', '/education', '/board-exec'];
-const isServicesActive = servicePaths.some((p) => currentPath.startsWith(p));
-
 const services = [
   { to: '/readiness', label: 'Readiness' },
   { to: '/experiments', label: 'Experiments' },
@@ -134,128 +131,30 @@ const navLinks = [
           Crox
         </a>
 
-        <!-- Desktop nav -->
-        <div class="hidden md:flex gap-8 items-center">
-          <a
-            href="/"
-            aria-current={isActive('/') ? 'page' : undefined}
-            class:list={[
-              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
-              isActive('/') ? 'text-fg' : 'text-fg-dim hover:text-fg',
-            ]}
-          >
-            Home
-          </a>
-
-          <!-- Services dropdown -->
-          <div class="relative group">
-            <button
-              type="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-              class:list={[
-                'text-[0.8rem] tracking-[0.1em] uppercase transition-colors flex items-center gap-1',
-                isServicesActive ? 'text-fg' : 'text-fg-dim group-hover:text-fg',
-              ]}
-            >
-              Services
-              <span class="text-[0.6rem]">&#9662;</span>
-            </button>
-            <div class="absolute top-full left-1/2 -translate-x-1/2 pt-3 hidden group-hover:block group-focus-within:block z-50">
-              <div class="bg-bg border border-border min-w-[200px] py-2">
-                {services.map(({ to, label }) => (
-                  <a
-                    href={to}
-                    aria-current={isActive(to) ? 'page' : undefined}
-                    class:list={[
-                      'block px-5 py-2 text-[0.8rem] tracking-[0.1em] uppercase transition-colors no-underline',
-                      isActive(to) ? 'text-fg bg-surface' : 'text-fg-dim hover:text-fg hover:bg-surface',
-                    ]}
-                  >
-                    {label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <a
-            href="/projects"
-            aria-current={isActive('/projects') ? 'page' : undefined}
-            class:list={[
-              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
-              isActive('/projects') ? 'text-fg' : 'text-fg-dim hover:text-fg',
-            ]}
-          >
-            Projects
-          </a>
-          <a
-            href="/insights"
-            aria-current={isActive('/insights') ? 'page' : undefined}
-            class:list={[
-              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
-              isActive('/insights') ? 'text-fg' : 'text-fg-dim hover:text-fg',
-            ]}
-          >
-            Insights
-          </a>
-          <a
-            href="/learn"
-            aria-current={isActive('/learn') ? 'page' : undefined}
-            class:list={[
-              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
-              isActive('/learn') ? 'text-fg' : 'text-fg-dim hover:text-fg',
-            ]}
-          >
-            Learn
-          </a>
-          <a
-            href="/servers"
-            aria-current={isActive('/servers') ? 'page' : undefined}
-            class:list={[
-              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
-              isActive('/servers') ? 'text-fg' : 'text-fg-dim hover:text-fg',
-            ]}
-          >
-            Servers
-          </a>
+        <!-- Right side: Scorecard CTA + burger (visible at all breakpoints) -->
+        <div class="flex items-center gap-3 sm:gap-4">
           <a
             href="/assessment"
             aria-current={isActive('/assessment') ? 'page' : undefined}
-            class:list={[
-              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
-              isActive('/assessment') ? 'text-fg' : 'text-fg-dim hover:text-fg',
-            ]}
+            class="font-mono text-[0.7rem] sm:text-[0.75rem] font-medium tracking-[0.12em] uppercase text-fg bg-accent px-4 py-2 sm:px-5 sm:py-2.5 transition-all hover:bg-[#c4472e] no-underline"
           >
-            Scorecard
+            Take Scorecard
           </a>
-          <a
-            href="/contact"
-            aria-current={isActive('/contact') ? 'page' : undefined}
-            class:list={[
-              'text-[0.8rem] tracking-[0.1em] uppercase transition-colors',
-              isActive('/contact') ? 'text-fg' : 'text-fg-dim hover:text-fg',
-            ]}
+          <button
+            id="menu-toggle"
+            class="flex flex-col justify-center items-center w-10 h-10 gap-[5px]"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
           >
-            Contact
-          </a>
+            <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
+            <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
+            <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
+          </button>
         </div>
 
-        <!-- Mobile hamburger button -->
-        <button
-          id="menu-toggle"
-          class="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[5px]"
-          aria-label="Toggle menu"
-          aria-expanded="false"
-          aria-controls="mobile-menu"
-        >
-          <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
-          <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
-          <span class="menu-bar block w-5 h-px bg-fg transition-all duration-200"></span>
-        </button>
-
-        <!-- Mobile nav -->
-        <div id="mobile-menu" role="menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-bg border-b border-border z-50 -mx-8 px-8 pb-6 pt-4">
+        <!-- Collapsable nav (the former mobile menu, now used at every breakpoint) -->
+        <div id="mobile-menu" role="menu" class="hidden absolute top-full left-0 right-0 bg-bg border-b border-border z-50 -mx-8 px-8 pb-6 pt-4">
           <div class="flex flex-col gap-1">
             <a
               href="/"
@@ -284,7 +183,7 @@ const navLinks = [
               </a>
             ))}
 
-            {navLinks.filter((l) => l.to !== '/').map(({ to, label }) => (
+            {navLinks.filter((l) => l.to !== '/' && l.to !== '/assessment').map(({ to, label }) => (
               <a
                 href={to}
                 role="menuitem"

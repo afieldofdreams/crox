@@ -4,28 +4,24 @@ import Base from '../layouts/Base.astro';
 const services = [
 	{
 		name: 'Readiness',
-		price: '£5,000',
 		meta: '1–2 people from you · 2–3 weeks',
 		blurb: 'Know exactly where you stand before you spend anything. Data, processes, team, risk.',
 		href: '/readiness',
 	},
 	{
 		name: 'Experiments',
-		price: '£15,000',
 		meta: '1 technical stakeholder · 4–6 weeks',
 		blurb: 'We take one high-value process and build an AI version of it. Connected to your real systems. Governance built in.',
 		href: '/experiments',
 	},
 	{
 		name: 'Education',
-		price: '£3,500',
 		meta: 'Your whole team · Half or full day',
 		blurb: 'Practical training for the people who will use AI day to day. How it works, where it fails, how to use it safely.',
 		href: '/education',
 	},
 	{
 		name: 'Board / Exec',
-		price: 'From £2,500',
 		meta: 'Board, exec team, or leadership · Single session or programme',
 		blurb: 'Briefings, working sessions, and ongoing guidance for the people deciding what AI does in your organisation.',
 		href: '/board-exec',
@@ -168,7 +164,6 @@ const jsonLd = [
 					<h3 class="font-serif font-normal text-[1.3rem] mb-2 text-fg group-hover:text-accent transition-colors">
 						{s.name}
 					</h3>
-					<p class="font-mono text-[1rem] text-fg mb-1">{s.price}</p>
 					<p class="text-[0.8rem] text-fg-dim mb-4">{s.meta}</p>
 					<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">{s.blurb}</p>
 					<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">

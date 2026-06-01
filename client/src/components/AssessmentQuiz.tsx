@@ -15,6 +15,7 @@ import { useMemo, useRef, useState } from 'react';
 import {
   ASSESSMENT_QUESTIONS,
   BANDS,
+  BOOKING_URL,
   MAX_SCORE,
   calculateScore,
   scoreToBand,
@@ -151,7 +152,7 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
     }
   }
 
-  // --- Done state: reveal score, band, and recommendation ---------------
+  // --- Done state: reveal score, band, recommendation, next steps -------
   if (step === 'done') {
     return (
       <div>
@@ -170,6 +171,51 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
           description={band.description}
           recommendation={band.recommendation}
         />
+
+        {/* Recommended service + book-a-call CTA */}
+        <div className="mt-12 pt-10 border-t border-border">
+          <div className="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+            What to do next
+            <span className="flex-1 h-px bg-border"></span>
+          </div>
+
+          <div className="border border-border p-6 mb-8">
+            <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">
+              Recommended service
+            </p>
+            <h3 className="font-serif font-normal text-[1.5rem] leading-[1.2] mb-3 max-sm:text-[1.25rem]">
+              <a href={band.service.href} className="text-fg no-underline border-b border-border hover:border-accent transition-colors">
+                {band.service.name}
+              </a>
+            </h3>
+            <p className="text-[0.95rem] text-fg-dim leading-[1.7]">
+              {band.service.blurb}
+            </p>
+          </div>
+
+          <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-8">
+            Best way to figure out if this is the right fit is a 30-minute call.
+            No pitch, no obligation — we go through your answers, work out whether
+            Adam can actually help, and what shape that would take.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-6">
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+            >
+              Book 30 minutes with Adam &rarr;
+            </a>
+            <a
+              href={band.service.href}
+              className="text-[0.85rem] text-fg-dim hover:text-fg transition-colors"
+            >
+              Read more about {band.service.name} &rarr;
+            </a>
+          </div>
+        </div>
       </div>
     );
   }
