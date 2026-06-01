@@ -40,22 +40,36 @@ def is_enabled() -> bool:
 
 
 async def init_db() -> None:
-    """Create the connection pool and apply schema. Idempotent."""
+    """Create the connection pool and apply schema. Idempotent.
+
+    Tolerates a bad DSN at startup: logs loudly and leaves _pool unset
+    rather than crashing the app. The chat endpoints still serve; the
+    persistence functions just no-op until the env var is fixed and the
+    app is redeployed. This matters in Coolify where a typo'd
+    DATABASE_URL would otherwise hold the whole service offline.
+    """
     global _pool
     if not is_enabled():
         print("[db] DATABASE_URL not set — conversation persistence disabled")
         return
     if _pool is not None:
         return
-    _pool = await asyncpg.create_pool(
-        settings.database_url,
-        min_size=1,
-        max_size=10,
-        command_timeout=10,
-    )
-    async with _pool.acquire() as conn:
-        await conn.execute(SCHEMA_SQL)
-    print("[db] connection pool ready, schema applied")
+    try:
+        _pool = await asyncpg.create_pool(
+            settings.database_url,
+            min_size=1,
+            max_size=10,
+            command_timeout=10,
+        )
+        async with _pool.acquire() as conn:
+            await conn.execute(SCHEMA_SQL)
+        print("[db] connection pool ready, schema applied")
+    except Exception as exc:
+        _pool = None
+        print(
+            f"[db] init failed ({type(exc).__name__}: {str(exc)[:200]}) — "
+            "conversation persistence DISABLED until DATABASE_URL is fixed and the app is redeployed"
+        )
 
 
 async def close_db() -> None:
