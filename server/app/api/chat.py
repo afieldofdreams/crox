@@ -144,8 +144,14 @@ async def chat(req: ChatRequest, request: Request):
         if not m.content or not m.content.strip():
             raise HTTPException(status_code=400, detail="empty_content")
 
-    if req.messages[0].role != "user":
-        raise HTTPException(status_code=400, detail="must_start_with_user")
+    # Drop any leading assistant turns. The widget seeds the conversation
+    # with the /chat/start greeting (an assistant message) before the
+    # visitor types anything — that greeting isn't a real Claude turn and
+    # Anthropic's API requires the first message to be from the user.
+    while req.messages and req.messages[0].role != "user":
+        req.messages.pop(0)
+    if not req.messages:
+        raise HTTPException(status_code=400, detail="no_user_message")
 
     system_prompt = _load_system_prompt()
     estimated = _estimate_input_tokens(system_prompt, req.messages)
