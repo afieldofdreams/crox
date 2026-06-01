@@ -19,6 +19,8 @@
 // contact if none matches.
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type Role = 'user' | 'assistant';
 type Message = { role: Role; content: string };
@@ -81,34 +83,59 @@ function persist(state: StoredState) {
   }
 }
 
-// Render plain text with URLs (booking link in particular) as anchor tags.
-// Splits the string on URL boundaries and emits a mix of text + <a>.
-function renderWithLinks(text: string): React.ReactNode[] {
-  const urlRe = /(https?:\/\/[^\s)]+)/g;
-  const parts: React.ReactNode[] = [];
-  let lastIdx = 0;
-  let match: RegExpExecArray | null;
-  let key = 0;
-  while ((match = urlRe.exec(text)) !== null) {
-    if (match.index > lastIdx) {
-      parts.push(text.slice(lastIdx, match.index));
-    }
-    const url = match[1];
-    parts.push(
-      <a
-        key={`l${key++}`}
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-accent underline underline-offset-2 hover:no-underline break-all"
-      >
-        {url}
-      </a>
-    );
-    lastIdx = match.index + url.length;
-  }
-  if (lastIdx < text.length) parts.push(text.slice(lastIdx));
-  return parts;
+// Render an assistant message as constrained markdown.
+//
+// What's allowed: bold, italic, lists, paragraphs, inline code, line
+// breaks, and autolinks (URLs typed bare become anchor tags). GFM is
+// enabled so Fred can use `- bullet` and `**bold**` naturally.
+//
+// What's disallowed: raw HTML (skipHtml), images, headings (we map
+// them to <p> so a stray ### doesn't blow up the layout). Links open
+// in a new tab.
+//
+// All custom components are styled to match the surrounding chat
+// design — small text, no extra spacing, accent-coloured links.
+function MarkdownMessage({ content }: { content: string }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      skipHtml
+      disallowedElements={['img']}
+      components={{
+        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+        a: ({ href, children }) => (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent underline underline-offset-2 hover:no-underline break-all"
+          >
+            {children}
+          </a>
+        ),
+        ul: ({ children }) => <ul className="list-disc pl-5 mb-2 last:mb-0 space-y-1">{children}</ul>,
+        ol: ({ children }) => <ol className="list-decimal pl-5 mb-2 last:mb-0 space-y-1">{children}</ol>,
+        li: ({ children }) => <li>{children}</li>,
+        code: ({ children }) => (
+          <code className="font-mono text-[0.8rem] bg-surface px-1 py-0.5 rounded">{children}</code>
+        ),
+        pre: ({ children }) => (
+          <pre className="font-mono text-[0.8rem] bg-surface p-2 rounded overflow-x-auto mb-2 last:mb-0">
+            {children}
+          </pre>
+        ),
+        // Flatten headings to bold paragraphs so a stray `## ` doesn't break the layout.
+        h1: ({ children }) => <p className="font-semibold mb-2 last:mb-0">{children}</p>,
+        h2: ({ children }) => <p className="font-semibold mb-2 last:mb-0">{children}</p>,
+        h3: ({ children }) => <p className="font-semibold mb-2 last:mb-0">{children}</p>,
+        h4: ({ children }) => <p className="font-semibold mb-2 last:mb-0">{children}</p>,
+        strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+        em: ({ children }) => <em className="italic">{children}</em>,
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
 }
 
 export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Props) {
@@ -481,11 +508,13 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
                     className={
                       m.role === 'user'
                         ? 'max-w-[85%] bg-surface border border-border px-4 py-3 text-[0.9rem] leading-[1.6] text-fg whitespace-pre-wrap'
-                        : 'max-w-[85%] px-1 py-1 text-[0.9rem] leading-[1.7] text-fg whitespace-pre-wrap'
+                        : 'max-w-[85%] px-1 py-1 text-[0.9rem] leading-[1.7] text-fg'
                     }
                   >
                     {m.content
-                      ? renderWithLinks(m.content)
+                      ? (m.role === 'assistant'
+                          ? <MarkdownMessage content={m.content} />
+                          : m.content)
                       : (isStreaming && i === messages.length - 1 ? <span className="text-fg-dim italic">…</span> : null)}
                   </div>
                 </div>
