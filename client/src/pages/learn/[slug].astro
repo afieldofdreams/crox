@@ -4,6 +4,10 @@ import { learnPosts } from '../../content/learnPosts';
 import WhatIsMcpPost from '../../views/learn/WhatIsMcpPost';
 import McpVsApisPost from '../../views/learn/McpVsApisPost';
 import McpArchitecturePost from '../../views/learn/McpArchitecturePost';
+import WhereToStartPost from '../../views/learn/WhereToStartPost';
+import AiAutomationRoiPost from '../../views/learn/AiAutomationRoiPost';
+import BuildBuyPartnerPost from '../../views/learn/BuildBuyPartnerPost';
+import AiAutomationRisksPost from '../../views/learn/AiAutomationRisksPost';
 
 export function getStaticPaths() {
 	return learnPosts.map((post) => ({
@@ -59,6 +63,10 @@ const postComponents: Record<string, any> = {
 	'what-is-mcp': WhatIsMcpPost,
 	'mcp-vs-apis-vs-plugins': McpVsApisPost,
 	'mcp-architecture-explained': McpArchitecturePost,
+	'where-to-start-ai-automation': WhereToStartPost,
+	'ai-automation-roi': AiAutomationRoiPost,
+	'build-buy-or-partner-ai': BuildBuyPartnerPost,
+	'ai-automation-risks-governance': AiAutomationRisksPost,
 };
 
 const PostContent = postComponents[slug];
