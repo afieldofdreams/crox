@@ -123,3 +123,8 @@ async def append_chat_transcript(contact_id: str, transcript_md: str) -> bool:
 async def append_contact_form_message(contact_id: str, message_md: str) -> bool:
     """Append a general contact-form submission to the contact's Activity Stream."""
     return await _append_activity_entry(contact_id, "Contact form", message_md)
+
+
+async def append_assessment_capture(contact_id: str, body_md: str) -> bool:
+    """Append the AI Readiness Scorecard breakdown to the contact's Activity Stream."""
+    return await _append_activity_entry(contact_id, "Assessment capture", body_md)

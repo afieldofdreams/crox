@@ -34,6 +34,13 @@ class Settings(BaseSettings):
     # refuse with 503 (rather than silently allowing access).
     admin_token: str = ""
 
+    # Resend for the /assessment endpoint. Sends Adam the scored
+    # breakdown so he can reply within two working days. The Fibery
+    # Activity Stream entry is the durable record; email is the poke.
+    resend_api_key: str = ""
+    assessment_to_email: str = "adam@crox.io"
+    assessment_from_email: str = "Crox Scorecard <onboarding@resend.dev>"
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_allowed_origins.split(",") if o.strip()]
