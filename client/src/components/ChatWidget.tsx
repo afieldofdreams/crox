@@ -429,7 +429,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
                 <button
                   type="button"
                   onClick={resetConversation}
-                  className="text-[0.7rem] tracking-[0.1em] uppercase text-fg-dim hover:text-fg transition-colors"
+                  className="px-2 py-2 -my-1 text-[0.7rem] tracking-[0.1em] uppercase text-fg-dim hover:text-fg transition-colors"
                   aria-label="Start a new conversation"
                 >
                   Reset
@@ -439,7 +439,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
                 type="button"
                 onClick={() => setIsOpen(false)}
                 aria-label="Close chat"
-                className="text-fg-dim hover:text-fg transition-colors text-xl leading-none p-1"
+                className="flex items-center justify-center w-10 h-10 -my-1 -mr-2 text-fg-dim hover:text-fg transition-colors text-2xl leading-none"
               >
                 ×
               </button>
@@ -529,7 +529,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
                 e.preventDefault();
                 sendMessage(input);
               }}
-              className="border-t border-border p-3 flex items-end gap-2"
+              className="border-t border-border p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-end gap-2"
             >
               <textarea
                 value={input}
@@ -543,13 +543,13 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
                 placeholder={isStreaming ? '…' : 'Type a message'}
                 rows={1}
                 disabled={isStreaming}
-                className="flex-1 resize-none bg-bg border border-border px-3 py-2 text-[0.9rem] text-fg placeholder:text-fg-dim focus:outline-none focus:border-accent disabled:opacity-60 max-h-32"
+                className="flex-1 min-w-0 w-full resize-none bg-bg border border-border px-3 py-3 text-[0.95rem] text-fg placeholder:text-fg-dim focus:outline-none focus:border-accent disabled:opacity-60 min-h-[2.75rem] max-h-32"
                 aria-label="Message"
               />
               <button
                 type="submit"
                 disabled={isStreaming || !input.trim()}
-                className="font-mono text-[0.7rem] tracking-[0.1em] uppercase bg-accent text-fg px-3 py-2 hover:bg-[#c4472e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="shrink-0 font-mono text-[0.75rem] tracking-[0.1em] uppercase bg-accent text-fg px-5 py-3 min-h-[2.75rem] hover:bg-[#c4472e] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 aria-label="Send message"
               >
                 Send
