@@ -1,21 +1,21 @@
-"""Postgres layer for chat conversation persistence.
+"""Postgres layer — the Crox lead/contact data store.
 
-Two tables:
+Tables:
 
-  - conversations: one row per chat session. Captures name + email on
-    start, plus flight-deck contact_id once /capture succeeds, plus the
-    visitor_id and page_url at start.
-  - messages: append-only log of each turn within a conversation.
+  - conversations / messages — one row per chat session + per-turn log.
+  - assessment_submissions   — Scorecard submissions with full breakdown JSON.
+  - contact_form_submissions — /contact form submissions.
+  - outbound_emails          — admin replies sent via Resend, for thread history.
 
-The database is the *raw archive* for Adam to read. Fibery Activity
-Stream + flight-deck remain the canonical CRM-shaped record (one entry
-per chat at the moment of capture). Postgres is what survives if Fibery
-is down, what catches anonymous/abandoned conversations, and what we
-can query in bulk.
+This is the system of record for Crox leads. Flight Deck reads from
+here (via the /admin/contacts JSON endpoints) and is allowed to write
+back to outbound_emails when Adam sends a reply through the admin UI.
 
-Schema is applied via init_db() at app startup. We use plain DDL with
-IF NOT EXISTS rather than Alembic because the schema is small and the
-service is the only writer.
+The previous Fibery Activity Stream pattern has been retired in favour
+of this Postgres-centric model.
+
+Schema is applied via init_db() at app startup. Idempotent DDL with
+IF NOT EXISTS — no Alembic at this scale; the service is the only writer.
 
 If DATABASE_URL is empty the module no-ops: init_db() does nothing and
 the public CRUD functions return None. The /chat endpoint should still
@@ -106,6 +106,61 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 
 CREATE INDEX IF NOT EXISTS messages_conv_idx ON messages (conversation_id, id);
+
+CREATE TABLE IF NOT EXISTS assessment_submissions (
+    id              BIGSERIAL PRIMARY KEY,
+    name            TEXT NOT NULL,
+    email           TEXT NOT NULL,
+    company         TEXT,
+    score           INTEGER NOT NULL,
+    max_score       INTEGER NOT NULL,
+    band            TEXT NOT NULL,
+    answers         JSONB NOT NULL,
+    breakdown       JSONB NOT NULL,
+    page_url        TEXT,
+    visitor_id      TEXT,
+    contact_ref     TEXT,
+    contact_id      TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS assessment_email_idx ON assessment_submissions (lower(email));
+CREATE INDEX IF NOT EXISTS assessment_created_idx ON assessment_submissions (created_at DESC);
+
+CREATE TABLE IF NOT EXISTS contact_form_submissions (
+    id              BIGSERIAL PRIMARY KEY,
+    name            TEXT,
+    email           TEXT NOT NULL,
+    message         TEXT NOT NULL,
+    page_url        TEXT,
+    visitor_id      TEXT,
+    contact_ref     TEXT,
+    contact_id      TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS contact_form_email_idx ON contact_form_submissions (lower(email));
+CREATE INDEX IF NOT EXISTS contact_form_created_idx ON contact_form_submissions (created_at DESC);
+
+CREATE TABLE IF NOT EXISTS outbound_emails (
+    id              BIGSERIAL PRIMARY KEY,
+    to_email        TEXT NOT NULL,
+    from_email      TEXT NOT NULL,
+    reply_to        TEXT,
+    subject         TEXT NOT NULL,
+    body_text       TEXT NOT NULL,
+    -- Free-text label: 'admin_reply', 'assessment_followup', etc. So the
+    -- admin can filter / understand the conversation history.
+    source          TEXT NOT NULL DEFAULT 'admin_reply',
+    -- The Resend message id once accepted; null if the send failed.
+    resend_id       TEXT,
+    -- Last-attempted error from Resend if the send failed.
+    send_error      TEXT,
+    sent_at         TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS outbound_emails_to_idx ON outbound_emails (lower(to_email));
+CREATE INDEX IF NOT EXISTS outbound_emails_sent_idx ON outbound_emails (sent_at DESC);
 """
 
 
@@ -249,3 +304,312 @@ async def mark_captured(conversation_id: int, contact_id: str | None) -> bool:
     except Exception as exc:
         print(f"[db] mark_captured failed: {type(exc).__name__}: {str(exc)[:200]}")
         return False
+
+
+# ---------------------------------------------------------------------------
+# Assessment submissions
+# ---------------------------------------------------------------------------
+
+async def insert_assessment_submission(
+    *,
+    name: str,
+    email: str,
+    company: str | None,
+    score: int,
+    max_score: int,
+    band: str,
+    answers: dict,
+    breakdown: list[dict],
+    page_url: str | None,
+    visitor_id: str | None,
+    contact_ref: str | None,
+    contact_id: str | None,
+) -> int | None:
+    """Persist a Scorecard submission. Returns the row id, or None on failure."""
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow(
+                """
+                INSERT INTO assessment_submissions
+                    (name, email, company, score, max_score, band,
+                     answers, breakdown, page_url, visitor_id, contact_ref, contact_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7::jsonb, $8::jsonb, $9, $10, $11, $12)
+                RETURNING id
+                """,
+                name, email, company, score, max_score, band,
+                json.dumps(answers), json.dumps(breakdown),
+                page_url, visitor_id, contact_ref, contact_id,
+            )
+            return row["id"] if row else None
+    except Exception as exc:
+        print(f"[db] insert_assessment_submission failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Contact-form submissions
+# ---------------------------------------------------------------------------
+
+async def insert_contact_form_submission(
+    *,
+    name: str | None,
+    email: str,
+    message: str,
+    page_url: str | None,
+    visitor_id: str | None,
+    contact_ref: str | None,
+    contact_id: str | None,
+) -> int | None:
+    """Persist a /contact-form submission. Returns the row id, or None on failure."""
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow(
+                """
+                INSERT INTO contact_form_submissions
+                    (name, email, message, page_url, visitor_id, contact_ref, contact_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                RETURNING id
+                """,
+                name, email, message, page_url, visitor_id, contact_ref, contact_id,
+            )
+            return row["id"] if row else None
+    except Exception as exc:
+        print(f"[db] insert_contact_form_submission failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Outbound emails — admin replies sent via Resend, logged so the contact
+# detail view shows the full thread.
+# ---------------------------------------------------------------------------
+
+async def insert_outbound_email(
+    *,
+    to_email: str,
+    from_email: str,
+    reply_to: str | None,
+    subject: str,
+    body_text: str,
+    source: str = "admin_reply",
+    resend_id: str | None = None,
+    send_error: str | None = None,
+) -> int | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow(
+                """
+                INSERT INTO outbound_emails
+                    (to_email, from_email, reply_to, subject, body_text,
+                     source, resend_id, send_error)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+                RETURNING id
+                """,
+                to_email, from_email, reply_to, subject, body_text,
+                source, resend_id, send_error,
+            )
+            return row["id"] if row else None
+    except Exception as exc:
+        print(f"[db] insert_outbound_email failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Consolidated contact view — used by Flight Deck admin.
+# Joins assessment / contact-form / conversations / outbound emails by email.
+# ---------------------------------------------------------------------------
+
+async def list_contacts(limit: int = 200) -> list[dict]:
+    """Return one row per unique email across all lead-source tables.
+
+    The shape is the 'lead list' as it appears in Flight Deck. Each row
+    has: email, name (best guess), company (latest if any), counts per
+    source, last activity timestamp, latest assessment score+band if any.
+    """
+    if not _pool:
+        return []
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                WITH all_emails AS (
+                    SELECT lower(email) AS email_l, email AS email_raw FROM conversations
+                    UNION
+                    SELECT lower(email), email FROM assessment_submissions
+                    UNION
+                    SELECT lower(email), email FROM contact_form_submissions
+                ),
+                conv_agg AS (
+                    SELECT lower(email) AS email_l,
+                           COUNT(*) AS n,
+                           MAX(last_message_at) AS last_activity,
+                           (ARRAY_AGG(name ORDER BY started_at DESC))[1] AS latest_name
+                    FROM conversations
+                    GROUP BY lower(email)
+                ),
+                ass_agg AS (
+                    SELECT lower(email) AS email_l,
+                           COUNT(*) AS n,
+                           MAX(created_at) AS last_activity,
+                           (ARRAY_AGG(name ORDER BY created_at DESC))[1] AS latest_name,
+                           (ARRAY_AGG(company ORDER BY created_at DESC))[1] AS latest_company,
+                           (ARRAY_AGG(score ORDER BY created_at DESC))[1] AS latest_score,
+                           (ARRAY_AGG(band ORDER BY created_at DESC))[1] AS latest_band
+                    FROM assessment_submissions
+                    GROUP BY lower(email)
+                ),
+                cf_agg AS (
+                    SELECT lower(email) AS email_l,
+                           COUNT(*) AS n,
+                           MAX(created_at) AS last_activity,
+                           (ARRAY_AGG(name ORDER BY created_at DESC))[1] AS latest_name
+                    FROM contact_form_submissions
+                    GROUP BY lower(email)
+                ),
+                out_agg AS (
+                    SELECT lower(to_email) AS email_l,
+                           COUNT(*) AS n,
+                           MAX(sent_at) AS last_sent
+                    FROM outbound_emails
+                    GROUP BY lower(to_email)
+                )
+                SELECT
+                    e.email_raw AS email,
+                    COALESCE(c.latest_name, a.latest_name, f.latest_name) AS name,
+                    a.latest_company AS company,
+                    COALESCE(a.n, 0) AS assessment_count,
+                    COALESCE(c.n, 0) AS conversation_count,
+                    COALESCE(f.n, 0) AS contact_form_count,
+                    COALESCE(o.n, 0) AS outbound_email_count,
+                    a.latest_score AS latest_score,
+                    a.latest_band AS latest_band,
+                    GREATEST(
+                        COALESCE(c.last_activity, 'epoch'::timestamptz),
+                        COALESCE(a.last_activity, 'epoch'::timestamptz),
+                        COALESCE(f.last_activity, 'epoch'::timestamptz),
+                        COALESCE(o.last_sent, 'epoch'::timestamptz)
+                    ) AS last_activity
+                FROM all_emails e
+                LEFT JOIN conv_agg c ON c.email_l = e.email_l
+                LEFT JOIN ass_agg  a ON a.email_l = e.email_l
+                LEFT JOIN cf_agg   f ON f.email_l = e.email_l
+                LEFT JOIN out_agg  o ON o.email_l = e.email_l
+                -- Dedupe — `all_emails` UNION already deduped on email_l
+                -- but a raw email may appear in multiple casings; collapse
+                -- by picking one arbitrary raw form per lowercase key.
+                ORDER BY last_activity DESC
+                LIMIT $1
+                """,
+                limit,
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] list_contacts failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return []
+
+
+async def get_contact_detail(email: str) -> dict | None:
+    """Return everything we know about a single email.
+
+    Shape:
+        {
+          email, name, company,
+          assessments: [...],
+          contact_forms: [...],
+          conversations: [{ ..., messages: [...] }, ...],
+          outbound_emails: [...],
+        }
+    """
+    if not _pool:
+        return None
+    email_l = email.lower()
+    try:
+        async with _pool.acquire() as conn:
+            assessments = await conn.fetch(
+                """
+                SELECT id, name, email, company, score, max_score, band,
+                       answers, breakdown, page_url, visitor_id, contact_ref,
+                       contact_id, created_at
+                FROM assessment_submissions
+                WHERE lower(email) = $1
+                ORDER BY created_at DESC
+                """,
+                email_l,
+            )
+            contact_forms = await conn.fetch(
+                """
+                SELECT id, name, email, message, page_url, visitor_id, contact_ref,
+                       contact_id, created_at
+                FROM contact_form_submissions
+                WHERE lower(email) = $1
+                ORDER BY created_at DESC
+                """,
+                email_l,
+            )
+            convs = await conn.fetch(
+                """
+                SELECT id, visitor_id, name, email, contact_ref, contact_id,
+                       page_url, user_agent, started_at, last_message_at, captured_at
+                FROM conversations
+                WHERE lower(email) = $1
+                ORDER BY started_at DESC
+                """,
+                email_l,
+            )
+            outbound = await conn.fetch(
+                """
+                SELECT id, to_email, from_email, reply_to, subject, body_text,
+                       source, resend_id, send_error, sent_at
+                FROM outbound_emails
+                WHERE lower(to_email) = $1
+                ORDER BY sent_at DESC
+                """,
+                email_l,
+            )
+
+            # Hydrate messages for each conversation
+            conv_dicts: list[dict] = []
+            for c in convs:
+                msgs = await conn.fetch(
+                    """
+                    SELECT role, content, created_at
+                    FROM messages
+                    WHERE conversation_id = $1
+                    ORDER BY id
+                    """,
+                    c["id"],
+                )
+                conv_dicts.append({**dict(c), "messages": [dict(m) for m in msgs]})
+
+        # Nothing across any table = unknown contact
+        if not assessments and not contact_forms and not convs and not outbound:
+            return None
+
+        # Best-effort name/company from most recent source
+        latest_name = None
+        latest_company = None
+        if assessments:
+            latest_name = assessments[0]["name"]
+            latest_company = assessments[0]["company"]
+        if not latest_name and convs:
+            latest_name = convs[0]["name"]
+        if not latest_name and contact_forms and contact_forms[0]["name"]:
+            latest_name = contact_forms[0]["name"]
+
+        return {
+            "email": email,
+            "name": latest_name,
+            "company": latest_company,
+            "assessments": [dict(r) for r in assessments],
+            "contact_forms": [dict(r) for r in contact_forms],
+            "conversations": conv_dicts,
+            "outbound_emails": [dict(r) for r in outbound],
+        }
+    except Exception as exc:
+        print(f"[db] get_contact_detail failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None

@@ -14,9 +14,6 @@ class Settings(BaseSettings):
     form_csrf_secret: str = ""
     project_host: str = "crox.io"
 
-    fibery_host: str = "wildgriffin.fibery.io"
-    fibery_token: str = ""
-
     posthog_host: str = "https://us.posthog.com"
     posthog_project_api_key: str = ""
 
@@ -34,12 +31,14 @@ class Settings(BaseSettings):
     # refuse with 503 (rather than silently allowing access).
     admin_token: str = ""
 
-    # Resend for the /assessment endpoint. Sends Adam the scored
-    # breakdown so he can reply within two working days. The Fibery
-    # Activity Stream entry is the durable record; email is the poke.
+    # Resend — used by /admin/contacts/{email}/send-email for replies
+    # Adam sends through the Flight Deck admin UI. Empty disables
+    # outbound mail (the endpoint returns 503).
     resend_api_key: str = ""
-    assessment_to_email: str = "adam@crox.io"
-    assessment_from_email: str = "Crox Scorecard <onboarding@resend.dev>"
+    # Default sender for admin replies. Override per environment to a
+    # verified Resend domain (e.g. "Adam Field <adam@crox.io>"). The
+    # default placeholder works for testing but lands in spam.
+    assessment_from_email: str = "Crox <onboarding@resend.dev>"
 
     @property
     def cors_origins_list(self) -> list[str]:

@@ -5,18 +5,18 @@ collects the visitor's name + email + (optional) company. The browser
 POSTs the raw answers here. This endpoint:
 
   1. Recomputes the score server-side (never trust the client).
-  2. Calls flight-deck /api/forms — canonical contact upsert.
-  3. Appends an "Assessment capture" entry to the contact's Fibery
-     Activity Stream with the full breakdown.
-  4. Emails Adam via Resend with the breakdown + reply-to set to the
-     visitor's email.
-  5. Fires PostHog assessment_completed keyed by contact_id.
+  2. Calls flight-deck /api/forms — identity resolution + engagement merge.
+  3. Persists the full submission (answers + breakdown JSON) to
+     crox-chat-db's assessment_submissions table.
+  4. Fires PostHog assessment_completed keyed by contact_id.
 
-All steps after (1) and (2) are best-effort. If flight-deck rejects
-the submission, we 4xx/5xx back so the visitor sees a real error.
-Otherwise the visitor gets a 200 with their score + band, even if
-email or Activity Stream temporarily fail — the contact still exists
-and flight-deck has the form_submission row.
+The visitor always sees their score even if flight-deck or PostHog
+fails downstream — they earned it by answering five questions.
+
+The Flight Deck admin reads assessment_submissions when rendering the
+Crox leads view. The 'email Adam the result' Resend path that used to
+live here was removed when we moved off Fibery — Adam reads the lead
+in Flight Deck and replies via the admin's email-send button instead.
 
 The five questions and their scoring live in
 `app.assessment_questions` (separate module so the test surface is
@@ -25,15 +25,12 @@ own copy so a tampered client payload can't manufacture a 15/15.
 """
 from __future__ import annotations
 
-from datetime import UTC, datetime
-
 import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr, Field
 
 from app.assessment_questions import ASSESSMENT_QUESTIONS, MAX_SCORE, score_to_band
-from app.config import settings
-from app.services import analytics, email, fibery, flight_deck
+from app.services import analytics, db, flight_deck
 
 router = APIRouter()
 
@@ -66,69 +63,6 @@ class AssessmentResponse(BaseModel):
     contact_id: str | None = None
 
 
-def _render_activity_md(
-    *,
-    score: int,
-    band_name: str,
-    band_headline: str,
-    band_description: str,
-    band_recommendation: str,
-    breakdown: list[AssessmentBreakdownItem],
-    company: str | None,
-) -> str:
-    """Render the assessment as markdown for the Activity Stream entry."""
-    lines: list[str] = []
-    lines.append(f"**Score:** {score} / {MAX_SCORE} — **{band_name}**")
-    lines.append(f"*{band_headline}*")
-    lines.append("")
-    if company:
-        lines.append(f"**Company:** {company}")
-        lines.append("")
-    lines.append(f"> {band_description}")
-    lines.append("")
-    lines.append(f"**Recommendation:** {band_recommendation}")
-    lines.append("")
-    lines.append("**Answers**")
-    for row in breakdown:
-        lines.append("")
-        lines.append(f"- **[{row.score}/3] {row.pillar}** — {row.prompt}")
-        lines.append(f"  - {row.answer}")
-    return "\n".join(lines)
-
-
-def _render_email_text(
-    *,
-    name: str,
-    email_addr: str,
-    company: str | None,
-    score: int,
-    band_name: str,
-    band_recommendation: str,
-    breakdown: list[AssessmentBreakdownItem],
-    submitted_at: str,
-) -> str:
-    lines: list[str] = []
-    lines.append(f"Score: {score} / {MAX_SCORE} — {band_name}")
-    lines.append(f"Recommendation: {band_recommendation}")
-    lines.append(f"Submitted: {submitted_at}")
-    lines.append("")
-    lines.append(f"Name: {name}")
-    lines.append(f"Email: {email_addr}")
-    if company:
-        lines.append(f"Company: {company}")
-    lines.append("")
-    lines.append("--- Answers ---")
-    for row in breakdown:
-        lines.append("")
-        lines.append(f"[{row.score}/3] {row.pillar}")
-        lines.append(f"Q: {row.prompt}")
-        lines.append(f"A: {row.answer}")
-    lines.append("")
-    lines.append("--")
-    lines.append("Reply directly to respond to this person.")
-    return "\n".join(lines)
-
-
 @router.post("/assessment", response_model=AssessmentResponse)
 async def assessment(req: AssessmentRequest) -> AssessmentResponse:
     # Honeypot — silently 200 to anything filling the hidden field.
@@ -139,9 +73,8 @@ async def assessment(req: AssessmentRequest) -> AssessmentResponse:
         raise HTTPException(status_code=503, detail="assessment_not_configured")
 
     # Recompute score server-side. Reject any answer that doesn't map
-    # to a known question/option — that catches both tampered payloads
-    # and version drift (e.g. an old cached page sending an answer for
-    # a question we've since removed).
+    # to a known question/option — catches tampered payloads and
+    # version drift (cached client sending an answer for a removed question).
     breakdown: list[AssessmentBreakdownItem] = []
     score = 0
     for q in ASSESSMENT_QUESTIONS:
@@ -155,30 +88,25 @@ async def assessment(req: AssessmentRequest) -> AssessmentResponse:
         score += opt.score
 
     band = score_to_band(score)
-    submitted_at = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
     email_addr = str(req.email)
+    name = req.name.strip()
+    company = req.company.strip() if req.company else None
 
-    # 1. Hand to flight-deck (canonical contact upsert).
-    #
-    # Flight-deck expects form_fields values as strings (it stores them
-    # as JSON, but the validator complained on numeric values in
-    # testing). Coerce everything to str.
+    # 1. Hand to flight-deck (identity resolution + engagement merge).
+    # Flight-deck wants form_fields values as strings.
     visitor_id = flight_deck.ensure_visitor_id(req.visitor_id)
     form_fields: dict[str, object] = {
         "email": email_addr,
-        "name": req.name.strip(),
+        "name": name,
         "source": "assessment",
         "score": str(score),
         "max_score": str(MAX_SCORE),
         "band": band.name,
     }
-    if req.company:
-        form_fields["company"] = req.company.strip()
+    if company:
+        form_fields["company"] = company
 
-    # Flight-deck failures are logged but do not 5xx the visitor — they
-    # already filled in the form, refusing them a score now would be
-    # rude. The score is honest data they earned; the CRM side is
-    # ops noise from their POV.
+    # Flight-deck failures are logged but do not 5xx the visitor.
     contact_id: str | None = None
     try:
         result = await flight_deck.submit_form(
@@ -194,55 +122,32 @@ async def assessment(req: AssessmentRequest) -> AssessmentResponse:
     except httpx.RequestError as exc:
         print(f"[assessment] flight-deck unreachable: {type(exc).__name__}: {str(exc)[:200]}")
     except Exception as exc:
-        # Defensive — anything unexpected in the upsert path shouldn't
-        # take down the response.
         import traceback
         print(f"[assessment] unexpected flight-deck error: {type(exc).__name__}: {str(exc)[:300]}")
         traceback.print_exc()
 
-    # 2. Activity Stream (best-effort).
+    # 2. Persist to Postgres — the canonical Crox CRM record. Always
+    # write, even if flight-deck failed; the local row is what Flight
+    # Deck's admin view will show.
     try:
-        if contact_id:
-            activity_md = _render_activity_md(
-                score=score,
-                band_name=band.name,
-                band_headline=band.headline,
-                band_description=band.description,
-                band_recommendation=band.recommendation,
-                breakdown=breakdown,
-                company=req.company,
-            )
-            await fibery.append_assessment_capture(contact_id, activity_md)
+        await db.insert_assessment_submission(
+            name=name,
+            email=email_addr,
+            company=company,
+            score=score,
+            max_score=MAX_SCORE,
+            band=band.name,
+            answers=req.answers,
+            breakdown=[item.model_dump() for item in breakdown],
+            page_url=req.page_url or None,
+            visitor_id=visitor_id,
+            contact_ref=req.contact_ref,
+            contact_id=contact_id,
+        )
     except Exception as exc:
-        print(f"[assessment] activity stream append failed: {type(exc).__name__}: {str(exc)[:200]}")
+        print(f"[assessment] db insert failed: {type(exc).__name__}: {str(exc)[:200]}")
 
-    # 3. Email Adam (best-effort).
-    try:
-        if email.is_configured():
-            email_subject = (
-                f"[Scorecard] {req.name.strip()} — {score}/{MAX_SCORE} ({band.name})"
-                + (f" — {req.company.strip()}" if req.company else "")
-            )
-            email_text = _render_email_text(
-                name=req.name.strip(),
-                email_addr=email_addr,
-                company=req.company.strip() if req.company else None,
-                score=score,
-                band_name=band.name,
-                band_recommendation=band.recommendation,
-                breakdown=breakdown,
-                submitted_at=submitted_at,
-            )
-            await email.send(
-                to=settings.assessment_to_email,
-                subject=email_subject,
-                text=email_text,
-                reply_to=email_addr,
-            )
-    except Exception as exc:
-        print(f"[assessment] email send failed: {type(exc).__name__}: {str(exc)[:200]}")
-
-    # 4. PostHog (best-effort).
+    # 3. PostHog (best-effort).
     try:
         if contact_id:
             await analytics.fire_event(
@@ -252,7 +157,7 @@ async def assessment(req: AssessmentRequest) -> AssessmentResponse:
                     "score": score,
                     "max_score": MAX_SCORE,
                     "band": band.name,
-                    "has_company": bool(req.company),
+                    "has_company": bool(company),
                     "page_url": req.page_url,
                     "visitor_id": visitor_id,
                 },

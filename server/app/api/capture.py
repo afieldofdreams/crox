@@ -1,19 +1,19 @@
 """POST /capture — lead capture from the chat widget.
 
 Flow:
-  1. Validate input (email, conversation, page_url)
-  2. POST to flight-deck /api/forms with HMAC CSRF → returns Fibery contact_id
-  3. Append the conversation transcript to that contact's CRM/Activity Stream
-  4. Fire a `chat_lead_captured` PostHog event keyed by contact_id
+  1. POST to flight-deck /api/forms with HMAC CSRF. Flight-deck still
+     owns identity resolution (tracking tokens, visitor->engagement
+     merge) so chat captures join up with other Crox properties.
+  2. Mark the local Postgres conversation row as captured. The transcript
+     itself is already stored in the `messages` table — Flight Deck's
+     admin view joins by email so there's nothing extra to do here.
+  3. Fire `chat_lead_captured` to PostHog keyed by contact_id.
 
-Step 1 is hard-fail: if flight-deck rejects the form (bad CSRF, validation,
-unknown project_host, etc.) we 4xx/5xx back to the widget so the user sees
-a real error. Steps 3 and 4 are best-effort — we already have the contact;
-losing a transcript append or a PostHog event is recoverable noise.
+Step 1 is hard-fail: if flight-deck rejects (bad CSRF, unknown host)
+we surface the error to the widget. Steps 2 and 3 are best-effort.
 
-The transcript markdown is built server-side so the widget can't inject
-arbitrary content into Fibery documents. We render each turn as a
-quoted block with a role prefix.
+Fibery Activity Stream writes were removed when Crox moved off Fibery
+as a CRM (2026-06). Postgres + Flight Deck is the canonical record.
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ from fastapi import APIRouter, HTTPException
 import httpx
 
 from app.api.chat import ChatMessage
-from app.services import analytics, db, fibery, flight_deck
+from app.services import analytics, db, flight_deck
 
 router = APIRouter()
 
@@ -42,28 +42,12 @@ class CaptureResponse(BaseModel):
     captured: bool
 
 
-def _render_transcript(messages: list[ChatMessage]) -> str:
-    """Render the conversation as markdown for the Activity Stream.
-
-    Each turn becomes a labelled blockquote. Markdown special chars in
-    user content are left as-is — Fibery renders them, but the worst
-    case is mild formatting weirdness, not injection (the document is
-    private to the CRM workspace).
-    """
-    lines: list[str] = []
-    for m in messages:
-        label = "**Visitor**" if m.role == "user" else "**Fred**"
-        body = "\n".join(f"> {line}" for line in m.content.strip().splitlines())
-        lines.append(f"{label}\n{body}")
-    return "\n\n".join(lines)
-
-
 @router.post("/capture", response_model=CaptureResponse)
 async def capture(req: CaptureRequest) -> CaptureResponse:
     if not flight_deck.is_configured():
         raise HTTPException(status_code=503, detail="capture_not_configured")
 
-    # 1. Hand the lead to flight-deck — it owns the canonical upsert.
+    # 1. Hand the lead to flight-deck — it owns identity resolution.
     visitor_id = flight_deck.ensure_visitor_id(req.visitor_id)
     form_fields = {
         "email": str(req.email),
@@ -80,7 +64,6 @@ async def capture(req: CaptureRequest) -> CaptureResponse:
             contact_ref=req.contact_ref,
         )
     except httpx.HTTPStatusError as exc:
-        # Flight-deck rejected the submission. Surface a sanitised error.
         body = exc.response.text[:200] if exc.response is not None else ""
         print(f"[capture] flight-deck rejected: {exc.response.status_code if exc.response else '?'} {body}")
         raise HTTPException(status_code=502, detail="upstream_rejected") from exc
@@ -90,24 +73,17 @@ async def capture(req: CaptureRequest) -> CaptureResponse:
 
     contact_id = result.get("contact_id")
     if not contact_id:
-        # Flight-deck queued the form (Fibery was down on their side). The
-        # widget should still treat this as success — they will retry.
+        # Flight-deck queued. Widget treats this as success.
         print(f"[capture] flight-deck queued for retry: {result}")
         if req.conversation_id:
             await db.mark_captured(req.conversation_id, None)
         return CaptureResponse(contact_id=None, captured=True)
 
-    # 2. Append transcript to the contact's Activity Stream (best-effort).
-    transcript_md = _render_transcript(req.conversation)
-    appended = await fibery.append_chat_transcript(contact_id, transcript_md)
-    if not appended:
-        print(f"[capture] activity-stream append failed for contact={contact_id}")
-
-    # 3. Link the Postgres conversation row to the resolved contact (best-effort).
+    # 2. Link the Postgres conversation row to the resolved contact (best-effort).
     if req.conversation_id:
         await db.mark_captured(req.conversation_id, contact_id)
 
-    # 4. Fire PostHog event keyed by contact_id (best-effort).
+    # 3. Fire PostHog event keyed by contact_id (best-effort).
     await analytics.fire_event(
         distinct_id=contact_id,
         event="chat_lead_captured",

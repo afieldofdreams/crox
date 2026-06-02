@@ -1,16 +1,16 @@
 """POST /contact-form — general contact form ingestion.
 
-Distinct from /capture (which is the chat-widget end-of-conversation
-flow): here the visitor explicitly fills in name, email, and a free-text
-message. The message is the primary content; there's no transcript.
+Distinct from /capture (chat-widget end-of-conversation flow): here the
+visitor explicitly fills name, email, and a free-text message.
 
-Plumbing is the same as /capture:
-  1. POST flight-deck /api/forms (HMAC CSRF, canonical Fibery upsert)
-  2. Append the message as a Contact form entry to CRM/Activity Stream
-  3. Fire `contact_form_submitted` PostHog event
+Plumbing:
+  1. POST flight-deck /api/forms (HMAC CSRF, canonical identity merge).
+  2. Persist the submission to crox-chat-db (contact_form_submissions).
+  3. Fire `contact_form_submitted` PostHog event.
 
-Distinct event name and Activity Stream label so the per-contact
-timeline at flight-deck admin reads correctly.
+The Flight Deck admin reads from contact_form_submissions to surface
+these in the consolidated lead view. Fibery Activity Stream writes
+were removed when Crox moved off Fibery as a CRM (2026-06).
 """
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr, Field
 import httpx
 
-from app.services import analytics, fibery, flight_deck
+from app.services import analytics, db, flight_deck
 
 router = APIRouter()
 
@@ -35,17 +35,6 @@ class ContactFormRequest(BaseModel):
 class ContactFormResponse(BaseModel):
     contact_id: str | None
     captured: bool
-
-
-def _render_message(name: str | None, email: str, message: str) -> str:
-    """Render the contact form submission as markdown for Activity Stream.
-
-    Each line of the message becomes a blockquote line so it stays
-    visually owned by the visitor — the same convention the chat
-    transcript uses (see api/capture.py)."""
-    body = "\n".join(f"> {line}" for line in message.strip().splitlines())
-    header = f"**From:** {name} <{email}>" if name else f"**From:** <{email}>"
-    return f"{header}\n\n{body}"
 
 
 @router.post("/contact-form", response_model=ContactFormResponse)
@@ -78,23 +67,29 @@ async def contact_form(req: ContactFormRequest) -> ContactFormResponse:
         raise HTTPException(status_code=502, detail="upstream_unreachable") from exc
 
     contact_id = result.get("contact_id")
-    if not contact_id:
-        # Queued by flight-deck for retry.
-        return ContactFormResponse(contact_id=None, captured=True)
 
-    # Append the message itself to the contact's Activity Stream (best-effort).
-    md = _render_message(req.name, str(req.email), req.message)
-    await fibery.append_contact_form_message(contact_id, md)
-
-    await analytics.fire_event(
-        distinct_id=contact_id,
-        event="contact_form_submitted",
-        properties={
-            "page_url": req.page_url,
-            "message_length": len(req.message),
-            "had_name": bool(req.name),
-            "visitor_id": visitor_id,
-        },
+    # Persist to local Postgres regardless of flight-deck contact_id —
+    # we want the message in our CRM even if flight-deck queued the upsert.
+    await db.insert_contact_form_submission(
+        name=req.name,
+        email=str(req.email),
+        message=req.message,
+        page_url=req.page_url,
+        visitor_id=visitor_id,
+        contact_ref=req.contact_ref,
+        contact_id=contact_id,
     )
+
+    if contact_id:
+        await analytics.fire_event(
+            distinct_id=contact_id,
+            event="contact_form_submitted",
+            properties={
+                "page_url": req.page_url,
+                "message_length": len(req.message),
+                "had_name": bool(req.name),
+                "visitor_id": visitor_id,
+            },
+        )
 
     return ContactFormResponse(contact_id=contact_id, captured=True)

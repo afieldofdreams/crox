@@ -1,19 +1,28 @@
-"""Resend email client. Best-effort, non-blocking failures.
+"""Resend email client. Used by the admin email-send endpoint.
 
-Used only by the /assessment endpoint to mail Adam the scored
-breakdown. Other CRM-shaped notifications stay on the Fibery Activity
-Stream side — this service exists because the assessment lead value
-is high enough to justify a direct inbox poke.
+When Adam clicks 'Send email' on a contact in the Flight Deck admin,
+the request POSTs to /admin/contacts/{email}/send-email which calls
+this module. The Resend message id (if returned) is persisted to the
+outbound_emails table so the admin can show what's been sent.
 
-Failure mode: log and return False rather than raising. The /assessment
-endpoint treats email as one of several best-effort sinks; the
-canonical record is the flight-deck/Fibery contact.
+Failure mode: returns a SendResult dataclass with `ok=False` and an
+error string rather than raising. The admin endpoint persists both
+success and failure rows so the operator can see what was attempted.
 """
 from __future__ import annotations
+
+from dataclasses import dataclass
 
 import httpx
 
 from app.config import settings
+
+
+@dataclass(frozen=True)
+class SendResult:
+    ok: bool
+    resend_id: str | None = None
+    error: str | None = None
 
 
 def is_configured() -> bool:
@@ -26,13 +35,19 @@ async def send(
     subject: str,
     text: str,
     reply_to: str | None = None,
-) -> bool:
+    from_address: str | None = None,
+) -> SendResult:
+    """Send an email via Resend.
+
+    `from_address` defaults to settings.assessment_from_email if not
+    given. Returns a SendResult with the Resend id (or error string)
+    so the caller can persist it.
+    """
     if not is_configured():
-        print("[email] RESEND_API_KEY not set — skipping send")
-        return False
+        return SendResult(ok=False, error="resend_not_configured")
 
     payload: dict[str, object] = {
-        "from": settings.assessment_from_email,
+        "from": from_address or settings.assessment_from_email,
         "to": [to],
         "subject": subject,
         "text": text,
@@ -51,9 +66,12 @@ async def send(
                 json=payload,
             )
             if resp.status_code >= 300:
-                print(f"[email] resend rejected {resp.status_code}: {resp.text[:200]}")
-                return False
-            return True
+                err = f"resend_{resp.status_code}: {resp.text[:300]}"
+                print(f"[email] {err}")
+                return SendResult(ok=False, error=err)
+            body = resp.json()
+            return SendResult(ok=True, resend_id=str(body.get("id")) if body.get("id") else None)
     except Exception as exc:
-        print(f"[email] send failed: {type(exc).__name__}: {str(exc)[:200]}")
-        return False
+        err = f"{type(exc).__name__}: {str(exc)[:200]}"
+        print(f"[email] send failed: {err}")
+        return SendResult(ok=False, error=err)
