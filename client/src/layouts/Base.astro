@@ -52,7 +52,7 @@ const navLinks = [
   { to: '/insights', label: 'Insights' },
   { to: '/learn', label: 'Learn' },
   { to: '/servers', label: 'Servers' },
-  { to: '/assessment', label: 'Scorecard' },
+  { to: '/assessment', label: 'Readiness Assessment' },
   { to: '/contact', label: 'Contact' },
 ];
 ---
@@ -131,15 +131,8 @@ const navLinks = [
           Crox
         </a>
 
-        <!-- Right side: Scorecard CTA + burger (visible at all breakpoints) -->
+        <!-- Right side: burger (visible at all breakpoints) -->
         <div class="flex items-center gap-3 sm:gap-4">
-          <a
-            href="/assessment"
-            aria-current={isActive('/assessment') ? 'page' : undefined}
-            class="font-mono text-[0.7rem] sm:text-[0.75rem] font-medium tracking-[0.12em] uppercase text-fg bg-accent px-4 py-2 sm:px-5 sm:py-2.5 transition-all hover:bg-[#c4472e] no-underline"
-          >
-            Take Scorecard
-          </a>
           <button
             id="menu-toggle"
             class="flex flex-col justify-center items-center w-10 h-10 gap-[5px]"
@@ -183,7 +176,7 @@ const navLinks = [
               </a>
             ))}
 
-            {navLinks.filter((l) => l.to !== '/' && l.to !== '/assessment').map(({ to, label }) => (
+            {navLinks.filter((l) => l.to !== '/').map(({ to, label }) => (
               <a
                 href={to}
                 role="menuitem"
