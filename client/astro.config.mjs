@@ -28,6 +28,7 @@ export default defineConfig({
   ],
   redirects: {
     '/ai-integration': '/experiments',
+    '/readiness': '/mapping',
   },
   build: {
     format: 'directory',

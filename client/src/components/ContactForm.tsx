@@ -29,7 +29,7 @@ interface Props {
   // Submit button copy.
   submitLabel?: string;
   // Override the message-field placeholder for context-specific framings
-  // (e.g. on /readiness: "What's the most urgent thing you're trying to
+  // (e.g. on /mapping: "What's the most urgent thing you're trying to
   // figure out?").
   messagePlaceholder?: string;
 }

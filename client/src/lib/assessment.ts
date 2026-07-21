@@ -116,11 +116,11 @@ export const BANDS: Band[] = [
     headline: 'Pockets of readiness — needs a plan.',
     description:
       "You have some of the pieces but they're uneven. A common pattern: solid data in one area, tacit knowledge in another; some appetite, no shared plan. The risk isn't doing nothing — it's doing the wrong thing first.",
-    recommendation: 'A structured Readiness Assessment to sequence what to fix and what to try.',
+    recommendation: 'A structured AI Mapping engagement to sequence what to fix and what to try.',
     service: {
-      name: 'Readiness Assessment',
-      href: '/readiness',
-      blurb: 'A proper three-week assessment of where you actually stand — data, processes, team, risk. Written report. Prioritised next steps.',
+      name: 'AI Mapping',
+      href: '/mapping',
+      blurb: 'A three-week map of how your business actually runs — processes, tools, data, risk — with a prioritised AI roadmap: what to automate first, what to fix first, what to leave alone.',
     },
   },
   {

@@ -1,19 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
 
-const services = [
+const path = [
 	{
-		name: 'Readiness',
+		step: 'Step 1',
+		name: 'Map',
 		meta: '1–2 people from you · 2–3 weeks',
-		blurb: 'Know exactly where you stand before you spend anything. Data, processes, team, risk.',
-		href: '/readiness',
+		blurb: 'We map how your business actually runs — processes, tools, data, people — and hand you a prioritised AI roadmap: what to automate first, what to fix first, what to leave alone.',
+		href: '/mapping',
 	},
 	{
-		name: 'Experiments',
+		step: 'Step 2',
+		name: 'Build',
 		meta: '1 technical stakeholder · 4–6 weeks',
-		blurb: 'We take one high-value process and build an AI version of it. Connected to your real systems. Governance built in.',
+		blurb: 'We take the top process on your roadmap and build the AI version of it. Connected to your real systems. Governance built in.',
 		href: '/experiments',
 	},
+	{
+		step: 'Step 3',
+		name: 'Support',
+		meta: 'Month to month · Scope agreed quarterly',
+		blurb: "Ongoing development and support. We keep what's built working, extend it down the roadmap, and keep your team ahead of the tools.",
+		href: '/support',
+	},
+];
+
+const supporting = [
 	{
 		name: 'Education',
 		meta: 'Your whole team · Half or full day',
@@ -48,7 +60,7 @@ const jsonLd = [
 		name: 'Crox',
 		url: 'https://crox.io',
 		logo: 'https://crox.io/og.png',
-		description: 'Crox helps organisations in regulated industries adopt AI safely. Readiness assessments, experiments, education, and board-level guidance.',
+		description: 'Crox helps small and mid-sized businesses put AI to work. It starts with a map of your business and a prioritised roadmap, then we build the tooling and support it as it grows.',
 		founder: { '@type': 'Person', name: 'Adam Field' },
 		sameAs: ['https://linkedin.com/in/afieldio'],
 	},
@@ -62,8 +74,8 @@ const jsonLd = [
 ---
 
 <Base
-	title="Crox — Practical AI for Regulated Industries"
-	description="Readiness, Experiments, Education, and Board-level guidance for organisations adopting AI in regulated sectors. Clear, fixed-scope engagements. No retainers. No ambiguity."
+	title="Crox — Practical AI for SMEs. Map it, build it, keep it working."
+	description="Crox helps small and mid-sized businesses put AI to work. Start with a map of your business and a prioritised roadmap, then we build the tooling and support it as it grows."
 	canonical="https://crox.io/"
 	ogType="website"
 	jsonLd={jsonLd}
@@ -151,12 +163,40 @@ const jsonLd = [
 			<span class="flex-1 h-px bg-border"></span>
 		</div>
 
-		<h2 class="font-serif font-normal text-[1.6rem] mb-10 max-sm:text-[1.3rem]">
-			No retainers. No ambiguity. Four clear ways to work together.
+		<h2 class="font-serif font-normal text-[1.6rem] mb-4 max-sm:text-[1.3rem]">
+			One clear path. Map it, build it, keep it working.
 		</h2>
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
+			Every engagement starts the same way: a map of your business and a prioritised
+			roadmap. Then we build what ranks first, and support the tooling as it grows.
+		</p>
+
+		<div class="grid grid-cols-3 gap-6 max-md:grid-cols-1">
+			{path.map((s) => (
+				<a
+					href={s.href}
+					class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group"
+				>
+					<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">{s.step}</p>
+					<h3 class="font-serif font-normal text-[1.3rem] mb-2 text-fg group-hover:text-accent transition-colors">
+						{s.name}
+					</h3>
+					<p class="text-[0.8rem] text-fg-dim mb-4">{s.meta}</p>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">{s.blurb}</p>
+					<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
+						Learn more &rarr;
+					</span>
+				</a>
+			))}
+		</div>
+
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mt-14 mb-8 flex items-center gap-4">
+			Alongside the path
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
 
 		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
-			{services.map((s) => (
+			{supporting.map((s) => (
 				<a
 					href={s.href}
 					class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group"

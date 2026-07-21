@@ -24,8 +24,12 @@ const faqs = [
 		a: "If we get to week three and it's clear the approach won't work, we tell you and stop. Better to know early than ship something fragile. We've never had this happen, but the door is open.",
 	},
 	{
-		q: 'Do we need to do a Readiness Assessment first?',
-		a: "Not always. If you already know which process you want to tackle and your data is in reasonable shape, you can go straight to Experiments. If you're unsure, Readiness is the cheaper place to find out.",
+		q: 'Do we need to do AI Mapping first?',
+		a: "Not always. If you already know which process you want to tackle and your data is in reasonable shape, you can go straight to a build. If you're unsure, Mapping is the cheaper place to find out — and it hands you the prioritised roadmap this step works from.",
+	},
+	{
+		q: 'What happens after handover?',
+		a: "The tool is yours either way. Most clients move into ongoing support: we keep it working as models and APIs change, and build the next thing on the roadmap. Some take the documentation and run it in-house. Both are fine.",
 	},
 ];
 
@@ -74,7 +78,7 @@ const jsonLd = [
 	<div class="py-24 pb-16 border-b border-border">
 		<div class="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-stretch">
 			<div>
-				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service · Step 2</p>
 				<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
 					AI <em class="italic text-accent">Experiments.</em>
 				</h1>
@@ -221,7 +225,8 @@ const jsonLd = [
 				<div>
 					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Handover</h3>
 					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
-						Working tool, written documentation, recommendation on what comes next.
+						Working tool, written documentation, recommendation on what comes next —
+						run it in-house, or keep it growing with <a href="/support" class="text-accent no-underline hover:text-fg">ongoing support</a>.
 					</p>
 				</div>
 			</div>
@@ -259,7 +264,7 @@ const jsonLd = [
 				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Not right if</h3>
 				<ul class="space-y-3">
 					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
-						You haven't done a Readiness Assessment and don't know what your risk exposure looks like
+						You don't yet know which process to pick or what your risk exposure looks like — start with <a href="/mapping" class="text-accent no-underline hover:text-fg">Mapping</a>
 					</li>
 					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
 						You want a generic chatbot disconnected from your actual business

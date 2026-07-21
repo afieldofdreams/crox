@@ -120,7 +120,7 @@ BANDS: tuple[Band, ...] = (
             "in one area, tacit knowledge in another; some appetite, no shared plan. The "
             "risk isn't doing nothing — it's doing the wrong thing first."
         ),
-        recommendation="A structured Readiness Assessment to sequence what to fix and what to try.",
+        recommendation="A structured AI Mapping engagement to sequence what to fix and what to try.",
     ),
     Band(
         name="Strong",

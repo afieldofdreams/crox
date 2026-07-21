@@ -5,22 +5,26 @@ import FaqAccordion from '../components/FaqAccordion.tsx';
 const faqs = [
 	{
 		q: 'How is this different from a free discovery call?',
-		a: "A discovery call is 30 minutes and produces a recommendation. A Readiness Assessment is three weeks and produces a written report you can take to a board. Different artefacts, different depth.",
+		a: "A discovery call is 30 minutes and produces a recommendation. AI Mapping is three weeks and produces a map of your business and a prioritised roadmap you can act on — with or without us. Different artefacts, different depth.",
 	},
 	{
 		q: "How much of our team's time does this take?",
-		a: "Roughly 4–6 hours total across three weeks. Mostly week 1 interviews and a one-hour walkthrough at the end.",
+		a: 'Roughly 4–6 hours total across three weeks. Mostly week 1 interviews and a one-hour walkthrough at the end.',
 	},
 	{
-		q: "What if the report just tells us we're not ready?",
-		a: "Then you've spent a fraction of what you'd have spent on a pilot that wouldn't have worked. The report tells you what you'd need to change first, in what order.",
+		q: "What if the map says we're not ready for AI yet?",
+		a: "Then you've spent a fraction of what you'd have spent on a pilot that wouldn't have worked. The roadmap tells you what to fix first, in what order — and that work is usually cheap.",
+	},
+	{
+		q: 'Do we have to keep working with you afterwards?',
+		a: "No. The map and roadmap are written to stand alone. Most clients do continue — first to build the top opportunity, then into ongoing support — but the roadmap is yours either way, and any competent builder can work from it.",
 	},
 	{
 		q: 'Do you cover specific regulations (HIPAA, GDPR, FCA)?',
 		a: "We address regulatory exposure relevant to your sector and flag where specialist counsel is needed. We're not a law firm — we work alongside one if you have one.",
 	},
 	{
-		q: 'Can the report inform a tender or board paper?',
+		q: 'Can the roadmap inform a tender or board paper?',
 		a: "Yes. It's written to be quotable in board papers and procurement documents. Specific, plain-language, and dated.",
 	},
 ];
@@ -29,10 +33,10 @@ const jsonLd = [
 	{
 		'@context': 'https://schema.org',
 		'@type': 'Service',
-		name: 'AI Readiness Assessment',
-		description: 'A three-week assessment of your data, processes, team capability, and risk exposure, with a written report and prioritised next steps.',
+		name: 'AI Mapping',
+		description: 'A three-week mapping of your processes, tools, data, and risk, producing a prioritised AI roadmap: what to automate first, what to fix first, and what to leave alone.',
 		provider: { '@type': 'Organization', name: 'Crox', url: 'https://crox.io' },
-		url: 'https://crox.io/readiness',
+		url: 'https://crox.io/mapping',
 		areaServed: 'GB',
 		offers: {
 			'@type': 'Offer',
@@ -54,28 +58,30 @@ const jsonLd = [
 		'@type': 'BreadcrumbList',
 		itemListElement: [
 			{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
-			{ '@type': 'ListItem', position: 2, name: 'Readiness', item: 'https://crox.io/readiness' },
+			{ '@type': 'ListItem', position: 2, name: 'Mapping', item: 'https://crox.io/mapping' },
 		],
 	},
 ];
 ---
 
 <Base
-	title="AI Readiness Assessment — Know where you stand before you spend | Crox"
-	description="A three-week assessment of your data, processes, team, and risk exposure. Written report. Prioritised next steps."
-	canonical="https://crox.io/readiness"
+	title="AI Mapping — A prioritised AI roadmap for your business | Crox"
+	description="Three weeks. We map your processes, tools, data, and risk, and hand you a prioritised AI roadmap: what to automate first, what to fix first, what to leave alone."
+	canonical="https://crox.io/mapping"
 	jsonLd={jsonLd}
 >
 	<!-- Hero -->
 	<div class="py-24 pb-16 border-b border-border">
 		<div class="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-stretch">
 			<div>
-				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service</p>
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service · Step 1</p>
 				<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
-					AI Readiness <em class="italic text-accent">Assessment.</em>
+					AI <em class="italic text-accent">Mapping.</em>
 				</h1>
 				<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
-					Know exactly where you stand before you spend anything significant.
+					We map how your business actually runs — processes, tools, data, people — and hand
+					you a prioritised roadmap: what to automate first, what to fix first, and what to
+					leave alone.
 				</p>
 				<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
 					<span class="text-fg-dim">1–2 people from you</span>
@@ -93,39 +99,33 @@ const jsonLd = [
 			<div class="hidden md:block relative bg-surface border border-border overflow-hidden">
 				<svg viewBox="0 0 300 220" style="position: absolute; inset: 0; width: 100%; height: 100%;" preserveAspectRatio="xMidYMid slice">
 				  <defs>
-				    <pattern id="r-grid" patternUnits="userSpaceOnUse" width="20" height="20">
+				    <pattern id="m-grid" patternUnits="userSpaceOnUse" width="20" height="20">
 				      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#332e2b" stroke-width="0.5"/>
 				    </pattern>
 				  </defs>
-				  <rect x="0" y="0" width="300" height="220" fill="url(#r-grid)" opacity="0.35"/>
+				  <rect x="0" y="0" width="300" height="220" fill="url(#m-grid)" opacity="0.35"/>
 				  <polygon points="-20,250 180,-30 320,30 320,250" fill="#c4472e" opacity="0.12"/>
-				  <rect x="-10" y="30" width="180" height="14" fill="#e07070" transform="rotate(-8, 80, 37)"/>
 				  <text x="180" y="65" font-family="DM Mono, monospace" font-size="68" font-weight="500" fill="#e8e4de" letter-spacing="2">01</text>
+				  <!-- Node map: processes connected, ranked -->
+				  <g stroke="#5a5550" stroke-width="1">
+				    <line x1="55" y1="110" x2="120" y2="140"/>
+				    <line x1="55" y1="110" x2="105" y2="85"/>
+				    <line x1="120" y1="140" x2="190" y2="120"/>
+				    <line x1="105" y1="85" x2="190" y2="120"/>
+				    <line x1="190" y1="120" x2="245" y2="165"/>
+				    <line x1="120" y1="140" x2="140" y2="190"/>
+				  </g>
+				  <circle cx="55" cy="110" r="9" fill="#c4472e"/>
+				  <circle cx="105" cy="85" r="6" fill="none" stroke="#e07070" stroke-width="2"/>
+				  <circle cx="120" cy="140" r="7" fill="#e07070"/>
+				  <circle cx="190" cy="120" r="9" fill="none" stroke="#c4472e" stroke-width="2"/>
+				  <circle cx="245" cy="165" r="5" fill="none" stroke="#9d6b53" stroke-width="2"/>
+				  <circle cx="140" cy="190" r="5" fill="#12100e" stroke="#5a5550" stroke-width="2"/>
 				  <g font-family="DM Mono, monospace" font-size="10" letter-spacing="1.5">
-				    <g transform="translate(20, 105)">
-				      <rect x="0" y="-9" width="11" height="11" fill="none" stroke="#e07070" stroke-width="2"/>
-				      <line x1="2" y1="-7" x2="9" y2="0" stroke="#e07070" stroke-width="2.5"/>
-				      <line x1="9" y1="-7" x2="2" y2="0" stroke="#e07070" stroke-width="2.5"/>
-				      <text x="20" y="0" fill="#d0cbc5">DATA · AUDIT</text>
-				      <text x="240" y="0" fill="#e07070" text-anchor="end">CMPL</text>
-				    </g>
-				    <g transform="translate(20, 130)">
-				      <rect x="0" y="-9" width="11" height="11" fill="none" stroke="#c4472e" stroke-width="2"/>
-				      <polyline points="2,-3 5,1 9,-6" fill="none" stroke="#c4472e" stroke-width="2.5"/>
-				      <text x="20" y="0" fill="#d0cbc5">PROC · MAPPED</text>
-				      <text x="240" y="0" fill="#c4472e" text-anchor="end">CMPL</text>
-				    </g>
-				    <g transform="translate(20, 155)">
-				      <rect x="0" y="-9" width="11" height="11" fill="none" stroke="#9d6b53" stroke-width="2"/>
-				      <line x1="2" y1="-3" x2="9" y2="-3" stroke="#9d6b53" stroke-width="2.5"/>
-				      <text x="20" y="0" fill="#d0cbc5">RISK · REVIEW</text>
-				      <text x="240" y="0" fill="#9d6b53" text-anchor="end">PEND</text>
-				    </g>
-				    <g transform="translate(20, 180)">
-				      <rect x="0" y="-9" width="11" height="11" fill="#12100e" stroke="#5a5550" stroke-width="2"/>
-				      <text x="20" y="0" fill="#d0cbc5" opacity="0.5">TEAM · BRIEF</text>
-				      <text x="240" y="0" fill="#5a5550" text-anchor="end" opacity="0.6">—</text>
-				    </g>
+				    <text x="20" y="135" fill="#d0cbc5">OPS</text>
+				    <text x="95" y="70" fill="#d0cbc5">DATA</text>
+				    <text x="205" y="110" fill="#d0cbc5">FIN</text>
+				    <text x="255" y="185" fill="#d0cbc5" opacity="0.6">HR</text>
 				  </g>
 				  <g stroke="#e07070" stroke-width="1.5" fill="none">
 				    <line x1="275" y1="195" x2="290" y2="195"/>
@@ -145,13 +145,13 @@ const jsonLd = [
 
 		<div class="text-[0.95rem] text-fg-dim leading-[1.8] space-y-4">
 			<p>
-				You know you need to do something with AI. You don't know what, you don't know in
-				what order, and you don't know what could go wrong. Every consultant tells you
-				something different. Every vendor demo looks impressive. None of it tells you
-				whether your business is actually ready.
+				You know AI should be doing something in your business. You don't know what, you
+				don't know in what order, and every vendor demo answers a question you weren't
+				asking. Meanwhile the processes that actually eat your team's week — quoting,
+				intake, reporting, chasing — carry on untouched.
 			</p>
 			<p class="text-fg">
-				Spending £50,000 to find out you weren't is the expensive way to learn.
+				The businesses that get value from AI don't start with tools. They start with a map.
 			</p>
 		</div>
 	</section>
@@ -165,16 +165,16 @@ const jsonLd = [
 
 		<ul class="space-y-4">
 			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-				A written readiness report covering your data, processes, team capability, and risk exposure
+				A map of your business — the processes, tools, data, and people behind them — scored for AI opportunity
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				A prioritised roadmap: what to automate first, second, and not at all — with the reasoning shown
 			</li>
 			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
 				A risk register naming the specific things that could go wrong in your context
 			</li>
 			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-				A prioritised list of what to tackle first, second, and not at all
-			</li>
-			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-				A clear answer to: should you do an Experiment, more education, or wait
+				A scoped recommendation for the first build — sized so you can decide whether to do it with us, in-house, or not at all
 			</li>
 		</ul>
 	</section>
@@ -192,8 +192,8 @@ const jsonLd = [
 				<div>
 					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Discovery</h3>
 					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
-						Interviews with your operations lead and one technical stakeholder. We review
-						your existing tooling, data, and governance setup.
+						Interviews with the people who run the work day to day. We walk your processes,
+						tooling, data, and governance as they actually are — not as the org chart says.
 					</p>
 				</div>
 			</div>
@@ -201,9 +201,10 @@ const jsonLd = [
 			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
 				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Week 2</span>
 				<div>
-					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Analysis</h3>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Mapping and scoring</h3>
 					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
-						We work through what we've found. You don't do anything in this week.
+						We build the map and score each process for value, feasibility, and risk.
+						You don't do anything in this week.
 					</p>
 				</div>
 			</div>
@@ -211,9 +212,10 @@ const jsonLd = [
 			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
 				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Week 3</span>
 				<div>
-					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Report and walkthrough</h3>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Roadmap and walkthrough</h3>
 					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
-						Written report delivered. One-hour session to walk you through it and answer questions.
+						Written map and prioritised roadmap delivered. One-hour session to walk you
+						through it, argue about it, and agree the first move.
 					</p>
 				</div>
 			</div>
@@ -222,6 +224,41 @@ const jsonLd = [
 		<p class="text-[0.95rem] text-fg-dim leading-[1.7] mt-10 pt-8 border-t border-border">
 			Time from you: roughly 4–6 hours total across the three weeks.
 		</p>
+	</section>
+
+	<!-- What happens after -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			What happens after
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-8">
+			The map is step one of a path, not a report that gathers dust. Most clients take the
+			top opportunity on the roadmap and build it — then keep the tooling alive and growing
+			with ongoing support.
+		</p>
+
+		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+			<a href="/experiments" class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group">
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">Step 2</p>
+				<h3 class="font-serif font-normal text-[1.3rem] mb-2 text-fg group-hover:text-accent transition-colors">Build</h3>
+				<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">
+					We take the top process on your roadmap and build the AI version of it —
+					connected to your real systems, governance built in.
+				</p>
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">Learn more &rarr;</span>
+			</a>
+			<a href="/support" class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group">
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-3">Step 3</p>
+				<h3 class="font-serif font-normal text-[1.3rem] mb-2 text-fg group-hover:text-accent transition-colors">Support</h3>
+				<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">
+					Ongoing development and support: we keep what's built working, extend it down
+					the roadmap, and keep your team ahead of the tools.
+				</p>
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">Learn more &rarr;</span>
+			</a>
+		</div>
 	</section>
 
 	<!-- Who this is for -->
@@ -236,13 +273,13 @@ const jsonLd = [
 				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Right for you if</h3>
 				<ul class="space-y-3">
 					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-						You're being asked by your board, your team, or yourself: what should we be doing with AI?
+						You run a small or mid-sized business and you're being asked — by your board, your team, or yourself — what AI should be doing for you
 					</li>
 					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-						You're in a regulated sector (healthcare, legal, financial services, insurance)
+						You've tried tools or pilots and they stalled, and you suspect the problem is sequencing, not technology
 					</li>
 					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
-						You'd rather spend a little finding out than £50,000 finding out the hard way
+						You'd rather spend a little mapping than £50,000 finding out the hard way
 					</li>
 				</ul>
 			</div>
@@ -250,7 +287,7 @@ const jsonLd = [
 				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Not right if</h3>
 				<ul class="space-y-3">
 					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
-						You already know exactly what you want to build and just need someone to build it (skip to <a href="/experiments" class="text-accent no-underline hover:text-fg">Experiments</a>)
+						You already know exactly what you want to build and just need someone to build it (skip to <a href="/experiments" class="text-accent no-underline hover:text-fg">Build</a>)
 					</li>
 					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
 						You're a sole operator looking for personal productivity tools
@@ -288,10 +325,10 @@ const jsonLd = [
 	<!-- CTA -->
 	<section class="py-24">
 		<h2 class="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.6rem]">
-			Find out where you actually <em class="italic text-accent">stand.</em>
+			See your business <em class="italic text-accent">mapped.</em>
 		</h2>
 		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
-			Three weeks. One report. Clear next steps.
+			Three weeks. One map. A roadmap you can act on — with us or without us.
 		</p>
 		<a
 			href="https://calendar.app.google/dmmq9bdFyc11G8Km8"

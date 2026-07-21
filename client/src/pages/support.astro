@@ -1,0 +1,292 @@
+---
+import Base from '../layouts/Base.astro';
+import FaqAccordion from '../components/FaqAccordion.tsx';
+
+const faqs = [
+	{
+		q: 'Is this a retainer?',
+		a: "It's a month-to-month partnership with a scope we agree each quarter. You see what was delivered every month, and you can stop whenever the value stops. No long lock-ins.",
+	},
+	{
+		q: 'Do we need to have done Mapping or a Build first?',
+		a: "Usually one or both — support works best when there's a roadmap to work down and tooling to look after. If you already have AI tooling built elsewhere, we can take it on after a short review.",
+	},
+	{
+		q: 'What does a typical month look like?',
+		a: 'A mix of three things: extending your tooling down the roadmap, keeping what exists working as models and APIs change, and time with your team — reviews, training, and answering the "could AI do this?" questions as they come up.',
+	},
+	{
+		q: 'Who owns what gets built?',
+		a: 'You do. Everything we build runs in your accounts, on your infrastructure, under your control. If we part ways, it keeps working and you keep the documentation.',
+	},
+	{
+		q: 'How is this priced?',
+		a: "A monthly amount agreed on the call, based on the pace you want to move at. Adam scopes it once he understands the roadmap rather than quoting blind.",
+	},
+];
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Service',
+		name: 'Ongoing AI Development & Support',
+		description: 'A month-to-month partnership: we extend your AI tooling down the roadmap, keep what exists working as models change, and keep your team ahead of the tools.',
+		provider: { '@type': 'Organization', name: 'Crox', url: 'https://crox.io' },
+		url: 'https://crox.io/support',
+		areaServed: 'GB',
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map(faq => ({
+			'@type': 'Question',
+			name: faq.q,
+			acceptedAnswer: { '@type': 'Answer', text: faq.a },
+		})),
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://crox.io' },
+			{ '@type': 'ListItem', position: 2, name: 'Support', item: 'https://crox.io/support' },
+		],
+	},
+];
+---
+
+<Base
+	title="Ongoing AI Development & Support — Keep the tooling alive | Crox"
+	description="A month-to-month partnership: we extend your AI tooling down the roadmap, keep what exists working as models change, and keep your team ahead of the tools."
+	canonical="https://crox.io/support"
+	jsonLd={jsonLd}
+>
+	<!-- Hero -->
+	<div class="py-24 pb-16 border-b border-border">
+		<div class="grid grid-cols-1 md:grid-cols-[1fr_280px] gap-8 lg:gap-12 items-stretch">
+			<div>
+				<p class="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">Service · Step 3</p>
+				<h1 class="font-serif font-normal text-[3.2rem] leading-[1.15] mb-8 max-sm:text-[2.2rem]">
+					Ongoing Development &amp; <em class="italic text-accent">Support.</em>
+				</h1>
+				<p class="text-[1rem] text-fg-dim leading-[1.8] mb-10">
+					AI tooling isn't a project you finish. Models change, your business changes, and
+					the roadmap has more than one line on it. We keep what's built working, extend it,
+					and keep your team ahead of the tools.
+				</p>
+				<div class="flex flex-wrap gap-x-8 gap-y-3 mb-10 font-mono text-[0.85rem]">
+					<span class="text-fg-dim">Month to month</span>
+					<span class="text-fg-dim">Scope agreed quarterly</span>
+				</div>
+				<a
+					href="https://calendar.app.google/dmmq9bdFyc11G8Km8"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+				>
+					Book a call to discuss &rarr;
+				</a>
+			</div>
+			<div class="hidden md:block relative bg-surface border border-border overflow-hidden">
+				<svg viewBox="0 0 300 220" style="position: absolute; inset: 0; width: 100%; height: 100%;" preserveAspectRatio="xMidYMid slice">
+				  <defs>
+				    <pattern id="s-grid" patternUnits="userSpaceOnUse" width="20" height="20">
+				      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#332e2b" stroke-width="0.5"/>
+				    </pattern>
+				  </defs>
+				  <rect x="0" y="0" width="300" height="220" fill="url(#s-grid)" opacity="0.35"/>
+				  <polygon points="-20,250 180,-30 320,30 320,250" fill="#c4472e" opacity="0.12"/>
+				  <text x="180" y="65" font-family="DM Mono, monospace" font-size="68" font-weight="500" fill="#e8e4de" letter-spacing="2">03</text>
+				  <!-- Compounding steps: tooling shipped over time -->
+				  <g>
+				    <rect x="25" y="165" width="42" height="25" fill="#9d6b53" opacity="0.7"/>
+				    <rect x="77" y="145" width="42" height="45" fill="#c4472e" opacity="0.8"/>
+				    <rect x="129" y="130" width="42" height="60" fill="#e07070" opacity="0.85"/>
+				    <rect x="181" y="105" width="42" height="85" fill="#c4472e"/>
+				    <rect x="233" y="88" width="42" height="102" fill="#e07070"/>
+				  </g>
+				  <polyline points="46,155 98,135 150,118 202,93 254,76" fill="none" stroke="#e8e4de" stroke-width="1.5" stroke-dasharray="4 3"/>
+				  <g font-family="DM Mono, monospace" font-size="10" letter-spacing="1.5">
+				    <text x="25" y="205" fill="#d0cbc5" opacity="0.6">Q1</text>
+				    <text x="129" y="205" fill="#d0cbc5" opacity="0.6">Q2</text>
+				    <text x="233" y="205" fill="#d0cbc5" opacity="0.6">Q3</text>
+				  </g>
+				  <g stroke="#e07070" stroke-width="1.5" fill="none">
+				    <line x1="275" y1="30" x2="290" y2="30"/>
+				    <line x1="290" y1="30" x2="290" y2="45"/>
+				  </g>
+				</svg>
+			</div>
+		</div>
+	</div>
+
+	<!-- Problem -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			The problem this solves
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="text-[0.95rem] text-fg-dim leading-[1.8] space-y-4">
+			<p>
+				Most AI projects die after handover. The consultant leaves, a model gets deprecated,
+				an API changes, the person who understood it moves on — and six months later the
+				"AI transformation" is a tool nobody opens. The build was fine. Nobody owned what
+				came after.
+			</p>
+			<p class="text-fg">
+				The value of AI tooling compounds only if someone keeps compounding it.
+			</p>
+		</div>
+	</section>
+
+	<!-- What you get -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			What you get
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<ul class="space-y-4">
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				New tooling built each month, working down the roadmap from your map — quoting, intake, reporting, whatever ranks next
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				Everything already built kept working — monitored, maintained, and updated as models and APIs change
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				Time with your team: reviews, training, and honest answers to "could AI do this?" as new ideas come up
+			</li>
+			<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+				A monthly written summary of what shipped, what it's saving, and what's next — quotable to your board
+			</li>
+		</ul>
+	</section>
+
+	<!-- How it works -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			How it works
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="space-y-10">
+			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Quarterly</span>
+				<div>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Agree the scope</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						We look at the roadmap together, re-rank it against what the business needs now,
+						and agree what the next quarter should deliver.
+					</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Monthly</span>
+				<div>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Ship and report</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						Tooling ships into your real systems. You get a written summary of what changed,
+						what it's saving, and anything that needs a decision from you.
+					</p>
+				</div>
+			</div>
+
+			<div class="grid grid-cols-[80px_1fr] gap-4 items-start max-sm:grid-cols-1 max-sm:gap-1">
+				<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-accent leading-[1.6]">Always</span>
+				<div>
+					<h3 class="font-serif font-normal text-[1.3rem] leading-[1.3] mb-2">Keep it alive</h3>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7]">
+						Model deprecations, API changes, new capabilities worth adopting — handled
+						before they become your problem.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<p class="text-[0.95rem] text-fg-dim leading-[1.7] mt-10 pt-8 border-t border-border">
+			Month to month. You see what was delivered every month, and you can stop whenever the
+			value stops.
+		</p>
+	</section>
+
+	<!-- Who this is for -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Is this for you?
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="grid grid-cols-2 gap-8 max-sm:grid-cols-1">
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Right for you if</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You have a roadmap (from <a href="/mapping" class="text-accent no-underline hover:text-fg">Mapping</a>) or working tooling (from a <a href="/experiments" class="text-accent no-underline hover:text-fg">Build</a>) and want it to keep compounding
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You don't want to hire an AI engineer to look after one system
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-accent">
+						You want one accountable partner your team can ask, rather than a new procurement every time an idea comes up
+					</li>
+				</ul>
+			</div>
+			<div>
+				<h3 class="font-serif font-normal text-[1.2rem] mb-4">Not right if</h3>
+				<ul class="space-y-3">
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						You haven't mapped anything yet and nothing is built — start with <a href="/mapping" class="text-accent no-underline hover:text-fg">Mapping</a>
+					</li>
+					<li class="text-[0.95rem] text-fg-dim leading-[1.7] pl-4 border-l-2 border-border">
+						You want a body-shop of developers on demand — this is a scoped partnership, not staff augmentation
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+
+	<!-- Proof -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Proof
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<div class="border-l-2 border-accent pl-6 py-1">
+			<p class="font-serif text-[1.3rem] text-fg leading-[1.5] mb-3">
+				&ldquo;Adam cares deeply about the quality and impact of his work.&rdquo;
+			</p>
+			<p class="text-[0.9rem] text-fg-dim">&mdash; Jasel Mehta, COO</p>
+		</div>
+	</section>
+
+	<!-- FAQ -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Frequently asked questions
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<FaqAccordion faqs={faqs} client:load />
+	</section>
+
+	<!-- CTA -->
+	<section class="py-24">
+		<h2 class="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.6rem]">
+			Tooling that keeps <em class="italic text-accent">compounding.</em>
+		</h2>
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
+			Month to month. A roadmap worked down, not a report on a shelf.
+		</p>
+		<a
+			href="https://calendar.app.google/dmmq9bdFyc11G8Km8"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="inline-block font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px no-underline"
+		>
+			Book a call to discuss &rarr;
+		</a>
+	</section>
+</Base>
