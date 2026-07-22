@@ -18,6 +18,9 @@ import httpx
 from app.config import settings
 
 
+_RESEND_EMAILS_URL = "https://api.resend.com/emails"
+
+
 @dataclass(frozen=True)
 class SendResult:
     ok: bool
@@ -62,7 +65,7 @@ async def send(
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
             resp = await client.post(
-                "https://api.resend.com/emails",
+                _RESEND_EMAILS_URL,
                 headers={
                     "Authorization": f"Bearer {settings.resend_api_key}",
                     "Content-Type": "application/json",
@@ -79,3 +82,27 @@ async def send(
         err = f"{type(exc).__name__}: {str(exc)[:200]}"
         print(f"[email] send failed: {err}")
         return SendResult(ok=False, error=err)
+
+
+async def get_status(resend_id: str) -> dict:
+    """Fetch delivery/engagement state for a sent email from Resend.
+
+    Returns {"last_event": str | None, "error": str | None}. Resend's
+    last_event moves through sent → delivered → opened/clicked (opens and
+    clicks only appear if tracking is enabled on the sending domain), or
+    bounced/complained/delivery_delayed on failure paths.
+    """
+    if not is_configured():
+        return {"last_event": None, "error": "resend_not_configured"}
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            resp = await client.get(
+                f"{_RESEND_EMAILS_URL}/{resend_id}",
+                headers={"Authorization": f"Bearer {settings.resend_api_key}"},
+            )
+            if resp.status_code >= 300:
+                return {"last_event": None, "error": f"resend_{resp.status_code}"}
+            body = resp.json()
+            return {"last_event": body.get("last_event"), "error": None}
+    except Exception as exc:
+        return {"last_event": None, "error": f"{type(exc).__name__}: {str(exc)[:200]}"}

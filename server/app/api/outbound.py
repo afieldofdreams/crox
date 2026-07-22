@@ -15,12 +15,14 @@ guardrails so no caller — human or agent — can bypass them:
     GET /unsubscribe is public and one-click.
 
 Routes:
-  POST /outbound/send     — send one cold email (admin token)
-  GET  /outbound/status   — configured? sent today? cap? (admin token)
-  GET  /unsubscribe       — public opt-out landing (HMAC-signed link)
+  POST /outbound/send        — send one cold email (admin token)
+  GET  /outbound/status      — configured? sent today? cap? (admin token)
+  GET  /outbound/engagement  — per-email Resend delivery/open state (admin token)
+  GET  /unsubscribe          — public opt-out landing (HMAC-signed link)
 """
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import hmac
 
@@ -80,6 +82,45 @@ async def outbound_status(_: None = Depends(_require_admin)) -> dict:
         "sent_today": sent_today,
         "db_ok": sent_today is not None,
     }
+
+
+@router.get("/outbound/engagement")
+async def outbound_engagement(
+    limit: int = 100,
+    _: None = Depends(_require_admin),
+) -> dict:
+    """Delivery/engagement state for recent cold sends, pulled live from
+    Resend. Opens and clicks only appear once tracking is enabled on the
+    sending domain in the Resend dashboard."""
+    rows = await db.list_cold_outbound(min(max(limit, 1), 500))
+    if rows is None:
+        raise HTTPException(status_code=503, detail="db_unavailable")
+
+    sem = asyncio.Semaphore(5)
+
+    async def enrich(row: dict) -> dict:
+        out = {
+            "to": row["to_email"],
+            "subject": row["subject"],
+            "sent_at": row["sent_at"].isoformat() if row.get("sent_at") else None,
+            "resend_id": row.get("resend_id"),
+            "send_error": row.get("send_error"),
+            "last_event": None,
+        }
+        if row.get("resend_id") and not row.get("send_error"):
+            async with sem:
+                status = await email_service.get_status(row["resend_id"])
+            out["last_event"] = status.get("last_event")
+            if status.get("error"):
+                out["status_error"] = status["error"]
+        return out
+
+    emails = list(await asyncio.gather(*(enrich(r) for r in rows)))
+    summary: dict[str, int] = {}
+    for e in emails:
+        key = e["last_event"] or ("send_failed" if e["send_error"] else "unknown")
+        summary[key] = summary.get(key, 0) + 1
+    return {"count": len(emails), "summary": summary, "emails": emails}
 
 
 @router.post("/outbound/send", response_model=OutboundSendResponse)

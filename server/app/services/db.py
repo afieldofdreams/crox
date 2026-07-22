@@ -496,6 +496,28 @@ async def count_cold_sends_today() -> int | None:
         return None
 
 
+async def list_cold_outbound(limit: int = 100) -> list[dict] | None:
+    """Most recent cold_outbound sends, newest first. None if DB unavailable."""
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT id, to_email, subject, resend_id, send_error, sent_at
+                FROM outbound_emails
+                WHERE source = 'cold_outbound'
+                ORDER BY sent_at DESC
+                LIMIT $1
+                """,
+                limit,
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] list_cold_outbound failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
 async def already_sent_cold(email: str) -> bool:
     """True if this address has ever received a cold_outbound send.
 
