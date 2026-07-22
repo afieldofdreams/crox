@@ -161,6 +161,17 @@ CREATE TABLE IF NOT EXISTS outbound_emails (
 
 CREATE INDEX IF NOT EXISTS outbound_emails_to_idx ON outbound_emails (lower(to_email));
 CREATE INDEX IF NOT EXISTS outbound_emails_sent_idx ON outbound_emails (sent_at DESC);
+
+CREATE TABLE IF NOT EXISTS outbound_suppressions (
+    id          BIGSERIAL PRIMARY KEY,
+    email       TEXT NOT NULL,
+    -- 'unsubscribed' (clicked the link), 'bounced', 'complaint', 'manual'
+    reason      TEXT NOT NULL DEFAULT 'unsubscribed',
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS outbound_suppressions_email_idx
+    ON outbound_suppressions (lower(email));
 """
 
 
@@ -417,6 +428,96 @@ async def insert_outbound_email(
     except Exception as exc:
         print(f"[db] insert_outbound_email failed: {type(exc).__name__}: {str(exc)[:200]}")
         return None
+
+
+# ---------------------------------------------------------------------------
+# Cold-outbound guardrails — suppression list and daily cap.
+# ---------------------------------------------------------------------------
+
+async def is_suppressed(email: str) -> bool:
+    """True if the address opted out, bounced, or was manually blocked.
+
+    Fails CLOSED: if the DB is unavailable we report suppressed, because
+    sending cold email without being able to honour opt-outs is worse
+    than skipping a send.
+    """
+    if not _pool:
+        return True
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow(
+                "SELECT 1 FROM outbound_suppressions WHERE lower(email) = $1",
+                email.lower(),
+            )
+            return row is not None
+    except Exception as exc:
+        print(f"[db] is_suppressed failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return True
+
+
+async def add_suppression(email: str, reason: str = "unsubscribed") -> bool:
+    if not _pool:
+        return False
+    try:
+        async with _pool.acquire() as conn:
+            await conn.execute(
+                """
+                INSERT INTO outbound_suppressions (email, reason)
+                VALUES ($1, $2)
+                ON CONFLICT (lower(email)) DO NOTHING
+                """,
+                email, reason,
+            )
+        return True
+    except Exception as exc:
+        print(f"[db] add_suppression failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return False
+
+
+async def count_cold_sends_today() -> int | None:
+    """Successful cold sends so far this UTC day. None if DB unavailable
+    (callers must treat that as cap-reached — fail closed)."""
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow(
+                """
+                SELECT COUNT(*) AS n
+                FROM outbound_emails
+                WHERE source = 'cold_outbound'
+                  AND send_error IS NULL
+                  AND sent_at >= date_trunc('day', NOW() AT TIME ZONE 'utc') AT TIME ZONE 'utc'
+                """,
+            )
+            return int(row["n"]) if row else None
+    except Exception as exc:
+        print(f"[db] count_cold_sends_today failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def already_sent_cold(email: str) -> bool:
+    """True if this address has ever received a cold_outbound send.
+
+    Used to prevent duplicate first-touches; follow-ups are sent
+    deliberately with allow_repeat=True at the API layer.
+    """
+    if not _pool:
+        return True
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow(
+                """
+                SELECT 1 FROM outbound_emails
+                WHERE lower(to_email) = $1 AND source = 'cold_outbound' AND send_error IS NULL
+                LIMIT 1
+                """,
+                email.lower(),
+            )
+            return row is not None
+    except Exception as exc:
+        print(f"[db] already_sent_cold failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return True
 
 
 # ---------------------------------------------------------------------------

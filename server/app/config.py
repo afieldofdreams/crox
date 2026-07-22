@@ -40,6 +40,24 @@ class Settings(BaseSettings):
     # default placeholder works for testing but lands in spam.
     assessment_from_email: str = "Crox <onboarding@resend.dev>"
 
+    # --- Cold outbound (the lead machine) -------------------------------
+    # Sender for cold outreach, e.g. "Adam Field <adam@hello.crox.io>".
+    # MUST be a Resend-verified sender on a dedicated subdomain/domain so
+    # cold volume never touches the main crox.io reputation. Empty
+    # disables /outbound/send entirely (503).
+    outbound_from_email: str = ""
+    # Replies should land in a real inbox Adam reads.
+    outbound_reply_to: str = "adam@crox.io"
+    # Hard ceiling on cold sends per UTC day, across all callers.
+    outbound_daily_cap: int = 25
+    # HMAC key for unsubscribe links. Falls back to form_csrf_secret if
+    # empty; if both are empty, cold outbound is disabled.
+    outbound_unsubscribe_secret: str = ""
+
+    @property
+    def unsubscribe_secret(self) -> str:
+        return self.outbound_unsubscribe_secret or self.form_csrf_secret
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_allowed_origins.split(",") if o.strip()]

@@ -36,12 +36,14 @@ async def send(
     text: str,
     reply_to: str | None = None,
     from_address: str | None = None,
+    headers: dict[str, str] | None = None,
 ) -> SendResult:
     """Send an email via Resend.
 
     `from_address` defaults to settings.assessment_from_email if not
-    given. Returns a SendResult with the Resend id (or error string)
-    so the caller can persist it.
+    given. `headers` lets callers set extras like List-Unsubscribe.
+    Returns a SendResult with the Resend id (or error string) so the
+    caller can persist it.
     """
     if not is_configured():
         return SendResult(ok=False, error="resend_not_configured")
@@ -54,6 +56,8 @@ async def send(
     }
     if reply_to:
         payload["reply_to"] = reply_to
+    if headers:
+        payload["headers"] = headers
 
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:

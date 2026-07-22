@@ -57,7 +57,22 @@ BASE_URL=https://chat.crox.io
 
 DATABASE_URL=postgresql://...                # See "Postgres" below
 BOOKING_URL=https://calendar.app.google/dmmq9bdFyc11G8Km8
+
+# --- Cold outbound (lead machine) — all optional; endpoint 503s until set
+OUTBOUND_FROM_EMAIL=Adam Field <adam@hello.crox.io>  # Resend-verified sender on a DEDICATED subdomain/domain
+OUTBOUND_REPLY_TO=adam@crox.io               # where replies land
+OUTBOUND_DAILY_CAP=25                        # hard ceiling on cold sends per UTC day
+OUTBOUND_UNSUBSCRIBE_SECRET=...              # HMAC key for unsubscribe links (falls back to FORM_CSRF_SECRET)
 ```
+
+**Cold outbound:** `POST /outbound/send` (admin bearer token) sends one
+cold email via Resend with an unsubscribe footer, List-Unsubscribe
+headers, a suppression check, a duplicate-first-touch check, and the
+daily cap. `GET /outbound/status` reports configured/sent-today.
+`GET /unsubscribe` is the public opt-out. Deliverability rule: point
+`OUTBOUND_FROM_EMAIL` at a dedicated sending subdomain (e.g.
+`hello.crox.io`) or cousin domain verified in Resend with its own
+SPF/DKIM — never the bare `crox.io` used for personal mail.
 
 **`ANTHROPIC_API_KEY`:** mint a fresh, dedicated key for this app. Don't
 share with other Crox projects — that way the daily-spend dashboard in
