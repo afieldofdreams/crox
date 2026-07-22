@@ -41,11 +41,12 @@ class Settings(BaseSettings):
     assessment_from_email: str = "Crox <onboarding@resend.dev>"
 
     # --- Cold outbound (the lead machine) -------------------------------
-    # Sender for cold outreach, e.g. "Adam Field <adam@hello.crox.io>".
-    # MUST be a Resend-verified sender on a dedicated subdomain/domain so
-    # cold volume never touches the main crox.io reputation. Empty
-    # disables /outbound/send entirely (503).
-    outbound_from_email: str = ""
+    # Sender for cold outreach. Adam's call (2026-07-22): send from the
+    # main address for now, accepting that cold volume shares crox.io's
+    # reputation. Move to a dedicated subdomain (e.g. adam@hello.crox.io,
+    # verified separately in Resend) if deliverability ever wobbles.
+    # Set to empty in the environment to disable /outbound/send (503).
+    outbound_from_email: str = "Adam Field <adam@crox.io>"
     # Replies should land in a real inbox Adam reads.
     outbound_reply_to: str = "adam@crox.io"
     # Hard ceiling on cold sends per UTC day, across all callers.

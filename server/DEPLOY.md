@@ -58,8 +58,8 @@ BASE_URL=https://chat.crox.io
 DATABASE_URL=postgresql://...                # See "Postgres" below
 BOOKING_URL=https://calendar.app.google/dmmq9bdFyc11G8Km8
 
-# --- Cold outbound (lead machine) — all optional; endpoint 503s until set
-OUTBOUND_FROM_EMAIL=Adam Field <adam@hello.crox.io>  # Resend-verified sender on a DEDICATED subdomain/domain
+# --- Cold outbound (lead machine) — all optional, defaults shown
+OUTBOUND_FROM_EMAIL=Adam Field <adam@crox.io>  # default; must be Resend-verified. Set empty to disable outbound.
 OUTBOUND_REPLY_TO=adam@crox.io               # where replies land
 OUTBOUND_DAILY_CAP=25                        # hard ceiling on cold sends per UTC day
 OUTBOUND_UNSUBSCRIBE_SECRET=...              # HMAC key for unsubscribe links (falls back to FORM_CSRF_SECRET)
@@ -69,10 +69,14 @@ OUTBOUND_UNSUBSCRIBE_SECRET=...              # HMAC key for unsubscribe links (f
 cold email via Resend with an unsubscribe footer, List-Unsubscribe
 headers, a suppression check, a duplicate-first-touch check, and the
 daily cap. `GET /outbound/status` reports configured/sent-today.
-`GET /unsubscribe` is the public opt-out. Deliverability rule: point
-`OUTBOUND_FROM_EMAIL` at a dedicated sending subdomain (e.g.
-`hello.crox.io`) or cousin domain verified in Resend with its own
-SPF/DKIM — never the bare `crox.io` used for personal mail.
+`GET /unsubscribe` is the public opt-out.
+
+With `RESEND_API_KEY` and `FORM_CSRF_SECRET` already set, outbound is
+ACTIVE by default using the adam@crox.io sender (Adam's decision,
+2026-07-22 — cold volume shares the main domain's reputation for now).
+If deliverability wobbles, verify a dedicated subdomain in Resend
+(e.g. `hello.crox.io`) and point `OUTBOUND_FROM_EMAIL` at it, or set
+`OUTBOUND_FROM_EMAIL=` (empty) to switch outbound off entirely.
 
 **`ANTHROPIC_API_KEY`:** mint a fresh, dedicated key for this app. Don't
 share with other Crox projects — that way the daily-spend dashboard in
