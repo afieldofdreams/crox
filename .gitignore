@@ -4,5 +4,5 @@ node_modules
 *.pyc
 __pycache__
 client/dist
-.claude/
+.claude/settings.local.json
 server/COOLIFY-ENV.txt
