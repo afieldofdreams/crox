@@ -82,6 +82,63 @@ Lives in Fibery (`wildgriffin.fibery.io`), CRM space — no separate tool:
   specific ("client onboarding at Sedulo"). Clever subjects signal
   cold email before the first line is read.
 - Under 120 words. No attachments. No prices. Sign as Adam Field, Crox.
+
+### Reads-human rules
+
+The fastest way to sound like AI is to be too tidy. Every draft must
+survive this checklist before sending; rewrite any line that fails.
+
+- **No lists of three.** "Onboarding, quoting and monthly reporting"
+  is a model fingerprint. Name ONE thing and let it carry the email.
+- **Banned phrases:** "genuinely", "exactly the kind of", "quietly",
+  "the usual cost of", "that's exactly what", "impressive",
+  "I help firms like yours", "serious trajectory",
+  "the good kind of problem", "worth 30 minutes?".
+- **No aphorisms.** If a sentence would look at home on LinkedIn
+  ("map the processes, rank the winners, build what pays"), cut it.
+- **One idea per email.** Offer OR process OR proof — never all three.
+- **Mess is allowed.** Fragments are fine. Starting with "And" or
+  "But" is fine. Flawless balanced prose is itself a tell.
+- **The hook: 12 words or fewer, no adjectives, unwritable about any
+  other firm.** Allowed shapes: blunt observation ("You're hiring two
+  onboarding admins."), direct question ("Who chases your January
+  records?"), admission ("You don't know me."), specific moment ("Saw
+  the Westhill Park opening in Care Home Professional.").
+- **Mandatory self-check pass:** after drafting, list every phrase a
+  reader could flag as "AI wrote this", rewrite each one, and only
+  then send. If the email wouldn't survive being read aloud to a
+  stranger in a lift, it isn't done.
+
+### Voice examples
+
+Imitate the register of these — never quote them. (INTERIM: written
+as placeholders; replace with real emails Adam has written as soon as
+a few are supplied.)
+
+> **Subject: your onboarding admin ad**
+>
+> Hi Dan,
+>
+> You're advertising for an onboarding administrator. Before you
+> hire, it might be worth seeing how much of that job AI can now do —
+> the records chasing in particular. I map this for independent firms.
+> Three weeks, and you get a straight answer on what's worth
+> automating and what isn't.
+>
+> Want the one-pager from another Midlands firm? Reply yes and it's
+> yours.
+>
+> Adam
+> Crox — crox.io
+
+> **Subject: quick question** *(routing email to a firm inbox)*
+>
+> Morning — could you point me at whoever looks after client
+> onboarding? I've got something specific for them and I'd rather not
+> clutter this inbox with it. Happy to write to them directly.
+>
+> Thanks,
+> Adam Field, Crox
 - **Firm-level inboxes get a routing email, not the pitch:** three
   lines maximum, no selling, one easy ask — "could you point me at
   whoever looks after <process>? Happy to write to them directly."
