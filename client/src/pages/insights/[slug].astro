@@ -11,6 +11,7 @@ import { DodarBenchmarkFailurePost } from '../../views/blog/DodarBenchmarkFailur
 import { StaticControlsLiveModelsBriefing } from '../../views/blog/StaticControlsLiveModelsBriefing';
 import { AiVendorDependencyRiskPost } from '../../views/blog/AiVendorDependencyRiskPost';
 import { SecondBrainTypedEntitiesPost } from '../../views/blog/SecondBrainTypedEntitiesPost';
+import { MarkdownPost } from '../../views/blog/MarkdownPost';
 
 export function getStaticPaths() {
 	return blogPosts.map((post) => ({
@@ -86,7 +87,25 @@ const postComponents: Record<string, any> = {
 	'second-brain-typed-entities': SecondBrainTypedEntitiesPost,
 };
 
+// Markdown-published posts: src/content/insights/<slug>.md plus a
+// blogPosts.ts entry. Hand-built TSX components take precedence.
+const mdModules = import.meta.glob('../../content/insights/*.md', {
+	query: '?raw',
+	import: 'default',
+	eager: true,
+}) as Record<string, string>;
+const mdBySlug: Record<string, string> = {};
+for (const [path, body] of Object.entries(mdModules)) {
+	const name = path.split('/').pop()!.replace(/\.md$/, '');
+	mdBySlug[name] = body;
+}
+
 const PostContent = postComponents[slug];
+const mdBody = mdBySlug[slug];
+
+if (!PostContent && !mdBody) {
+	return Astro.redirect('/insights');
+}
 ---
 
 <Base
@@ -136,7 +155,7 @@ const PostContent = postComponents[slug];
 
 		<!-- Article Body -->
 		<div class="prose prose-invert max-w-none mb-16">
-			<PostContent />
+			{PostContent ? <PostContent /> : <MarkdownPost content={mdBody} />}
 		</div>
 
 		<!-- Bottom CTA Section -->

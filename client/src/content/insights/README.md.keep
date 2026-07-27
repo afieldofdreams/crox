@@ -1,0 +1,10 @@
+Markdown-published insights articles live here, one file per post.
+
+To publish: add <slug>.md in this directory AND a matching metadata
+entry (same slug) in src/content/blogPosts.ts. The page at
+/insights/<slug> renders the markdown with the house article styling
+(see src/views/blog/MarkdownPost.tsx). Hand-built TSX posts in
+postComponents take precedence over a markdown file with the same slug.
+
+This file is named .keep so the directory exists in git without being
+picked up by the *.md glob.
