@@ -46,4 +46,23 @@ is pending his data export — its conclusions go here as week zero.)
 
 ## Weekly entries
 
-(none yet — first entry lands Monday 2026-08-03)
+### 2026-07-28 — week zero (baseline; daily cadence begins)
+
+Adam moved the cadence to one post every weekday, starting today.
+This week's four posts (Tue–Fri) were queued ad hoc mid-week, so
+there is no single hypothesis — the aim is a baseline across four
+formats, each with a tracked link card to crox.io:
+
+- `li-20260728-tue` — research observation (100 firms' websites vs
+  their job ads).
+- `li-20260729-wed` — build-in-public with real numbers (2 of first
+  25 emails bounced; the checker built in response).
+- `li-20260730-thu` — sector-specific how-to (care providers, daily
+  notes via speech-to-text).
+- `li-20260731-fri` — opinion with a reply question (one task, not
+  an AI strategy).
+
+Next Monday: compare clicks across the four tags, note any replies
+or conversions Adam reports, and pick week one's single hypothesis
+from whichever format leads. From this week on the routine queues
+five posts, Monday to Friday.
