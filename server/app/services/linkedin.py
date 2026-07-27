@@ -27,7 +27,9 @@ _AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization"
 _TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
 _USERINFO_URL = "https://api.linkedin.com/v2/userinfo"
 _POSTS_URL = "https://api.linkedin.com/rest/posts"
-_API_VERSION = "202506"
+# LinkedIn sunsets versions ~12 months out; keep this within the last
+# year or every call fails with 426 NONEXISTENT_VERSION.
+_API_VERSION = "202606"
 
 
 def is_configured() -> bool:
