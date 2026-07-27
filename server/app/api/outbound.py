@@ -18,6 +18,7 @@ Routes:
   POST /outbound/send        — send one cold email (admin token)
   GET  /outbound/status      — configured? sent today? cap? (admin token)
   GET  /outbound/engagement  — per-email Resend delivery/open state (admin token)
+  GET  /outbound/harvest     — published addresses from a firm's own site (admin token)
   GET  /unsubscribe          — public opt-out landing (HMAC-signed link)
 """
 from __future__ import annotations
@@ -32,7 +33,7 @@ from pydantic import BaseModel, EmailStr, Field
 
 from app.api.admin import _require_admin
 from app.config import settings
-from app.services import db, email as email_service
+from app.services import db, email as email_service, verify
 
 router = APIRouter()
 
@@ -82,6 +83,20 @@ async def outbound_status(_: None = Depends(_require_admin)) -> dict:
         "sent_today": sent_today,
         "db_ok": sent_today is not None,
     }
+
+
+@router.get("/outbound/harvest")
+async def outbound_harvest(
+    domain: str,
+    _: None = Depends(_require_admin),
+) -> dict:
+    """Fetch a firm's own public pages (contact/team/about) and return
+    every email address they publish, with the page it came from. The
+    compliant way to upgrade a firm inbox to a named person's address —
+    reads only what the firm itself published, never guesses."""
+    if not domain or len(domain) > 253:
+        raise HTTPException(status_code=422, detail="invalid_domain")
+    return await verify.harvest(domain)
 
 
 @router.get("/outbound/engagement")
@@ -135,6 +150,9 @@ async def outbound_send(
 
     if await db.is_suppressed(to):
         return OutboundSendResponse(ok=False, error="suppressed")
+
+    if not await verify.check_deliverable(to):
+        return OutboundSendResponse(ok=False, error="undeliverable_domain")
 
     if not req.follow_up and await db.already_sent_cold(to):
         return OutboundSendResponse(ok=False, error="already_contacted")

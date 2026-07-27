@@ -34,34 +34,72 @@ Lives in Fibery (`wildgriffin.fibery.io`), CRM space — no separate tool:
   (no `j.smith@…` construction). If nothing is published, record
   "none published" + the contact-form URL and leave the contact OUT of
   the email cadence.
+- **A named person's direct address beats a firm inbox, always.**
+  Firm inboxes (info@/hello@/enquiries@) are gatekeeper triage — treat
+  them as a last resort, and send them a routing email (below), never
+  the pitch. Before settling for info@, run
+  `GET https://chat.crox.io/outbound/harvest?domain=<firm domain>`
+  (admin token): it fetches the firm's own contact/team pages and
+  returns every address they publish, each with its source page.
 - Every sourced contact gets a Dossier note: what they do, growth/tech
   signals, the angle, and where the email was found.
+- **Evidence rule:** every dossier needs at least one checkable,
+  current detail that proves the pain — a live job ad, a review, a
+  filing, a press quote. Pain must be evidenced, never asserted from
+  sector averages.
 
 ## The email itself
 
 - Written fresh per prospect from the Dossier angle — no template with
   the name swapped. If the angle is stale (news moved on), re-research
-  before writing.
+  before writing. Vary the structure between emails: a batch that
+  shares one visible skeleton reads as a template no matter how
+  bespoke the research is.
 - Fred's voice rules apply (see `server/prompts/system.md`): plain
   English, short sentences, British spelling, no marketing speak, one
   em-dash max per paragraph.
-- Shape: 1 line that proves we looked at *their* business → 1–2 lines
-  connecting a specific process pain to what Crox does → one soft CTA.
-- CTA is ONE of: the AI Readiness Scorecard (crox.io/assessment), the
-  board briefing (crox.io/insights/static-controls-live-models), or a
-  30-min call (https://calendar.app.google/dmmq9bdFyc11G8Km8). Pick
-  whichever matches the prospect's altitude — briefing for boards/CEOs,
-  scorecard for ops-level, call only when the fit is obvious.
+- **Open with the evidence, not a compliment.** The first line is the
+  dossier's checkable detail ("you've got openings up for two
+  onboarding admins"), never flattery ("impressive growth"). The
+  compliment-then-pitch shape is the most recognisable cold-email
+  trope there is.
+- **Outcome language, not deliverable language.** Owners buy back
+  evenings and avoided hires, not "mappings" and "roadmaps". Say what
+  they stop doing by hand, not what document they receive.
+- **One proof point, one clause.** Canary (canary.crox.io) for care
+  prospects; the decade shipping AI in regulated environments
+  (Babylon Health, fintech scoring) for lenders and brokers. Never a
+  paragraph of credentials.
+- CTA: the **preferred CTA is a one-word reply** — offer to send one
+  specific, named artefact ("want the one-pager on what this looked
+  like for another three-home group? Reply 'yes'"). Replies are the
+  metric; make replying the cheapest possible action. The scorecard
+  (crox.io/assessment), board briefing
+  (crox.io/insights/static-controls-live-models) and 30-min call
+  (https://calendar.app.google/dmmq9bdFyc11G8Km8) remain options where
+  the altitude clearly fits — one CTA only, never two.
+- **Subjects read like internal memos**, not marketing: plain, short,
+  specific ("client onboarding at Sedulo"). Clever subjects signal
+  cold email before the first line is read.
 - Under 120 words. No attachments. No prices. Sign as Adam Field, Crox.
-- Firm-level inboxes (info@/hello@): write the first line so a
-  gatekeeper would forward it.
+- **Firm-level inboxes get a routing email, not the pitch:** three
+  lines maximum, no selling, one easy ask — "could you point me at
+  whoever looks after <process>? Happy to write to them directly."
+  A gatekeeper answers a routing question far sooner than they forward
+  a pitch, and the answer yields a named contact. The routing email
+  counts as that address's touch.
 
 ## Sending mechanics
 
 - All cold sends go through `POST https://chat.crox.io/outbound/send`
   (admin bearer token). The endpoint enforces: suppression list,
-  no duplicate first-touches, daily cap, unsubscribe footer +
-  List-Unsubscribe headers. Do not send cold email any other way.
+  no duplicate first-touches, daily cap, DNS deliverability check
+  (refuses with `undeliverable_domain` when the address's domain has
+  no mail records), unsubscribe footer + List-Unsubscribe headers.
+  Do not send cold email any other way.
+- `GET /outbound/engagement` reports per-send Resend state
+  (delivered/opened/bounced); `GET /outbound/harvest?domain=` finds
+  published addresses on a firm's own site. Both take the admin token.
 - Sender is `OUTBOUND_FROM_EMAIL` — a Resend-verified address on a
   dedicated subdomain, never bare `@crox.io`. Replies go to
   `adam@crox.io` via Reply-To.
