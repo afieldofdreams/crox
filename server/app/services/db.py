@@ -199,7 +199,93 @@ CREATE INDEX IF NOT EXISTS linkedin_queue_due_idx
 ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS link_url   TEXT;
 ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS link_title TEXT;
 ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS image_url  TEXT;
+
+-- Tracked short links (/l/<tag>) so social posts get owned click data.
+CREATE TABLE IF NOT EXISTS tracked_links (
+    tag        TEXT PRIMARY KEY,
+    target     TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS link_clicks (
+    id         BIGSERIAL PRIMARY KEY,
+    tag        TEXT NOT NULL,
+    referer    TEXT,
+    user_agent TEXT,
+    clicked_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS link_clicks_tag_idx ON link_clicks (tag, clicked_at DESC);
 """
+
+
+# ---------------------------------------------------------------------------
+# Tracked links — owned click data for social posts.
+# ---------------------------------------------------------------------------
+
+async def upsert_tracked_link(tag: str, target: str) -> bool:
+    if not _pool:
+        return False
+    try:
+        async with _pool.acquire() as conn:
+            await conn.execute(
+                """
+                INSERT INTO tracked_links (tag, target) VALUES ($1, $2)
+                ON CONFLICT (tag) DO UPDATE SET target = EXCLUDED.target
+                """,
+                tag, target,
+            )
+        return True
+    except Exception as exc:
+        print(f"[db] upsert_tracked_link failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return False
+
+
+async def get_tracked_link(tag: str) -> str | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow("SELECT target FROM tracked_links WHERE tag = $1", tag)
+            return row["target"] if row else None
+    except Exception as exc:
+        print(f"[db] get_tracked_link failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def log_link_click(tag: str, referer: str | None, user_agent: str | None) -> None:
+    if not _pool:
+        return
+    try:
+        async with _pool.acquire() as conn:
+            await conn.execute(
+                "INSERT INTO link_clicks (tag, referer, user_agent) VALUES ($1, $2, $3)",
+                tag, referer, user_agent,
+            )
+    except Exception as exc:
+        print(f"[db] log_link_click failed: {type(exc).__name__}: {str(exc)[:200]}")
+
+
+async def link_click_stats() -> list[dict] | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT t.tag, t.target, t.created_at,
+                       COUNT(c.id) AS clicks_total,
+                       COUNT(c.id) FILTER (WHERE c.clicked_at > NOW() - INTERVAL '7 days') AS clicks_7d
+                FROM tracked_links t
+                LEFT JOIN link_clicks c ON c.tag = t.tag
+                GROUP BY t.tag, t.target, t.created_at
+                ORDER BY t.created_at DESC
+                """
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] link_click_stats failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
 
 
 # ---------------------------------------------------------------------------
