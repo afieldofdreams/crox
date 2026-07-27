@@ -89,9 +89,53 @@ async def exchange_code(code: str) -> dict:
     return {"ok": True, "error": None, "expires_at": expires_at}
 
 
-async def publish(body: str) -> dict:
-    """Post text to the connected member's feed. Returns
-    {"ok": bool, "post_id": str | None, "error": str | None}."""
+async def _upload_image(auth: dict, image_url: str) -> dict:
+    """Register an image upload, fetch the bytes from image_url, and
+    push them to LinkedIn. Returns {"urn": str | None, "error": ...}."""
+    headers = {
+        "Authorization": f"Bearer {auth['access_token']}",
+        "LinkedIn-Version": _API_VERSION,
+        "X-Restli-Protocol-Version": "2.0.0",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=30.0, follow_redirects=True) as client:
+            init = await client.post(
+                "https://api.linkedin.com/rest/images?action=initializeUpload",
+                json={"initializeUploadRequest": {"owner": auth["member_urn"]}},
+                headers=headers,
+            )
+            if init.status_code >= 300:
+                return {"urn": None, "error": f"image_init_{init.status_code}: {init.text[:200]}"}
+            value = init.json().get("value", {})
+            upload_url, image_urn = value.get("uploadUrl"), value.get("image")
+            if not upload_url or not image_urn:
+                return {"urn": None, "error": "image_init_malformed"}
+
+            src = await client.get(image_url)
+            if src.status_code >= 300 or not src.content:
+                return {"urn": None, "error": f"image_fetch_{src.status_code}"}
+
+            put = await client.put(
+                upload_url,
+                content=src.content,
+                headers={"Authorization": f"Bearer {auth['access_token']}"},
+            )
+            if put.status_code >= 300:
+                return {"urn": None, "error": f"image_upload_{put.status_code}"}
+        return {"urn": image_urn, "error": None}
+    except Exception as exc:
+        return {"urn": None, "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
+
+
+async def publish(
+    body: str,
+    *,
+    link_url: str | None = None,
+    link_title: str | None = None,
+    image_url: str | None = None,
+) -> dict:
+    """Post to the connected member's feed: plain text, text + link
+    card, or text + image. Returns {"ok", "post_id", "error"}."""
     auth = await db.get_linkedin_auth()
     if not auth:
         return {"ok": False, "post_id": None, "error": "not_connected"}
@@ -109,6 +153,13 @@ async def publish(body: str) -> dict:
         "lifecycleState": "PUBLISHED",
         "isReshareDisabledByAuthor": False,
     }
+    if image_url:
+        upload = await _upload_image(auth, image_url)
+        if not upload["urn"]:
+            return {"ok": False, "post_id": None, "error": upload["error"]}
+        payload["content"] = {"media": {"id": upload["urn"]}}
+    elif link_url:
+        payload["content"] = {"article": {"source": link_url, "title": link_title or link_url}}
     try:
         async with httpx.AsyncClient(timeout=20.0) as client:
             resp = await client.post(
@@ -132,7 +183,12 @@ async def flush_due() -> None:
     background loop in main.py; each post is marked posted or errored
     so failures never retry silently forever."""
     for row in await db.due_linkedin_posts():
-        result = await publish(row["body"])
+        result = await publish(
+            row["body"],
+            link_url=row.get("link_url"),
+            link_title=row.get("link_title"),
+            image_url=row.get("image_url"),
+        )
         await db.mark_linkedin_post(
             row["id"], linkedin_post_id=result.get("post_id"), error=result.get("error")
         )

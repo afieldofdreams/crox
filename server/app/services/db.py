@@ -194,6 +194,11 @@ CREATE TABLE IF NOT EXISTS linkedin_queue (
 
 CREATE INDEX IF NOT EXISTS linkedin_queue_due_idx
     ON linkedin_queue (post_at) WHERE posted_at IS NULL AND post_error IS NULL;
+
+-- Optional attachments (added after the first deploy, hence ALTERs).
+ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS link_url   TEXT;
+ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS link_title TEXT;
+ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS image_url  TEXT;
 """
 
 
@@ -236,14 +241,24 @@ async def get_linkedin_auth() -> dict | None:
         return None
 
 
-async def queue_linkedin_post(body: str, post_at) -> int | None:
+async def queue_linkedin_post(
+    body: str,
+    post_at,
+    *,
+    link_url: str | None = None,
+    link_title: str | None = None,
+    image_url: str | None = None,
+) -> int | None:
     if not _pool:
         return None
     try:
         async with _pool.acquire() as conn:
             row = await conn.fetchrow(
-                "INSERT INTO linkedin_queue (body, post_at) VALUES ($1, $2) RETURNING id",
-                body, post_at,
+                """
+                INSERT INTO linkedin_queue (body, post_at, link_url, link_title, image_url)
+                VALUES ($1, $2, $3, $4, $5) RETURNING id
+                """,
+                body, post_at, link_url, link_title, image_url,
             )
             return int(row["id"]) if row else None
     except Exception as exc:
