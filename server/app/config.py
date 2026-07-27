@@ -55,6 +55,14 @@ class Settings(BaseSettings):
     # empty; if both are empty, cold outbound is disabled.
     outbound_unsubscribe_secret: str = ""
 
+    # --- LinkedIn auto-posting (weekly content routine) ------------------
+    # From a free app at developer.linkedin.com with the "Share on
+    # LinkedIn" and "Sign In with LinkedIn using OpenID Connect"
+    # products. Empty disables /linkedin/* (503). The member token is
+    # captured via GET /linkedin/auth and lives ~60 days.
+    linkedin_client_id: str = ""
+    linkedin_client_secret: str = ""
+
     @property
     def unsubscribe_secret(self) -> str:
         return self.outbound_unsubscribe_secret or self.form_csrf_secret

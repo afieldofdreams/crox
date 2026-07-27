@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -8,17 +9,30 @@ from app.api.assessment import router as assessment_router
 from app.api.capture import router as capture_router
 from app.api.chat import router as chat_router
 from app.api.contact_form import router as contact_form_router
+from app.api.linkedin import router as linkedin_router
 from app.api.outbound import router as outbound_router
 from app.config import settings
-from app.services import db
+from app.services import db, linkedin
+
+
+async def _linkedin_poster() -> None:
+    """Publish due queued LinkedIn posts every 10 minutes."""
+    while True:
+        try:
+            await linkedin.flush_due()
+        except Exception as exc:
+            print(f"[linkedin] poster loop error: {type(exc).__name__}: {str(exc)[:200]}")
+        await asyncio.sleep(600)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await db.init_db()
+    poster = asyncio.create_task(_linkedin_poster())
     try:
         yield
     finally:
+        poster.cancel()
         await db.close_db()
 
 
@@ -50,3 +64,4 @@ app.include_router(contact_form_router)
 app.include_router(assessment_router)
 app.include_router(admin_router)
 app.include_router(outbound_router)
+app.include_router(linkedin_router)
