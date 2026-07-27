@@ -172,7 +172,149 @@ CREATE TABLE IF NOT EXISTS outbound_suppressions (
 
 CREATE UNIQUE INDEX IF NOT EXISTS outbound_suppressions_email_idx
     ON outbound_suppressions (lower(email));
+
+-- LinkedIn auto-posting: single-row token store + scheduled post queue.
+CREATE TABLE IF NOT EXISTS linkedin_auth (
+    id           INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    access_token TEXT NOT NULL,
+    member_urn   TEXT NOT NULL,
+    expires_at   TIMESTAMPTZ NOT NULL,
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS linkedin_queue (
+    id               BIGSERIAL PRIMARY KEY,
+    body             TEXT NOT NULL,
+    post_at          TIMESTAMPTZ NOT NULL,
+    posted_at        TIMESTAMPTZ,
+    linkedin_post_id TEXT,
+    post_error       TEXT,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS linkedin_queue_due_idx
+    ON linkedin_queue (post_at) WHERE posted_at IS NULL AND post_error IS NULL;
 """
+
+
+# ---------------------------------------------------------------------------
+# LinkedIn auto-posting — token store and scheduled queue.
+# ---------------------------------------------------------------------------
+
+async def save_linkedin_auth(access_token: str, member_urn: str, expires_at) -> bool:
+    if not _pool:
+        return False
+    try:
+        async with _pool.acquire() as conn:
+            await conn.execute(
+                """
+                INSERT INTO linkedin_auth (id, access_token, member_urn, expires_at, updated_at)
+                VALUES (1, $1, $2, $3, NOW())
+                ON CONFLICT (id) DO UPDATE SET
+                    access_token = EXCLUDED.access_token,
+                    member_urn = EXCLUDED.member_urn,
+                    expires_at = EXCLUDED.expires_at,
+                    updated_at = NOW()
+                """,
+                access_token, member_urn, expires_at,
+            )
+        return True
+    except Exception as exc:
+        print(f"[db] save_linkedin_auth failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return False
+
+
+async def get_linkedin_auth() -> dict | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow("SELECT * FROM linkedin_auth WHERE id = 1")
+            return dict(row) if row else None
+    except Exception as exc:
+        print(f"[db] get_linkedin_auth failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def queue_linkedin_post(body: str, post_at) -> int | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow(
+                "INSERT INTO linkedin_queue (body, post_at) VALUES ($1, $2) RETURNING id",
+                body, post_at,
+            )
+            return int(row["id"]) if row else None
+    except Exception as exc:
+        print(f"[db] queue_linkedin_post failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def list_linkedin_queue(limit: int = 50) -> list[dict] | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                "SELECT * FROM linkedin_queue ORDER BY post_at DESC LIMIT $1", limit
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] list_linkedin_queue failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def delete_linkedin_post(post_id: int) -> bool:
+    """Veto: delete a queued post that has not gone out yet."""
+    if not _pool:
+        return False
+    try:
+        async with _pool.acquire() as conn:
+            result = await conn.execute(
+                "DELETE FROM linkedin_queue WHERE id = $1 AND posted_at IS NULL", post_id
+            )
+            return result.endswith("1")
+    except Exception as exc:
+        print(f"[db] delete_linkedin_post failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return False
+
+
+async def due_linkedin_posts() -> list[dict]:
+    if not _pool:
+        return []
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT * FROM linkedin_queue
+                WHERE posted_at IS NULL AND post_error IS NULL AND post_at <= NOW()
+                ORDER BY post_at
+                """
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] due_linkedin_posts failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return []
+
+
+async def mark_linkedin_post(post_id: int, *, linkedin_post_id: str | None, error: str | None) -> None:
+    if not _pool:
+        return
+    try:
+        async with _pool.acquire() as conn:
+            if error is None:
+                await conn.execute(
+                    "UPDATE linkedin_queue SET posted_at = NOW(), linkedin_post_id = $2 WHERE id = $1",
+                    post_id, linkedin_post_id,
+                )
+            else:
+                await conn.execute(
+                    "UPDATE linkedin_queue SET post_error = $2 WHERE id = $1",
+                    post_id, error,
+                )
+    except Exception as exc:
+        print(f"[db] mark_linkedin_post failed: {type(exc).__name__}: {str(exc)[:200]}")
 
 
 async def create_conversation(
