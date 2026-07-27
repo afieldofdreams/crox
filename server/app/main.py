@@ -10,6 +10,7 @@ from app.api.capture import router as capture_router
 from app.api.chat import router as chat_router
 from app.api.contact_form import router as contact_form_router
 from app.api.linkedin import router as linkedin_router
+from app.api.links import router as links_router
 from app.api.outbound import router as outbound_router
 from app.config import settings
 from app.services import db, linkedin
@@ -65,3 +66,4 @@ app.include_router(assessment_router)
 app.include_router(admin_router)
 app.include_router(outbound_router)
 app.include_router(linkedin_router)
+app.include_router(links_router)
