@@ -93,6 +93,11 @@ async def linkedin_callback(code: str = "", state: str = "", error: str = "") ->
 class QueueItem(BaseModel):
     body: str = Field(..., min_length=1, max_length=2900)
     post_at: datetime
+    # Optional attachment: a link card (link_url + link_title) OR an
+    # image fetched from image_url — not both.
+    link_url: str | None = Field(default=None, max_length=1000)
+    link_title: str | None = Field(default=None, max_length=200)
+    image_url: str | None = Field(default=None, max_length=1000)
 
 
 class QueueRequest(BaseModel):
@@ -107,7 +112,15 @@ async def queue_posts(req: QueueRequest, _: None = Depends(_require_admin)) -> d
         raise HTTPException(status_code=409, detail="linkedin_not_connected")
     queued = []
     for item in req.posts:
-        post_id = await db.queue_linkedin_post(item.body, item.post_at)
+        if item.link_url and item.image_url:
+            raise HTTPException(status_code=422, detail="link_or_image_not_both")
+        post_id = await db.queue_linkedin_post(
+            item.body,
+            item.post_at,
+            link_url=item.link_url,
+            link_title=item.link_title,
+            image_url=item.image_url,
+        )
         if post_id is None:
             raise HTTPException(status_code=503, detail="db_unavailable")
         queued.append({"id": post_id, "post_at": item.post_at.isoformat()})
