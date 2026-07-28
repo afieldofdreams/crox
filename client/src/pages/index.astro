@@ -58,10 +58,26 @@ const jsonLd = [
 		'@context': 'https://schema.org',
 		'@type': 'Organization',
 		name: 'Crox',
+		legalName: 'Crox Ltd',
 		url: 'https://crox.io',
 		logo: 'https://crox.io/og.png',
 		description: 'Crox helps small and mid-sized businesses put AI to work. It starts with a map of your business and a prioritised roadmap, then we build the tooling and support it as it grows.',
 		founder: { '@type': 'Person', name: 'Adam Field' },
+		foundingDate: '2017-01-05',
+		// Companies House number — anchors the entity to the UK register.
+		identifier: {
+			'@type': 'PropertyValue',
+			propertyID: 'Companies House',
+			value: '10549400',
+		},
+		address: { '@type': 'PostalAddress', addressCountry: 'GB' },
+		areaServed: 'GB',
+		knowsAbout: [
+			'AI readiness for small and mid-sized businesses',
+			'AI governance and the EU AI Act',
+			'AI process mapping and automation',
+			'Model Context Protocol',
+		],
 		sameAs: ['https://linkedin.com/in/afieldio'],
 	},
 	{
