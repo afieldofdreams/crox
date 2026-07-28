@@ -57,6 +57,26 @@ def _outbound_configured() -> bool:
     )
 
 
+class SuppressRequest(BaseModel):
+    email: EmailStr
+    # 'bounced', 'complaint', 'manual' — 'unsubscribed' is reserved for
+    # the public /unsubscribe flow.
+    reason: str = Field("manual", pattern="^(bounced|complaint|manual)$")
+
+
+@router.post("/outbound/suppress")
+async def outbound_suppress(
+    req: SuppressRequest,
+    _: None = Depends(_require_admin),
+) -> dict:
+    """Admin-added suppression — closes the loop on bounces and
+    complaints observed in Resend, which the unsubscribe flow can't see."""
+    ok = await db.add_suppression(str(req.email), reason=req.reason)
+    if not ok:
+        raise HTTPException(status_code=503, detail="db_unavailable")
+    return {"ok": True, "email": str(req.email).lower(), "reason": req.reason}
+
+
 class OutboundSendRequest(BaseModel):
     to: EmailStr
     subject: str = Field(..., min_length=1, max_length=200)

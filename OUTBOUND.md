@@ -176,8 +176,18 @@ a few are supplied.)
 - Any reply stops the cadence immediately: move Deal to `Conversing`,
   record the reply in the contact's Activity Stream, and leave the
   human conversation to Adam.
-- Any bounce or opt-out: suppression is handled server-side; also
-  record it in Fibery and never re-add the address.
+- Opt-outs suppress themselves (the /unsubscribe link writes straight
+  to the suppression table). Bounces do NOT self-suppress: each run
+  must check the previous days' sends in Resend and register every
+  bounced address via `POST /outbound/suppress` (admin token, body
+  `{"email": ..., "reason": "bounced"}`), then note the bounce in the
+  contact's Activity Stream. Never re-add a suppressed address.
+- Before sending a follow-up, check the contact's Activity Stream for
+  a bounce note or hold instruction (e.g. out-of-office with a return
+  date) — a hold overrides the cadence clock.
+- If a contact's Activity Stream contains a "DRAFT follow-up" entry
+  written by a previous session, send that draft verbatim (with
+  `follow_up: true`) rather than writing a new one.
 
 ## After each run, update Fibery
 
