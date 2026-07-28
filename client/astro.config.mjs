@@ -29,6 +29,9 @@ export default defineConfig({
   redirects: {
     '/ai-integration': '/experiments',
     '/readiness': '/mapping',
+    // Legacy startup-era page still in Google's index; closest current
+    // offer is the mapping exercise.
+    '/audits': '/mapping',
   },
   build: {
     format: 'directory',

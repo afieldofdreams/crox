@@ -12,6 +12,18 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'eu-ai-act-uk-business',
+    title: 'EU AI Act: Does It Apply to a UK Business?',
+    subtitle: 'The Act follows the market, not the company registration. How to work out whether it reaches you before enforcement starts on 2 August 2026.',
+    date: 'July 2026',
+    dateISO: '2026-07-28',
+    readTime: '6 min read',
+    description:
+      'From 2 August 2026 the bulk of the EU AI Act becomes enforceable. UK businesses are in scope when they sell AI into the EU — or when the output of an AI tool they use lands there. What that means for SMEs, and the four steps to take this week.',
+    keywords: ['eu ai act uk business', 'does eu ai act apply to uk', 'eu ai act august 2026', 'ai act deployer obligations', 'ai act sme', 'uk ai regulation', 'ai governance sme', 'high risk ai systems'],
+    tags: ['EU AI Act', 'AI Governance', 'Compliance', 'SME'],
+  },
+  {
     slug: 'second-brain-typed-entities',
     title: 'Why Fibery, Not Obsidian, for My Second Brain',
     subtitle: 'Notes on why typed entities beat flat files once the goal is thinking, not just capture.',
