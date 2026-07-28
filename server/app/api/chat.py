@@ -31,6 +31,7 @@ Cost controls (see memory: feedback-cost-monitoring):
 """
 from __future__ import annotations
 
+import asyncio
 import json
 from pathlib import Path
 
@@ -41,7 +42,7 @@ from pydantic import BaseModel, EmailStr, Field
 
 from app import budget
 from app.config import settings
-from app.services import db
+from app.services import db, flight_deck
 
 router = APIRouter()
 
@@ -99,6 +100,33 @@ def _estimate_input_tokens(system_prompt: str, messages: list[ChatMessage]) -> i
     return max(1, chars // 4)
 
 
+async def _push_lead_to_flight_deck(
+    *,
+    conv_id: int | None,
+    name: str,
+    email: str,
+    visitor_id: str | None,
+    contact_ref: str | None,
+    page_url: str,
+) -> None:
+    """Best-effort flight-deck upsert for a chat-gate lead. Failures are
+    logged only — the visitor is already chatting and the local row exists.
+    The later /capture call (booking-link conversations) upserts the same
+    email again, which flight-deck resolves to the same contact."""
+    try:
+        result = await flight_deck.submit_form(
+            visitor_id=flight_deck.ensure_visitor_id(visitor_id),
+            page_url=page_url,
+            form_fields={"email": email, "name": name, "source": "chat"},
+            contact_ref=contact_ref,
+        )
+        contact_id = result.get("contact_id")
+        if contact_id and conv_id:
+            await db.mark_captured(conv_id, contact_id)
+    except Exception as exc:
+        print(f"[chat/start] flight-deck push failed: {type(exc).__name__}: {str(exc)[:200]}")
+
+
 @router.post("/chat/start", response_model=ChatStartResponse)
 async def chat_start(req: ChatStartRequest, request: Request) -> ChatStartResponse:
     """Create a conversation record from name + email.
@@ -125,6 +153,20 @@ async def chat_start(req: ChatStartRequest, request: Request) -> ChatStartRespon
         page_url=req.page_url,
         user_agent=user_agent or None,
     )
+
+    # Push the lead to flight-deck immediately, in the background. The
+    # widget's own /capture only fires when Fred drops a booking link,
+    # which most conversations never reach — without this, a visitor who
+    # gives their email and asks one question is invisible to Flight Deck.
+    if flight_deck.is_configured():
+        asyncio.create_task(_push_lead_to_flight_deck(
+            conv_id=conv_id,
+            name=name,
+            email=email,
+            visitor_id=req.visitor_id,
+            contact_ref=req.contact_ref,
+            page_url=req.page_url or "https://crox.io/",
+        ))
 
     greeting = (
         f"Hi {name.split()[0]} — Fred here, Adam's assistant. "
