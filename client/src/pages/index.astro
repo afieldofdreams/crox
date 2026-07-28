@@ -1,5 +1,37 @@
 ---
 import Base from '../layouts/Base.astro';
+import { blogPosts } from '../content/blogPosts';
+
+const latestPost = blogPosts[0];
+
+// Things built here, not just advised on. Ordered by how well each one
+// demonstrates the consultancy's pitch to an SME buyer.
+const builds = [
+	{
+		name: 'Canary',
+		meta: 'Product · canary.crox.io',
+		blurb: 'Automated CQC monitoring for the UK care sector. Free email alerts on inspection changes; Pro adds AI analysis, multi-area monitoring and a monthly national brief.',
+		href: 'https://canary.crox.io',
+	},
+	{
+		name: 'BBX Signals',
+		meta: 'Product · radar.crox.io',
+		blurb: 'Early visibility for care homes. Frontline observations become themes, themes become trends you can act on early — no scores, no traffic lights, just patterns surfacing from real data.',
+		href: 'https://radar.crox.io',
+	},
+	{
+		name: 'DODAR',
+		meta: 'Research · dodar.crox.io',
+		blurb: 'A structured-reasoning benchmark across 8 LLMs: with the right scaffolding, small models match frontier-model quality at a fraction of the cost. Method and results published in full.',
+		href: 'https://dodar.crox.io',
+	},
+	{
+		name: 'Fred',
+		meta: 'Live on this site — bottom right',
+		blurb: 'The assistant in the corner of this page. Answers questions about Crox, qualifies enquiries and books calls — the same kind of assistant we build into clients’ sites.',
+		href: '/contact',
+	},
+];
 
 const path = [
 	{
@@ -264,6 +296,45 @@ const jsonLd = [
 		</div>
 	</section>
 
+	<!-- Built at Crox -->
+	<section class="py-16 border-b border-border">
+		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
+			Built at Crox
+			<span class="flex-1 h-px bg-border"></span>
+		</div>
+
+		<h2 class="font-serif font-normal text-[1.6rem] mb-4 max-sm:text-[1.3rem]">
+			We use what we sell.
+		</h2>
+		<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
+			Products, research, and working tools — built the same way we build for clients.
+		</p>
+
+		<div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1">
+			{builds.map((b) => (
+				<a
+					href={b.href}
+					class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group"
+				>
+					<h3 class="font-serif font-normal text-[1.3rem] mb-2 text-fg group-hover:text-accent transition-colors">
+						{b.name}
+					</h3>
+					<p class="text-[0.8rem] text-fg-dim mb-4">{b.meta}</p>
+					<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">{b.blurb}</p>
+					<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
+						Take a look &rarr;
+					</span>
+				</a>
+			))}
+		</div>
+
+		<p class="mt-8">
+			<a href="/projects" class="text-[0.95rem] text-fg no-underline border-b border-border pb-px hover:border-accent transition-colors">
+				All projects and research &rarr;
+			</a>
+		</p>
+	</section>
+
 	<!-- Latest from Insights -->
 	<section class="py-16 border-b border-border">
 		<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-8 flex items-center gap-4">
@@ -271,19 +342,19 @@ const jsonLd = [
 			<span class="flex-1 h-px bg-border"></span>
 		</div>
 
-		<a href="/insights/second-brain-typed-entities" class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group">
+		<a href={`/insights/${latestPost.slug}`} class="block bg-surface border border-border p-8 transition-colors hover:border-accent no-underline group">
 			<div class="flex items-center gap-3 mb-4">
-				<span class="text-[0.75rem] font-mono tracking-[0.1em] uppercase text-accent">Essay</span>
-				<span class="text-[0.8rem] text-fg-dim">May 2026</span>
+				<span class="text-[0.75rem] font-mono tracking-[0.1em] uppercase text-accent">{latestPost.tags[0]}</span>
+				<span class="text-[0.8rem] text-fg-dim">{latestPost.date}</span>
 			</div>
 			<h3 class="font-serif font-normal text-[1.5rem] text-fg mb-3 leading-[1.3] group-hover:text-accent transition-colors max-sm:text-[1.2rem]">
-				Why Fibery, Not Obsidian, for My Second Brain
+				{latestPost.title}
 			</h3>
 			<p class="text-[0.95rem] text-fg-dim leading-[1.7] mb-4">
-				Obsidian thinks in notes. Fibery thinks in typed entities. Why that distinction matters once your second brain has to do real work — and once you want an AI co-pilot to read from it.
+				{latestPost.description}
 			</p>
 			<span class="font-mono text-[0.8rem] tracking-[0.1em] uppercase text-fg-dim group-hover:text-accent transition-colors">
-				Read the essay &rarr;
+				Read the article &rarr;
 			</span>
 		</a>
 	</section>
