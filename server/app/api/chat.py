@@ -169,7 +169,7 @@ async def chat_start(req: ChatStartRequest, request: Request) -> ChatStartRespon
         ))
 
     greeting = (
-        f"Hi {name.split()[0]} — Fred here, Adam's assistant. "
+        f"Hi {name.split()[0]} — I'm Adam's AI assistant. "
         "What brought you to Crox today?"
     )
     return ChatStartResponse(conversation_id=conv_id, greeting=greeting)

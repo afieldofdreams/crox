@@ -402,10 +402,10 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          aria-label="Open chat with Fred"
+          aria-label="Open chat with Adam's AI assistant"
           className="fixed bottom-6 right-6 z-40 flex items-center gap-2 bg-accent text-fg font-mono text-[0.75rem] tracking-[0.12em] uppercase px-5 py-3 shadow-lg hover:bg-[#c4472e] hover:-translate-y-px transition-all"
         >
-          <span>Chat with Fred</span>
+          <span>Ask Adam&apos;s AI</span>
         </button>
       )}
 
@@ -413,7 +413,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
       {isOpen && (
         <div
           role="dialog"
-          aria-label="Chat with Fred"
+          aria-label="Chat with Adam's AI assistant"
           className="fixed inset-0 z-50 flex flex-col w-full h-[100dvh] bg-surface sm:inset-auto sm:bottom-4 sm:right-4 sm:w-[min(420px,calc(100vw-2rem))] sm:h-[min(640px,calc(100vh-2rem))] sm:border sm:border-border sm:shadow-2xl"
         >
           {/* Header */}
@@ -421,7 +421,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
             <div>
               <p className="font-mono text-[0.7rem] tracking-[0.15em] uppercase text-accent">Chat</p>
               <p className="font-serif text-[1.1rem] text-fg leading-tight">
-                With Fred <span className="text-fg-dim text-[0.85rem]">— Adam's assistant</span>
+                Adam&apos;s AI Assistant
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -449,7 +449,7 @@ export default function ChatWidget({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: Prop
           {/* Body: intro form OR messages */}
           {!introComplete ? (
             <div className="flex-1 overflow-y-auto p-5">
-              <p className="font-serif text-fg text-[1rem] mb-2">Hi — I'm Fred, Adam's assistant.</p>
+              <p className="font-serif text-fg text-[1rem] mb-2">Hi — I'm Adam's AI assistant.</p>
               <p className="text-[0.9rem] text-fg-dim leading-[1.6] mb-5">
                 Quick one before we chat: drop your name and email so Adam can follow up properly.
                 I'll then help you work out whether (and how) Adam can help.
