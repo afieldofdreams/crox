@@ -2,6 +2,8 @@
 
 > Practical AI for small and mid-sized businesses. It starts with a map of your business and a prioritised AI roadmap, then we build the tooling and support it as it grows.
 
+Crox (crox.io, also known as Crox AI) is a UK company — Crox Ltd, Companies House number 10549400 — founded in 2017 by Adam Field and based in London. It is not affiliated with the similarly named Crox Agency (crox.agency), which is a separate, unrelated business.
+
 ## What We Do
 
 Crox helps SMEs put AI to work through one clear path: Map, Build, Support. AI Mapping produces a map of your processes, tools, and data plus a prioritised roadmap. Build turns the top opportunity into working tooling connected to your real systems with governance built in. Ongoing Support keeps the tooling working as models change and works down the rest of the roadmap. Deep experience in regulated industries (healthcare, legal, fintech, insurance).
