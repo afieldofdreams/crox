@@ -1,0 +1,255 @@
+---
+import Base from '../layouts/Base.astro';
+
+const baseUrl = 'https://crox.io';
+const canonicalUrl = `${baseUrl}/ai-for-smes`;
+const BOOKING_URL = 'https://calendar.app.google/3avUXyXnctfWpyHF7';
+
+const faqs = [
+	{
+		q: 'What can AI actually do for a small business?',
+		a: 'The reliable wins today are language and document work: drafting and triaging email, summarising meetings and calls, preparing first drafts of proposals and reports, answering routine customer questions, and moving data between systems that don’t talk to each other. Connected to your real tools, an AI assistant can act on your CRM, accounting software, and inbox rather than just chat about them.',
+	},
+	{
+		q: 'How much does AI cost for an SME?',
+		a: 'Off-the-shelf assistants cost roughly £15–£60 per user per month. A built automation for one process — connected to your real systems, with governance — typically runs £5,000–£25,000 as a project, plus ongoing support. The bigger cost is usually the time wasted on tools that don’t fit the process, which is why mapping before building matters.',
+	},
+	{
+		q: 'Does the EU AI Act apply to UK SMEs?',
+		a: 'Brexit did not put UK firms outside it. The Act follows the market: if you sell AI-powered products into the EU, or use AI whose output is used in the EU, it can reach you — and from 2 August 2026 the bulk of it is enforceable. UK-only firms still answer to UK GDPR for automated decisions about people.',
+	},
+	{
+		q: 'Where should an SME start with AI?',
+		a: 'Not with a tool — with a process. Pick something high-volume, rules-based, and low blast radius if it goes wrong: inbox triage, document preparation, data entry between systems. Map how it works today, automate one step, measure, then widen. Starting with a map of the whole business tells you which process earns that first slot.',
+	},
+	{
+		q: 'Will AI replace staff in a small business?',
+		a: 'In practice it removes tasks, not roles. The firms getting value use AI to take the repetitive 30% off people’s plates — the reconciliation, the retyping, the first drafts — so the humans do the judgement work only they can do. Headcount usually stays; capacity grows.',
+	},
+];
+
+const jsonLd = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'Article',
+		headline: 'AI for SMEs: A Practical Guide for UK Small and Mid-Sized Businesses',
+		description:
+			'What AI can actually do for a small or mid-sized business in 2026 — realistic use cases, honest costs, where to start, and the rules that apply. Written for UK SMEs.',
+		author: { '@type': 'Person', name: 'Adam Field' },
+		publisher: {
+			'@type': 'Organization',
+			name: 'Crox',
+			logo: { '@type': 'ImageObject', url: `${baseUrl}/logo.png` },
+		},
+		datePublished: '2026-08-04',
+		dateModified: '2026-08-04',
+		mainEntityOfPage: canonicalUrl,
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl },
+			{ '@type': 'ListItem', position: 2, name: 'AI for SMEs', item: canonicalUrl },
+		],
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faqs.map((f) => ({
+			'@type': 'Question',
+			name: f.q,
+			acceptedAnswer: { '@type': 'Answer', text: f.a },
+		})),
+	},
+];
+
+const body = 'text-[0.95rem] text-fg-dim leading-[1.8]';
+const link = 'text-fg border-b border-border pb-px hover:border-accent transition-colors';
+const h2 = 'font-serif font-normal text-[1.6rem] text-fg mt-12 mb-4';
+const h3 = 'text-[1.1rem] text-fg font-medium mt-8 mb-2';
+---
+
+<Base
+	title="AI for SMEs: A Practical Guide for UK Small and Mid-Sized Businesses | Crox"
+	description="What AI can actually do for an SME in 2026 — realistic use cases, honest costs, where to start, and the rules that apply. A practical, UK-focused guide with no vendor hype."
+	canonical={canonicalUrl}
+	jsonLd={jsonLd}
+>
+	<article class="py-16 max-w-2xl">
+		<header class="mb-12">
+			<h1 class="font-serif text-4xl md:text-5xl text-fg leading-tight mb-4">
+				AI for SMEs: a practical guide
+			</h1>
+			<p class="text-[1.05rem] text-fg-dim leading-[1.8] font-serif italic">
+				What AI can actually do for a small or mid-sized business — realistic use cases, honest
+				costs, where to start, and the rules that apply. Written for UK firms, without the hype.
+			</p>
+		</header>
+
+		<div class="space-y-6">
+			<p class={body}>
+				Most writing about AI for business is aimed at enterprises with data teams and
+				seven-figure budgets, or it is a vendor pitch wearing a how-to guide as a disguise. If you
+				run a firm of five to two hundred people, neither is much use. You do not have a data
+				team. You have a business to run, a stack of tools that mostly work, and a nagging sense
+				that some of what your team does by hand every week should not be done by hand.
+			</p>
+			<p class={body}>
+				This guide is the missing middle: what AI genuinely does well for an SME today, what it
+				costs, where to start, and what the law expects — based on what we see building and
+				supporting this for firms across accounting, legal, healthcare, recruitment, and
+				professional services.
+			</p>
+
+			<h2 class={h2}>What AI can actually do for an SME right now</h2>
+			<p class={body}>
+				The honest headline: today's AI is exceptional at <strong class="text-fg font-medium">language and document work</strong>,
+				good at <strong class="text-fg font-medium">moving information between systems</strong>, and unreliable at anything
+				requiring judgement it hasn't been given the context to make. That maps to four areas
+				where SMEs get dependable value.
+			</p>
+
+			<h3 class={h3}>Administration and operations</h3>
+			<p class={body}>
+				Meeting notes and action points written up before you're back at your desk. Inboxes
+				triaged and drafts prepared for the routine 70% of replies. First drafts of proposals,
+				reports, and letters that a human edits rather than writes. This is the least glamorous
+				category and consistently the fastest payback —
+				<a href="/insights/ai-saving-small-business-time" class={link}>here are five patterns we see saving teams 10+ hours a week</a>.
+			</p>
+
+			<h3 class={h3}>Customer-facing work</h3>
+			<p class={body}>
+				Routine questions answered instantly and accurately from your own documentation; the
+				tricky ones routed to a human with the context attached. Enquiries qualified and logged in
+				the CRM before anyone picks up the phone. The pattern that works is AI handling the
+				volume, people handling the exceptions.
+			</p>
+
+			<h3 class={h3}>Finance and back office</h3>
+			<p class={body}>
+				Bank reconciliation suggestions, invoice chasing sequences, expense categorisation,
+				supplier document extraction. Because this work is rules-based and high-volume, it
+				automates well — and because it touches money, it is exactly where governance matters
+				most. Our guide to <a href="/insights/ai-for-accounting-firms" class={link}>AI for accounting firms</a>
+				covers what's realistic here in detail.
+			</p>
+
+			<h3 class={h3}>Connecting AI to the tools you already use</h3>
+			<p class={body}>
+				The step that turns a chatbot into a colleague is giving it governed access to your real
+				systems — your CRM, your accounting package, your project tracker. An open standard called
+				the Model Context Protocol makes this practical without a bespoke integration project:
+				browse the <a href="/servers" class={link}>160+ integrations in our MCP server directory</a>,
+				or start with <a href="/insights/connect-ai-to-business-tools" class={link}>how to connect AI to your business tools without writing code</a>.
+			</p>
+
+			<h2 class={h2}>What it costs — real numbers</h2>
+			<p class={body}>
+				Three tiers, in practice. <strong class="text-fg font-medium">Off-the-shelf assistants</strong> (ChatGPT
+				Team, Claude, Copilot) run £15–£60 per user per month and are worth having almost
+				regardless. <strong class="text-fg font-medium">Connected automation</strong> — AI wired into one of your
+				actual processes with permissions and audit trails — is typically a £5,000–£25,000 project
+				depending on the systems involved. <strong class="text-fg font-medium">Ongoing support</strong> — keeping
+				it working as models and APIs change, and working down the roadmap — is a monthly
+				retainer. The expensive failure mode is none of these: it's six months of licence fees for
+				tools nobody uses because they don't fit the process.
+			</p>
+
+			<h2 class={h2}>Where to start (and where not to)</h2>
+			<p class={body}>
+				Don't start with a tool. Start with a process — one that is
+				<strong class="text-fg font-medium">high-volume</strong> (happens daily or weekly),
+				<strong class="text-fg font-medium">rules-based</strong> (a competent temp could follow the instructions), and
+				<strong class="text-fg font-medium">low blast radius</strong> (a mistake is annoying, not existential). Automate
+				one step, measure the result, widen from there. We've written a fuller framework for
+				<a href="/learn/where-to-start-ai-automation" class={link}>picking the first process</a> and for
+				<a href="/learn/ai-automation-roi" class={link}>proving the ROI</a> once it's running.
+			</p>
+			<p class={body}>
+				The reason we start every engagement with <a href="/mapping" class={link}>AI Mapping</a> is
+				that the highest-value process is rarely the one that first comes to mind — and the
+				prioritised roadmap stops you automating a process that should have been fixed instead.
+				Two minutes with the <a href="/assessment" class={link}>AI readiness assessment</a> will
+				tell you roughly where you stand.
+			</p>
+
+			<h2 class={h2}>The rules: UK GDPR, the EU AI Act, and governance</h2>
+			<p class={body}>
+				Two legal facts matter for UK SMEs. First, <strong class="text-fg font-medium">UK GDPR applies now</strong>:
+				automated decisions about people — customers, candidates, staff — carry obligations today,
+				and the ICO has been explicit that AI tools do not suspend them. Second, the
+				<strong class="text-fg font-medium">EU AI Act reaches across the Channel</strong>: sell AI-powered services into
+				the EU, or use AI whose output lands there, and from 2 August 2026 its enforceable
+				obligations can apply to you.
+				<a href="/insights/eu-ai-act-uk-business" class={link}>Here's how to work out whether it reaches you</a>.
+			</p>
+			<p class={body}>
+				Governance doesn't need to be heavy — it needs to exist: who approved the tool, what data
+				it can see, who checks its output, and what happens
+				<a href="/insights/ai-vendor-dependency-risk" class={link}>when your vendor has a bad day</a>.
+				Our guide to <a href="/learn/ai-automation-risks-governance" class={link}>governing AI automation without killing it</a>
+				covers the practical version; for boards and exec teams there's a
+				<a href="/board-exec" class={link}>dedicated briefing service</a>.
+			</p>
+
+			<h2 class={h2}>Build, buy, or partner?</h2>
+			<p class={body}>
+				Buy where your need is generic (transcription, drafting). Build where the process is your
+				competitive edge and the systems are yours. Partner when you need building done without
+				hiring for it — which is the gap Crox exists to fill: we
+				<a href="/mapping" class={link}>map</a>, <a href="/experiments" class={link}>build</a>, and
+				<a href="/support" class={link}>support</a>, in that order. The fuller decision framework is in
+				<a href="/learn/build-buy-or-partner-ai" class={link}>Build, Buy, or Partner?</a>
+			</p>
+
+			<h2 class={h2}>Guides for your industry</h2>
+			<p class={body}>
+				The general principles land differently in each trade, so we write them up one industry at
+				a time: <a href="/insights/ai-for-accounting-firms" class={link}>accounting firms</a>,
+				<a href="/insights/ai-for-legal-practices" class={link}>legal practices</a>,
+				<a href="/insights/ai-for-recruitment-agencies" class={link}>recruitment agencies</a>,
+				<a href="/insights/ai-for-estate-agents" class={link}>estate agents</a>, and
+				<a href="/insights/ai-for-dental-practices" class={link}>dental practices</a> — with more on
+				the way in the <a href="/insights" class={link}>insights section</a>.
+			</p>
+
+			<h2 class={h2}>Frequently asked questions</h2>
+			<div class="space-y-8">
+				{faqs.map((f) => (
+					<div>
+						<h3 class={h3}>{f.q}</h3>
+						<p class={body}>{f.a}</p>
+					</div>
+				))}
+			</div>
+		</div>
+
+		<!-- CTA -->
+		<div class="border-t border-border pt-12 mt-16">
+			<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-4">Next step</div>
+			<h2 class="font-serif text-2xl text-fg mb-4">Find out where AI fits your business</h2>
+			<p class={`${body} mb-6`}>
+				Two ways to start: the free two-minute readiness assessment, or a conversation about
+				mapping your business properly.
+			</p>
+			<div class="flex gap-4">
+				<a
+					href="/assessment"
+					class="inline-block px-6 py-3 bg-accent text-bg font-mono text-[0.9rem] rounded hover:bg-[#d84d2f] transition-colors"
+				>
+					Take the Readiness Assessment
+				</a>
+				<a
+					href={BOOKING_URL}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-block px-6 py-3 border border-accent text-accent font-mono text-[0.9rem] rounded hover:bg-accent hover:text-bg transition-colors"
+				>
+					Schedule a Call <span class="sr-only">(opens in a new tab)</span>
+				</a>
+			</div>
+		</div>
+	</article>
+</Base>

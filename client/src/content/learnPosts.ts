@@ -12,6 +12,17 @@ export interface LearnPost {
 
 export const learnPosts: LearnPost[] = [
   {
+    slug: "ai-automation-cost",
+    title: "How Much Does AI Automation Cost a Small Business? Real Numbers",
+    subtitle: "The three tiers of AI spend — off-the-shelf tools, connected automation, and ongoing support — with actual price ranges and the arithmetic for deciding what's worth it.",
+    date: "August 2026",
+    dateISO: "2026-08-04",
+    readTime: "7 min read",
+    description: "AI automation costs for UK SMEs, with real numbers: £15–£60/user/month for assistants, £5,000–£25,000 for a connected build, and what support costs. What inflates the price and when to skip it.",
+    keywords: ["how much does ai automation cost", "ai automation cost small business", "ai cost uk sme", "ai implementation cost", "custom ai automation price", "ai consultant cost uk", "mcp integration cost", "ai budget small business"],
+    tags: ["Costs", "AI Automation", "SME", "Buyer's Guide"],
+  },
+  {
     slug: "what-is-mcp",
     title: "What Is the Model Context Protocol? A Plain English Guide",
     subtitle: "The open standard that lets AI assistants like ChatGPT and Claude securely talk to your business software — explained without jargon.",

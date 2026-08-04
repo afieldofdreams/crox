@@ -12,6 +12,42 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'ai-for-recruitment-agencies',
+    title: 'AI for Recruitment Agencies: The Wins, and the One Area the Law Watches',
+    subtitle: 'Job ads, call notes, CRM hygiene, and candidate comms automate beautifully. Screening is where the EU AI Act and UK GDPR are looking — here\'s how to draw the line.',
+    date: 'August 2026',
+    dateISO: '2026-08-04',
+    readTime: '6 min read',
+    description:
+      'What AI actually does well in a UK recruitment agency — job ads, interview notes, CRM hygiene, candidate communication — and why screening is legally different. Practical costs and where to start.',
+    keywords: ['ai for recruitment agencies', 'ai recruitment uk', 'ai cv screening legal', 'eu ai act recruitment high risk', 'ai for recruiters', 'recruitment automation', 'ai candidate sourcing', 'bullhorn ai integration'],
+    tags: ['Recruitment', 'AI Automation', 'SME', 'EU AI Act'],
+  },
+  {
+    slug: 'ai-for-estate-agents',
+    title: 'AI for Estate Agents: More Viewings, Fewer Evenings Writing Listings',
+    subtitle: 'Listing copy, enquiry triage, vendor updates, and compliance checklists — where AI genuinely pays back in a UK agency branch, with honest costs.',
+    date: 'August 2026',
+    dateISO: '2026-08-04',
+    readTime: '6 min read',
+    description:
+      'What AI actually does well in a UK estate agency — listing descriptions, enquiry qualification, vendor updates, AML and material information checks — plus realistic costs and the right first process.',
+    keywords: ['ai for estate agents', 'ai estate agency uk', 'ai property descriptions', 'estate agent automation', 'ai lettings admin', 'property enquiry automation', 'ai for letting agents', 'estate agent crm ai'],
+    tags: ['Estate Agency', 'AI Automation', 'SME', 'Property'],
+  },
+  {
+    slug: 'ai-for-dental-practices',
+    title: 'AI for Dental Practices: Filling Chairs Without Risking Records',
+    subtitle: 'Recalls, letters, front-desk FAQ, and treatment plan follow-ups — the operational layer where AI pays back fast, and the governance that keeps the CQC and UK GDPR happy.',
+    date: 'August 2026',
+    dateISO: '2026-08-04',
+    readTime: '6 min read',
+    description:
+      'Where AI genuinely helps a UK dental practice — recalls and reminders, treatment plan letters, front-desk questions, follow-ups — and how to handle special category data, DPIAs, and CQC accountability.',
+    keywords: ['ai for dental practices', 'ai dental practice uk', 'dental practice automation', 'ai patient recalls', 'dental reception ai', 'ai healthcare admin', 'dental practice management ai', 'cqc ai governance'],
+    tags: ['Dental', 'Healthcare', 'AI Automation', 'SME'],
+  },
+  {
     slug: 'eu-ai-act-uk-business',
     title: 'EU AI Act: Does It Apply to a UK Business?',
     subtitle: 'The Act follows the market, not the company registration. How to work out whether it reaches you before enforcement starts on 2 August 2026.',
