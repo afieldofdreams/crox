@@ -1,0 +1,401 @@
+---
+import Base from '../../layouts/Base.astro';
+import { servers, categories } from '../../content/servers';
+import {
+	categorySlug,
+	serverSlug,
+	assertNoSlugCollisions,
+} from '../../lib/serverSlugs';
+
+export function getStaticPaths() {
+	assertNoSlugCollisions();
+	return [
+		...categories.map((category) => ({
+			params: { slug: categorySlug(category) },
+			props: { type: 'category' as const, category },
+		})),
+		...servers.map((server) => ({
+			params: { slug: serverSlug(server) },
+			props: { type: 'server' as const, server },
+		})),
+	];
+}
+
+interface Props {
+	type: 'category' | 'server';
+	category?: string;
+	server?: (typeof servers)[number];
+}
+
+const { type, category, server } = Astro.props;
+
+const baseUrl = 'https://crox.io';
+const BOOKING_URL = 'https://calendar.app.google/3avUXyXnctfWpyHF7';
+
+// ── Category page data ──────────────────────────────────────────────
+const categoryServers = category
+	? servers.filter((s) => s.category === category)
+	: [];
+const topNames = categoryServers.slice(0, 3).map((s) => s.name);
+
+// ── Server page data ────────────────────────────────────────────────
+const siblingServers = server
+	? servers.filter((s) => s.category === server.category && s.id !== server.id)
+	: [];
+
+const statusLine =
+	server?.status === 'official'
+		? `The ${server.name} MCP server is an official integration, maintained by the vendor or the Model Context Protocol project, which makes it the safest default for business use.`
+		: server?.status === 'community'
+			? `The ${server.name} MCP server is community-maintained. It is widely used, but review the repository and pin a version before relying on it in production.`
+			: server
+				? `This is a custom integration that Crox builds and supports for clients — built to your workflow rather than a generic feature list.`
+				: '';
+
+const toolsSentence = server
+	? server.tools.map((t) => t.toLowerCase()).join(', ')
+	: '';
+
+const faqs = server
+	? [
+			{
+				q: `What is the ${server.name} MCP server?`,
+				a: `It is a Model Context Protocol (MCP) server — a small piece of software that gives AI assistants like Claude a secure, governed connection to ${server.name}. ${server.description}`,
+			},
+			{
+				q: `Is there an official ${server.name} MCP server?`,
+				a: statusLine,
+			},
+			{
+				q: `What can an AI assistant actually do with ${server.name}?`,
+				a: `Through this server an assistant can work with ${toolsSentence} — reading from and acting on ${server.name} directly instead of you copy-pasting between windows. What you allow it to do is controlled by the permissions you grant.`,
+			},
+			{
+				q: `How do I set this up for my business?`,
+				a: `Technically-minded teams can connect an MCP server themselves — our plain-English guide to MCP explains how the pieces fit. If you want it done with governance, permissions, and support handled, that is exactly what Crox's Build engagement covers.`,
+			},
+		]
+	: [];
+
+// ── Titles, descriptions, canonical ─────────────────────────────────
+const pageSlug = Astro.params.slug;
+const canonicalUrl = `${baseUrl}/servers/${pageSlug}`;
+
+const title =
+	type === 'category'
+		? `${category} MCP Servers — Connect AI to ${topNames.join(', ')} | Crox`
+		: `${server!.name} MCP Server — Connect Claude & AI Assistants to ${server!.name} | Crox`;
+
+const description =
+	type === 'category'
+		? `${categoryServers.length} MCP server${categoryServers.length === 1 ? '' : 's'} for ${category!.toLowerCase()}: ${categoryServers
+				.slice(0, 5)
+				.map((s) => s.name)
+				.join(', ')} and more. Connect AI assistants to the ${category!.toLowerCase()} tools your business already uses.`
+		: `${server!.description} How the ${server!.name} MCP server works, whether it's official, and what an AI assistant can do with it.`;
+
+// ── Structured data ─────────────────────────────────────────────────
+const breadcrumbSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'BreadcrumbList',
+	itemListElement: [
+		{ '@type': 'ListItem', position: 1, name: 'Home', item: baseUrl },
+		{ '@type': 'ListItem', position: 2, name: 'Servers', item: `${baseUrl}/servers` },
+		...(type === 'server'
+			? [
+					{
+						'@type': 'ListItem',
+						position: 3,
+						name: server!.category,
+						item: `${baseUrl}/servers/${categorySlug(server!.category)}`,
+					},
+					{ '@type': 'ListItem', position: 4, name: server!.name, item: canonicalUrl },
+				]
+			: [{ '@type': 'ListItem', position: 3, name: category, item: canonicalUrl }]),
+	],
+};
+
+const jsonLd =
+	type === 'category'
+		? [
+				{
+					'@context': 'https://schema.org',
+					'@type': 'CollectionPage',
+					name: `${category} MCP Servers`,
+					description,
+					url: canonicalUrl,
+				},
+				breadcrumbSchema,
+				{
+					'@context': 'https://schema.org',
+					'@type': 'ItemList',
+					name: `${category} MCP Servers`,
+					url: canonicalUrl,
+					itemListElement: categoryServers.map((s, index) => ({
+						'@type': 'SoftwareApplication',
+						position: index + 1,
+						name: s.name,
+						description: s.description,
+						applicationCategory: 'DeveloperApplication',
+						url: `${baseUrl}/servers/${serverSlug(s)}`,
+					})),
+				},
+			]
+		: [
+				{
+					'@context': 'https://schema.org',
+					'@type': 'SoftwareApplication',
+					name: `${server!.name} MCP Server`,
+					description: server!.description,
+					applicationCategory: 'DeveloperApplication',
+					operatingSystem: 'Any',
+					url: canonicalUrl,
+					...(server!.url ? { sameAs: [server!.url] } : {}),
+					offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP' },
+				},
+				breadcrumbSchema,
+				{
+					'@context': 'https://schema.org',
+					'@type': 'FAQPage',
+					mainEntity: faqs.map((f) => ({
+						'@type': 'Question',
+						name: f.q,
+						acceptedAnswer: { '@type': 'Answer', text: f.a },
+					})),
+				},
+			];
+---
+
+<Base title={title} description={description} canonical={canonicalUrl} jsonLd={jsonLd}>
+	<div class="py-16">
+		{
+			type === 'category' ? (
+				<>
+					<nav aria-label="Breadcrumb" class="text-[0.8rem] font-mono text-fg-dim mb-8">
+						<a href="/servers" class="hover:text-accent transition-colors">
+							Server Directory
+						</a>
+						<span class="mx-2">/</span>
+						<span class="text-fg">{category}</span>
+					</nav>
+
+					<div class="mb-12">
+						<h1 class="font-serif text-4xl md:text-5xl mb-4 text-fg">{category} MCP Servers</h1>
+						<p class="text-[0.95rem] text-fg-dim leading-[1.8] max-w-2xl">
+							{categoryServers.length} MCP server{categoryServers.length === 1 ? '' : 's'} connect AI
+							assistants like Claude and ChatGPT to the {category!.toLowerCase()} tools your business
+							already runs on — including {topNames.join(', ')}. Pick a server below to see what it
+							does, whether it's officially maintained, and what an assistant can automate with it.
+						</p>
+					</div>
+
+					<div class="grid gap-6 mb-16">
+						{categoryServers.map((s) => (
+							<div class="bg-surface border border-border rounded p-6 hover:border-accent transition-colors">
+								<div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-3">
+									<h2 class="font-serif text-xl text-fg mb-1">
+										<a href={`/servers/${serverSlug(s)}`} class="hover:text-accent transition-colors">
+											{s.name}
+										</a>
+									</h2>
+									<div class="flex flex-wrap gap-2 items-start">
+										{s.status === 'official' && (
+											<span class="text-[0.75rem] font-mono px-3 py-1 rounded border border-accent text-accent">
+												Official
+											</span>
+										)}
+										{s.status === 'community' && (
+											<span class="text-[0.75rem] font-mono px-3 py-1 rounded border border-border text-fg-dim">
+												Community
+											</span>
+										)}
+										{s.status === 'custom' && (
+											<span class="text-[0.75rem] font-mono px-3 py-1 rounded bg-accent text-bg">
+												We build this
+											</span>
+										)}
+									</div>
+								</div>
+								<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-4">{s.description}</p>
+								<a
+									href={`/servers/${serverSlug(s)}`}
+									class="text-[0.85rem] text-accent hover:text-fg transition-colors"
+								>
+									About the {s.name} MCP server →
+								</a>
+							</div>
+						))}
+					</div>
+
+					<div class="border-t border-border pt-12 mb-16">
+						<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-4">
+							Browse other categories
+						</div>
+						<div class="flex flex-wrap gap-2">
+							{categories
+								.filter((c) => c !== category)
+								.map((c) => (
+									<a
+										href={`/servers/${categorySlug(c)}`}
+										class="px-4 py-2 text-[0.85rem] font-mono rounded border border-border text-fg-dim hover:border-accent hover:text-accent transition-colors"
+									>
+										{c}
+									</a>
+								))}
+						</div>
+					</div>
+				</>
+			) : (
+				<>
+					<nav aria-label="Breadcrumb" class="text-[0.8rem] font-mono text-fg-dim mb-8">
+						<a href="/servers" class="hover:text-accent transition-colors">
+							Server Directory
+						</a>
+						<span class="mx-2">/</span>
+						<a
+							href={`/servers/${categorySlug(server!.category)}`}
+							class="hover:text-accent transition-colors"
+						>
+							{server!.category}
+						</a>
+						<span class="mx-2">/</span>
+						<span class="text-fg">{server!.name}</span>
+					</nav>
+
+					<div class="mb-10">
+						<div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
+							<h1 class="font-serif text-4xl md:text-5xl text-fg">{server!.name} MCP Server</h1>
+							<div class="flex flex-wrap gap-2 items-start">
+								<a
+									href={`/servers/${categorySlug(server!.category)}`}
+									class="text-[0.75rem] font-mono px-3 py-1 rounded border border-border text-fg-dim hover:border-accent hover:text-accent transition-colors"
+								>
+									{server!.category}
+								</a>
+								{server!.status === 'official' && (
+									<span class="text-[0.75rem] font-mono px-3 py-1 rounded border border-accent text-accent">
+										Official
+									</span>
+								)}
+								{server!.status === 'community' && (
+									<span class="text-[0.75rem] font-mono px-3 py-1 rounded border border-border text-fg-dim">
+										Community
+									</span>
+								)}
+								{server!.status === 'custom' && (
+									<span class="text-[0.75rem] font-mono px-3 py-1 rounded bg-accent text-bg">
+										We build this
+									</span>
+								)}
+							</div>
+						</div>
+						<p class="text-[0.95rem] text-fg-dim leading-[1.8] max-w-2xl">{server!.description}</p>
+					</div>
+
+					<div class="mb-10">
+						<div class="text-[0.75rem] text-fg-dim uppercase tracking-[0.1em] mb-2">Capabilities</div>
+						<div class="flex flex-wrap gap-2">
+							{server!.tools.map((tool) => (
+								<span class="text-[0.8rem] px-2 py-1 bg-surface border border-border rounded text-fg-dim">
+									{tool}
+								</span>
+							))}
+						</div>
+					</div>
+
+					{server!.url && (
+						<div class="mb-12">
+							<a
+								href={server!.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-block text-[0.9rem] text-accent hover:text-fg transition-colors font-mono"
+							>
+								View official documentation <span class="sr-only">(opens in a new tab)</span> →
+							</a>
+						</div>
+					)}
+
+					<div class="border-t border-border pt-12 mb-12 max-w-2xl">
+						<h2 class="font-serif text-2xl text-fg mb-6">Frequently asked questions</h2>
+						<div class="space-y-8">
+							{faqs.map((f) => (
+								<div>
+									<h3 class="text-[1.05rem] text-fg font-medium mb-2">{f.q}</h3>
+									<p class="text-[0.95rem] text-fg-dim leading-[1.8]">{f.a}</p>
+								</div>
+							))}
+						</div>
+						<p class="text-[0.95rem] text-fg-dim leading-[1.8] mt-8">
+							New to MCP? Start with{' '}
+							<a
+								href="/learn/what-is-mcp"
+								class="text-fg border-b border-border pb-px hover:border-accent transition-colors"
+							>
+								our plain-English guide to the Model Context Protocol
+							</a>{' '}
+							or see{' '}
+							<a
+								href="/insights/connect-ai-to-business-tools"
+								class="text-fg border-b border-border pb-px hover:border-accent transition-colors"
+							>
+								how to connect AI to your business tools without writing code
+							</a>
+							.
+						</p>
+					</div>
+
+					{siblingServers.length > 0 && (
+						<div class="border-t border-border pt-12 mb-12">
+							<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-4">
+								More {server!.category} servers
+							</div>
+							<div class="flex flex-wrap gap-2">
+								{siblingServers.map((s) => (
+									<a
+										href={`/servers/${serverSlug(s)}`}
+										class="px-4 py-2 text-[0.85rem] font-mono rounded border border-border text-fg-dim hover:border-accent hover:text-accent transition-colors"
+									>
+										{s.name}
+									</a>
+								))}
+							</div>
+						</div>
+					)}
+				</>
+			)
+		}
+
+		<!-- CTA -->
+		<div class="border-t border-border pt-12">
+			<div class="max-w-2xl">
+				<div class="text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-4">
+					Done-for-you integration
+				</div>
+				<h2 class="font-serif text-2xl text-fg mb-4">
+					Want this connected to your business — with governance handled?
+				</h2>
+				<p class="text-[0.95rem] text-fg-dim leading-[1.8] mb-6">
+					Crox maps your processes, connects AI to the tools you already use, and keeps it working
+					as models change. Start with a readiness assessment or talk to us about a build.
+				</p>
+				<div class="flex gap-4">
+					<a
+						href="/assessment"
+						class="inline-block px-6 py-3 bg-accent text-bg font-mono text-[0.9rem] rounded hover:bg-[#d84d2f] transition-colors"
+					>
+						Take the Readiness Assessment
+					</a>
+					<a
+						href={BOOKING_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-block px-6 py-3 border border-accent text-accent font-mono text-[0.9rem] rounded hover:bg-accent hover:text-bg transition-colors"
+					>
+						Schedule a Call <span class="sr-only">(opens in a new tab)</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</Base>

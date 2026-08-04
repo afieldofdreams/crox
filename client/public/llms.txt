@@ -15,7 +15,7 @@ Crox helps SMEs put AI to work through one clear path: Map, Build, Support. AI M
 - **Ongoing Development & Support** (Step 3): A month-to-month partnership — new tooling built down the roadmap, everything built kept working as models and APIs change, and time with your team. https://crox.io/support
 - **Education**: Practical half- or full-day training for the people who will use AI day to day. https://crox.io/education
 - **Board / Exec**: Briefings, working sessions, and ongoing guidance for leadership deciding what AI does in the organisation. https://crox.io/board-exec
-- **MCP Server Directory**: Comprehensive directory of 150+ MCP servers across business tools, finance, development, data, communication, AI, e-commerce, analytics, design, marketing, and more. https://crox.io/servers
+- **MCP Server Directory**: Comprehensive directory of 160+ MCP servers across 30 categories (business tools, finance, development, data, communication, AI, e-commerce, and more), with a dedicated page per category and per server. https://crox.io/servers
 
 ## About
 
@@ -29,6 +29,7 @@ Founded by Adam Field. 10+ years building and deploying machine learning systems
 ## Pages
 
 - Home: https://crox.io/
+- AI for SMEs — practical guide (pillar): https://crox.io/ai-for-smes
 - About: https://crox.io/about
 - AI Mapping: https://crox.io/mapping
 - Build / AI Experiments: https://crox.io/experiments
@@ -40,6 +41,10 @@ Founded by Adam Field. 10+ years building and deploying machine learning systems
 
 ## Blog Posts
 
+- AI for Recruitment Agencies: The Wins, and the One Area the Law Watches: https://crox.io/insights/ai-for-recruitment-agencies
+- AI for Estate Agents: More Viewings, Fewer Evenings Writing Listings: https://crox.io/insights/ai-for-estate-agents
+- AI for Dental Practices: Filling Chairs Without Risking Records: https://crox.io/insights/ai-for-dental-practices
+- EU AI Act: Does It Apply to a UK Business?: https://crox.io/insights/eu-ai-act-uk-business
 - Why Fibery, Not Obsidian, for My Second Brain: https://crox.io/insights/second-brain-typed-entities
 - Your AI Vendor's Bad Day Is Your Regulatory Exposure: https://crox.io/insights/ai-vendor-dependency-risk
 - How to Connect AI to Your Business Tools Without Writing Code: https://crox.io/insights/connect-ai-to-business-tools
@@ -50,6 +55,7 @@ Founded by Adam Field. 10+ years building and deploying machine learning systems
 
 ## Learn
 
+- How Much Does AI Automation Cost a Small Business? Real Numbers: https://crox.io/learn/ai-automation-cost
 - What Is the Model Context Protocol? A Plain English Guide: https://crox.io/learn/what-is-mcp
 - MCP vs APIs vs Plugins: Which Integration Approach Should Your Business Use?: https://crox.io/learn/mcp-vs-apis-vs-plugins
 - How AI Assistants Connect to Your Tools: MCP Architecture Explained: https://crox.io/learn/mcp-architecture-explained

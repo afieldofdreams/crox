@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { servers, categories, type MCPServerEntry } from '../content/servers';
+import { serverSlug } from '../lib/serverSlugs';
 
 export default function ServerDirectory() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -78,7 +79,12 @@ export default function ServerDirectory() {
           >
             <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-3">
               <h2 className="font-serif text-xl text-fg mb-1">
-                {server.name}
+                <a
+                  href={`/servers/${serverSlug(server)}`}
+                  className="hover:text-accent transition-colors"
+                >
+                  {server.name}
+                </a>
               </h2>
               <div className="flex flex-wrap gap-2 items-start">
                 <span className="text-[0.75rem] font-mono px-3 py-1 rounded border border-border text-fg-dim">
