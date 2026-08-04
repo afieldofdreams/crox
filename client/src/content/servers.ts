@@ -1587,6 +1587,423 @@ export const servers: MCPServerEntry[] = [
     tools: ['Courses', 'Quizzes', 'Content', 'Learning'],
     status: 'official',
     url: 'https://github.com/nicholasgriffintn/edubase-mcp'
+  },
+
+  // ─── SME tools (August 2026 research batch) ───────────────────────
+
+  {
+    id: 'google-analytics-mcp',
+    name: 'Google Analytics',
+    description: 'Pull GA4 data on demand: run standard, funnel, and realtime reports, list accounts and properties, and retrieve custom dimensions and metrics. Read-only, maintained by Google.',
+    category: 'Analytics & Monitoring',
+    tools: ['Reports', 'Funnel Analysis', 'Realtime Traffic', 'Property Lookup'],
+    status: 'official',
+    url: 'https://github.com/googleanalytics/google-analytics-mcp'
+  },
+  {
+    id: 'mixpanel-mcp',
+    name: 'Mixpanel',
+    description: 'Answer product-usage questions from real Mixpanel data — run insights, funnel, flow, and retention analyses, build dashboards, and review session replays.',
+    category: 'Analytics & Monitoring',
+    tools: ['Funnels & Retention', 'Dashboards', 'Events & Cohorts', 'Session Replay'],
+    status: 'official',
+    url: 'https://docs.mixpanel.com/docs/mcp'
+  },
+  {
+    id: 'posthog-mcp',
+    name: 'PostHog',
+    description: 'Query product analytics with HogQL, manage feature flags and experiments, investigate errors with stack traces, and triage issues directly in PostHog.',
+    category: 'Analytics & Monitoring',
+    tools: ['Analytics Queries', 'Feature Flags', 'Error Tracking', 'Experiments'],
+    status: 'official',
+    url: 'https://posthog.com/docs/model-context-protocol'
+  },
+  {
+    id: 'zapier-mcp',
+    name: 'Zapier',
+    description: 'Take real actions across 9,000+ business apps — send messages, create tasks, update CRM records, and run workflows — through Zapier\'s hosted MCP endpoint.',
+    category: 'Automation & Integration',
+    tools: ['App Actions', '9,000+ Integrations', 'Tool Discovery', 'Workflow Automation'],
+    status: 'official',
+    url: 'https://docs.zapier.com/mcp/home'
+  },
+  {
+    id: 'attio-mcp',
+    name: 'Attio',
+    description: 'Search, read, and update CRM records — people, companies, deals, tasks, and notes — plus run reports and semantic search across emails and call recordings in Attio.',
+    category: 'Business Tools',
+    tools: ['Record Search', 'Pipeline Management', 'Notes & Tasks', 'Reporting'],
+    status: 'official',
+    url: 'https://docs.attio.com/mcp/overview'
+  },
+  {
+    id: 'cal-com-mcp',
+    name: 'Cal.com',
+    description: 'Manage Cal.com scheduling by natural language — view bookings, reschedule, check open slots, and edit event types. Hosted or self-hosted with 34 tools.',
+    category: 'Business Tools',
+    tools: ['Bookings', 'Rescheduling', 'Availability', 'Event Types'],
+    status: 'official',
+    url: 'https://cal.com/docs/mcp-server'
+  },
+  {
+    id: 'calendly-mcp',
+    name: 'Calendly',
+    description: 'Check availability, generate scheduling links, and book or cancel meetings in Calendly. Runs as a fully hosted server with OAuth sign-in and no credential setup.',
+    category: 'Business Tools',
+    tools: ['Availability', 'Scheduling Links', 'Booking', 'Event Types'],
+    status: 'official',
+    url: 'https://developer.calendly.com/calendly-mcp-server'
+  },
+  {
+    id: 'close-mcp',
+    name: 'Close',
+    description: 'Pull leads, opportunities, and activity data from Close CRM, update records, and create new leads through natural-language prompts.',
+    category: 'Business Tools',
+    tools: ['Lead Management', 'Opportunity Tracking', 'Activity History', 'Record Updates'],
+    status: 'official',
+    url: 'https://close.com/integrations/close-mcp'
+  },
+  {
+    id: 'jotform-mcp',
+    name: 'Jotform',
+    description: 'Create forms and review submissions in Jotform through conversational commands, with an interactive app mode showing form previews inside AI clients.',
+    category: 'Business Tools',
+    tools: ['Form Creation', 'Submissions', 'Previews', 'Workflow Automation'],
+    status: 'official',
+    url: 'https://www.jotform.com/developers/mcp/'
+  },
+  {
+    id: 'typeform-mcp',
+    name: 'Typeform',
+    description: 'Build and publish forms, manage contacts and lists, set up automation workflows, and analyse form responses in Typeform.',
+    category: 'Business Tools',
+    tools: ['Form Building', 'Contact Management', 'Automations', 'Response Analysis'],
+    status: 'official',
+    url: 'https://www.typeform.com/developers/get-started/mcp/'
+  },
+  {
+    id: 'fathom-mcp',
+    name: 'Fathom',
+    description: 'Search and summarise recorded meetings — pulling transcripts, summaries, and action items from Fathom to draft follow-ups and answer questions about past calls.',
+    category: 'Communication',
+    tools: ['Meeting Search', 'Transcripts', 'Summaries', 'Action Items'],
+    status: 'official',
+    url: 'https://developers.fathom.ai/mcp-docs'
+  },
+  {
+    id: 'postmark-mcp',
+    name: 'Postmark',
+    description: 'Send single and batch transactional emails, manage and validate templates, search message history, and diagnose delivery failures, bounces, and suppressions in Postmark.',
+    category: 'Communication',
+    tools: ['Email Sending', 'Templates', 'Delivery Diagnostics', 'Suppressions'],
+    status: 'official',
+    url: 'https://github.com/ActiveCampaign/postmark-mcp'
+  },
+  {
+    id: 'resend-mcp',
+    name: 'Resend',
+    description: 'Send and schedule emails, manage contacts and audience segments, create broadcasts and templates, build automations, and configure sending domains in Resend.',
+    category: 'Communication',
+    tools: ['Email Sending', 'Audience Management', 'Broadcasts', 'Automations', 'Domains'],
+    status: 'official',
+    url: 'https://resend.com/docs/mcp-server'
+  },
+  {
+    id: 'zoom-mcp',
+    name: 'Zoom',
+    description: 'Schedule Zoom meetings, send chat messages, and pull meeting summaries, notes, and action items into other tools via Zoom\'s product-area MCP servers.',
+    category: 'Communication',
+    tools: ['Meeting Scheduling', 'Chat', 'Summaries', 'Action Items'],
+    status: 'official',
+    url: 'https://developers.zoom.us/docs/mcp/'
+  },
+  {
+    id: 'contentful-mcp',
+    name: 'Contentful',
+    description: 'Manage the full Contentful content lifecycle — create and edit entries, manage assets and content types, bulk publish, and invoke AI Actions across spaces.',
+    category: 'Content Management',
+    tools: ['Entry Editing', 'Content Types', 'Asset Management', 'Bulk Publishing'],
+    status: 'official',
+    url: 'https://github.com/contentful/contentful-mcp-server'
+  },
+  {
+    id: 'sanity-mcp',
+    name: 'Sanity',
+    description: 'Create, patch, and publish Sanity content with full schema awareness, run GROQ queries and semantic search, and manage releases and datasets.',
+    category: 'Content Management',
+    tools: ['Document Editing', 'GROQ Queries', 'Release Management', 'Semantic Search'],
+    status: 'official',
+    url: 'https://www.sanity.io/docs/ai/mcp-server'
+  },
+  {
+    id: 'storyblok-mcp',
+    name: 'Storyblok',
+    description: 'Create stories, update and publish entries, and manage assets in Storyblok by discovering and executing Management API operations through a hosted MCP endpoint.',
+    category: 'Content Management',
+    tools: ['Story Creation', 'Publishing', 'Asset Management', 'API Operations'],
+    status: 'official',
+    url: 'https://www.storyblok.com/docs/libraries/mcp-server'
+  },
+  {
+    id: 'strapi-mcp',
+    name: 'Strapi',
+    description: 'Create, read, update, publish, and unpublish content in a Strapi CMS through auto-generated CRUD tools per content type, with permission enforcement built in.',
+    category: 'Content Management',
+    tools: ['Content CRUD', 'Publishing', 'Filtering', 'Localisation'],
+    status: 'official',
+    url: 'https://docs.strapi.io/cms/features/strapi-mcp-server'
+  },
+  {
+    id: 'webflow-mcp',
+    name: 'Webflow',
+    description: 'Build and manage Webflow sites: create and update CMS collections and items, edit page content, and manage site publishing through Webflow\'s Data API.',
+    category: 'Content Management',
+    tools: ['CMS Collections', 'Page Editing', 'Site Publishing', 'Design Elements'],
+    status: 'official',
+    url: 'https://github.com/webflow/mcp-server'
+  },
+  {
+    id: 'wordpress-mcp',
+    name: 'WordPress',
+    description: 'Manage a WordPress site remotely — posts, pages, and site content via the WordPress REST API, with optional WooCommerce support. Maintained by Automattic.',
+    category: 'Content Management',
+    tools: ['Posts & Pages', 'REST API Access', 'Site Administration', 'WooCommerce'],
+    status: 'official',
+    url: 'https://github.com/Automattic/mcp-wordpress-remote'
+  },
+  {
+    id: 'front-mcp',
+    name: 'Front',
+    description: 'Search and triage Front conversations, draft and send replies, post internal comments, manage tags and assignments, and look up contacts and accounts.',
+    category: 'Customer Support',
+    tools: ['Conversation Triage', 'Reply Drafting', 'Comments', 'Tags & Assignments'],
+    status: 'official',
+    url: 'https://dev.frontapp.com/docs/mcp-server'
+  },
+  {
+    id: 'help-scout-mcp',
+    name: 'Help Scout',
+    description: 'Search Help Scout conversations, customers, and Docs knowledge base to summarise customer history, spot patterns, and pull support reports — respecting existing user permissions.',
+    category: 'Customer Support',
+    tools: ['Conversation Search', 'Customer Context', 'Docs Queries', 'Support Trends'],
+    status: 'official',
+    url: 'https://articles.helpscout.com/blog/introducing-help-scout-mcp/'
+  },
+  {
+    id: 'canva-mcp',
+    name: 'Canva',
+    description: 'Create Canva designs from text descriptions, edit and search existing designs, upload assets, use brand kit resources, and export to PDF, PNG, PPTX, or MP4.',
+    category: 'Design & Creative',
+    tools: ['Design Creation', 'Design Search', 'Asset Upload', 'Brand Kit', 'Export'],
+    status: 'official',
+    url: 'https://www.canva.dev/docs/mcp/'
+  },
+  {
+    id: 'bigcommerce-storefront-mcp',
+    name: 'BigCommerce Storefront',
+    description: 'Act as a shopping agent on a BigCommerce store — search the product catalogue, retrieve product details, build and manage carts, and generate checkout URLs.',
+    category: 'E-commerce',
+    tools: ['Catalogue Search', 'Product Details', 'Cart Management', 'Checkout URLs'],
+    status: 'official',
+    url: 'https://www.bigcommerce.com/blog/storefront-mcp/'
+  },
+  {
+    id: 'wix-mcp',
+    name: 'Wix',
+    description: 'Manage Wix sites and make live API calls on them — listing sites, performing site-level actions, and searching Wix documentation to build on the platform.',
+    category: 'E-commerce',
+    tools: ['Site APIs', 'Site Management', 'Docs Search', 'Headless Commerce'],
+    status: 'official',
+    url: 'https://dev.wix.com/docs/sdk/articles/use-the-wix-mcp/about-the-wix-mcp'
+  },
+  {
+    id: 'bill-com-mcp',
+    name: 'Bill.com',
+    description: 'Manage accounts payable and receivable — bills, invoices, vendors, customers, and payments — plus corporate card spend and budgets via the Spend & Expense API.',
+    category: 'Finance & Accounting',
+    tools: ['Accounts Payable', 'Accounts Receivable', 'Vendors', 'Spend Management'],
+    status: 'community',
+    url: 'https://github.com/civicteam/bill-mcp-server'
+  },
+  {
+    id: 'brex-mcp',
+    name: 'Brex',
+    description: 'Review card expenses, transactions, budgets, spend limits, and statements, upload receipts, and update expense records — suited to spend analysis and expense hygiene.',
+    category: 'Finance & Accounting',
+    tools: ['Card Expenses', 'Budgets', 'Transactions', 'Statements'],
+    status: 'community',
+    url: 'https://github.com/crazyrabbitLTC/mcp-brex-server'
+  },
+  {
+    id: 'expensify-mcp',
+    name: 'Expensify',
+    description: 'Search and analyse live expenses, receipts, reports, and invoices in natural language. Read-only by design, so the AI can audit spend and approval states but never move money.',
+    category: 'Finance & Accounting',
+    tools: ['Expense Search', 'Receipts', 'Report Analysis', 'Spend Auditing'],
+    status: 'official',
+    url: 'https://use.expensify.com/blog/expensify-mcp'
+  },
+  {
+    id: 'freeagent-mcp',
+    name: 'FreeAgent',
+    description: 'List bank transactions, explain and reconcile them with receipts, create expense claims, and log mileage at HMRC rates — a practical bookkeeping assistant for UK freelancers and small companies.',
+    category: 'Finance & Accounting',
+    tools: ['Reconciliation', 'Bank Transactions', 'Expenses', 'HMRC Mileage'],
+    status: 'community',
+    url: 'https://github.com/oxygenbubbles/freeagent-mcp-server'
+  },
+  {
+    id: 'freshbooks-mcp',
+    name: 'FreshBooks',
+    description: 'List and retrieve invoices, payments, expenses, clients, and projects, and manage time entries — 24 tools covering the day-to-day admin of a service business.',
+    category: 'Finance & Accounting',
+    tools: ['Invoicing', 'Time Tracking', 'Expenses', 'Clients'],
+    status: 'community',
+    url: 'https://github.com/bitovi/freshbooks-mcp-server'
+  },
+  {
+    id: 'gocardless-mcp',
+    name: 'GoCardless',
+    description: 'Query payment statuses, customers, mandates, and subscriptions, and create payments or issue refunds with user confirmation. A strong fit for UK businesses collecting by Direct Debit.',
+    category: 'Finance & Accounting',
+    tools: ['Direct Debit', 'Payments', 'Mandates', 'Subscriptions', 'Refunds'],
+    status: 'official',
+    url: 'https://developer.gocardless.com/developer-tools/mcp/'
+  },
+  {
+    id: 'mercury-mcp',
+    name: 'Mercury',
+    description: 'Query business bank balances, transaction history, and account data in natural language, with OAuth sign-in and read-only access so the AI can analyse cash without moving money.',
+    category: 'Finance & Accounting',
+    tools: ['Banking', 'Balances', 'Transactions', 'Cash Analysis'],
+    status: 'official',
+    url: 'https://docs.mercury.com/docs/connecting-mercury-mcp'
+  },
+  {
+    id: 'plaid-mcp',
+    name: 'Plaid',
+    description: 'Diagnose Plaid Items, pull Link conversion and error metrics, and check API usage from an AI assistant, with sandbox tokens and webhook simulation for building bank-data integrations.',
+    category: 'Finance & Accounting',
+    tools: ['Bank Data', 'Item Diagnostics', 'Link Analytics', 'Sandbox Testing'],
+    status: 'official',
+    url: 'https://plaid.com/docs/resources/mcp/'
+  },
+  {
+    id: 'wise-mcp',
+    name: 'Wise',
+    description: 'List recipients, look up transfer requirements, create recipients, and send international payments through the Wise API, with sandbox support for personal and business profiles.',
+    category: 'Finance & Accounting',
+    tools: ['International Transfers', 'Recipients', 'Payments', 'Sandbox Testing'],
+    status: 'community',
+    url: 'https://github.com/sergeiledvanov/mcp-wise'
+  },
+  {
+    id: 'zoho-books-mcp',
+    name: 'Zoho Books',
+    description: 'Create and send invoices, record expenses, reconcile bank transactions, chase overdue invoices with payment reminders, and pull P&L or revenue reports by prompt.',
+    category: 'Finance & Accounting',
+    tools: ['Invoicing', 'Expenses', 'Reconciliation', 'Reports', 'Payment Reminders'],
+    status: 'official',
+    url: 'https://www.zoho.com/us/books/help/mcp/zoho-books-mcp.html'
+  },
+  {
+    id: 'factorial-mcp',
+    name: 'Factorial',
+    description: 'Clock employees in and out, request time off, check shift status, search colleagues, and answer company HR questions from Factorial, respecting user permissions.',
+    category: 'HR & Recruitment',
+    tools: ['Time Tracking', 'Time Off', 'Shifts', 'Employee Directory'],
+    status: 'official',
+    url: 'https://help.factorialhr.com/en_US/one/factorial-mcp-%E2%80%94-connect-one-to-chatgpt-claude-or-any-mcp-compatible-ai-assistant'
+  },
+  {
+    id: 'gusto-mcp',
+    name: 'Gusto',
+    description: 'Answer payroll and HR questions from your Gusto account — payroll runs, deadlines, tax liability, employee records, and time off — via 36 read-only tools that can never run payroll or move money.',
+    category: 'HR & Recruitment',
+    tools: ['Payroll Queries', 'Employee Records', 'Pay Schedules', 'Leave Balances'],
+    status: 'official',
+    url: 'https://docs.gusto.com/app-integrations/docs/mcp'
+  },
+  {
+    id: 'ahrefs-mcp',
+    name: 'Ahrefs',
+    description: 'Do keyword research, backlink audits, competitor traffic analysis, and content gap analysis with live Ahrefs data. Included on all paid Ahrefs plans.',
+    category: 'Marketing',
+    tools: ['Keyword Research', 'Backlink Audits', 'Traffic Analysis', 'Content Gaps'],
+    status: 'official',
+    url: 'https://ahrefs.com/mcp/'
+  },
+  {
+    id: 'brevo-mcp',
+    name: 'Brevo',
+    description: 'Manage contacts and lists, create email, SMS, and WhatsApp campaigns, and work sales deals and pipelines inside Brevo.',
+    category: 'Marketing',
+    tools: ['Contact Management', 'Campaign Creation', 'Deal Pipeline', 'Templates'],
+    status: 'official',
+    url: 'https://developers.brevo.com/docs/mcp-protocol'
+  },
+  {
+    id: 'dataforseo-mcp',
+    name: 'DataForSEO',
+    description: 'Pull real-time SERP results, keyword data, backlink profiles, on-page audits, and competitor domain analytics from DataForSEO\'s APIs.',
+    category: 'Marketing',
+    tools: ['SERP Data', 'Keyword Metrics', 'Backlink Analysis', 'On-Page Audits'],
+    status: 'official',
+    url: 'https://github.com/dataforseo/mcp-server-typescript'
+  },
+  {
+    id: 'klaviyo-mcp',
+    name: 'Klaviyo',
+    description: 'Report on campaign and flow performance, inspect and segment customer profiles, and create email templates directly from live Klaviyo account data.',
+    category: 'Marketing',
+    tools: ['Campaign Reporting', 'Segmentation', 'Flow Analytics', 'Email Templates'],
+    status: 'official',
+    url: 'https://developers.klaviyo.com/en/docs/klaviyo_mcp_server'
+  },
+  {
+    id: 'semrush-mcp',
+    name: 'Semrush',
+    description: 'Run keyword research, domain overviews, competitor analysis, and backlink research using live Semrush SEO and market-trends data.',
+    category: 'Marketing',
+    tools: ['Keyword Research', 'Domain Overview', 'Competitor Analysis', 'Backlinks'],
+    status: 'official',
+    url: 'https://developer.semrush.com/api/v4/introduction/semrush-mcp/'
+  },
+  {
+    id: 'monday-com-mcp',
+    name: 'Monday.com',
+    description: 'Create and update boards, items, groups, and columns in monday.com, search work data, and post updates. Maintained by the monday.com AI team.',
+    category: 'Productivity',
+    tools: ['Items & Boards', 'Columns', 'Search', 'Updates'],
+    status: 'official',
+    url: 'https://github.com/mondaycom/mcp'
+  },
+  {
+    id: 'smartsheet-mcp',
+    name: 'Smartsheet',
+    description: 'Query, analyse, and update live Smartsheet data — sheets, rows, reports, comments, and workspaces — respecting each user\'s permissions.',
+    category: 'Productivity',
+    tools: ['Sheet Queries', 'Row Updates', 'Reports', 'Sharing'],
+    status: 'official',
+    url: 'https://developers.smartsheet.com/ai-mcp/smartsheet/mcp-server'
+  },
+  {
+    id: 'docusign-mcp',
+    name: 'DocuSign',
+    description: 'Create, send, and track agreements and query signature status through Docusign\'s Intelligent Agreement Management platform, connecting via OAuth with no API key setup.',
+    category: 'Workflow & Approvals',
+    tools: ['Send Agreements', 'Envelope Tracking', 'Agreement Data', 'Workflows'],
+    status: 'official',
+    url: 'https://developers.docusign.com/platform/mcp-server/'
+  },
+  {
+    id: 'pandadoc-mcp',
+    name: 'PandaDoc',
+    description: 'Create, populate, and send PandaDoc documents — contracts, proposals, and NDAs — plus update variables and search agreements from a prompt.',
+    category: 'Workflow & Approvals',
+    tools: ['Document Creation', 'E-Signature', 'Variables', 'Agreement Search'],
+    status: 'official',
+    url: 'https://developers.pandadoc.com/docs/use-pandadoc-mcp-server'
   }
 ];
 

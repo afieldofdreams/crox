@@ -15,7 +15,7 @@ Crox helps SMEs put AI to work through one clear path: Map, Build, Support. AI M
 - **Ongoing Development & Support** (Step 3): A month-to-month partnership — new tooling built down the roadmap, everything built kept working as models and APIs change, and time with your team. https://crox.io/support
 - **Education**: Practical half- or full-day training for the people who will use AI day to day. https://crox.io/education
 - **Board / Exec**: Briefings, working sessions, and ongoing guidance for leadership deciding what AI does in the organisation. https://crox.io/board-exec
-- **MCP Server Directory**: Comprehensive directory of 160+ MCP servers across 30 categories (business tools, finance, development, data, communication, AI, e-commerce, and more), with a dedicated page per category and per server. https://crox.io/servers
+- **MCP Server Directory**: Comprehensive directory of 200+ MCP servers across 30 categories (business tools, finance, development, data, communication, AI, e-commerce, and more), with a dedicated page per category and per server. https://crox.io/servers
 
 ## About
 
