@@ -8,19 +8,25 @@ export interface MCPServerEntry {
   url?: string;
 }
 
-export interface FeaturedServer {
-  serverId: string;
-  headline: string;
-  description: string;
-  weekOf: string; // ISO date string for the Monday of the featured week
+/** Deterministic weekly rotation over official servers, evaluated at build
+ * time — each deploy features whichever server the current ISO week lands
+ * on, so the spotlight can never go stale the way a hardcoded pick did. */
+export function getFeaturedServer(): { server: MCPServerEntry; weekOf: string } {
+  const eligible = servers.filter((s) => s.status === 'official' && s.url);
+  const now = new Date();
+  const monday = new Date(
+    Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate() - ((now.getUTCDay() + 6) % 7)
+    )
+  );
+  const weekIndex = Math.floor(monday.getTime() / (7 * 24 * 3600 * 1000));
+  return {
+    server: eligible[weekIndex % eligible.length],
+    weekOf: monday.toISOString().slice(0, 10),
+  };
 }
-
-export const featuredServer: FeaturedServer = {
-  serverId: 'fibery-mcp',
-  headline: 'MCP Server of the Week',
-  description: 'Fibery is a connected workspace that adapts to your team. Their official MCP server lets AI agents query entities, manage work items, and interact with custom databases — making it easy to build AI-powered workflows on top of your existing Fibery setup.',
-  weekOf: '2026-03-16',
-};
 
 export const servers: MCPServerEntry[] = [
   // ─── Business Tools ───────────────────────────────────────────────
