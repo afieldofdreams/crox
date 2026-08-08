@@ -31,7 +31,13 @@ const {
   articleMeta,
 } = Astro.props;
 
-const canonicalUrl = canonical || Astro.url.href;
+// Directory-format builds serve every page at a trailing-slash URL (and the
+// sitemap advertises that form), so canonicals must use it too — a bare-path
+// canonical makes Google treat the two forms as duplicates.
+const rawCanonical = canonical || Astro.url.href;
+const canonicalUrl = /\.[a-z0-9]+$/i.test(rawCanonical) || rawCanonical.endsWith('/')
+  ? rawCanonical
+  : `${rawCanonical}/`;
 const currentPath = Astro.url.pathname;
 
 function isActive(path: string) {
