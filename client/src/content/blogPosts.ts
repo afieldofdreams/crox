@@ -12,6 +12,30 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'ai-for-construction-trades',
+    title: 'AI for Construction Firms and Trades: Quotes, RAMS, and Getting Paid for Variations',
+    subtitle: 'Faster quotes, job-specific health and safety paperwork, and site notes that become records — where AI genuinely helps a UK construction firm, and what to keep away from it.',
+    date: 'August 2026',
+    dateISO: '2026-08-08',
+    readTime: '6 min read',
+    description:
+      'What AI actually does well for UK construction firms and trades — quote turnaround, RAMS and method statement drafting, variation records, subcontractor admin — with honest costs and the right first process.',
+    keywords: ['ai for construction companies', 'ai for builders uk', 'ai rams generator', 'ai method statements', 'construction quoting ai', 'ai for trades', 'construction admin automation', 'ai variation records'],
+    tags: ['Construction', 'AI Automation', 'SME', 'Trades'],
+  },
+  {
+    slug: 'ai-for-manufacturers',
+    title: 'AI for SME Manufacturers: Skip the Robots, Fix the Office First',
+    subtitle: 'RFQs, order entry, quality paperwork, and supplier chasing — the office layer around the shop floor is where AI pays back for a 20–200 person manufacturer.',
+    date: 'August 2026',
+    dateISO: '2026-08-08',
+    readTime: '6 min read',
+    description:
+      'Where AI genuinely pays back for UK SME manufacturers — quoting from RFQs, PO entry into the ERP, non-conformance and ISO documentation, supplier chasing — and why shop-floor AI can wait.',
+    keywords: ['ai for manufacturers', 'ai manufacturing sme', 'ai order entry automation', 'rfq automation', 'ai quality documentation', 'erp ai integration', 'ai for factories uk', 'manufacturing admin automation'],
+    tags: ['Manufacturing', 'AI Automation', 'SME', 'ERP'],
+  },
+  {
     slug: 'ai-for-recruitment-agencies',
     title: 'AI for Recruitment Agencies: The Wins, and the One Area the Law Watches',
     subtitle: 'Job ads, call notes, CRM hygiene, and candidate comms automate beautifully. Screening is where the EU AI Act and UK GDPR are looking — here\'s how to draw the line.',

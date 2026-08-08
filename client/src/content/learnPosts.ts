@@ -12,6 +12,28 @@ export interface LearnPost {
 
 export const learnPosts: LearnPost[] = [
   {
+    slug: "is-chatgpt-safe-for-business-data",
+    title: "Is ChatGPT Safe for Business Data? The Honest Answer for SMEs",
+    subtitle: "The tool is rarely the problem — the tier and the habits are. Where the risk actually lives, and the five rules that make AI assistants safe for company data.",
+    date: "August 2026",
+    dateISO: "2026-08-08",
+    readTime: "6 min read",
+    description: "Is it safe to put business data into ChatGPT or Claude? What business tiers change about training and retention, what UK GDPR actually requires, the five rules that manage the risk, and why shadow AI use is the bigger exposure.",
+    keywords: ["is chatgpt safe for business", "chatgpt business data security", "chatgpt gdpr uk", "ai data protection business", "is claude safe for business data", "chatgpt confidential information", "ai security small business", "shadow ai risk"],
+    tags: ["Security", "Data Protection", "SME", "Governance"],
+  },
+  {
+    slug: "sme-ai-policy",
+    title: "What Should an SME AI Policy Include? Seven Questions, One Page",
+    subtitle: "The AI policy that works for a 10–200 person firm is a page long and answers seven questions. Here they are, with the wording that holds up.",
+    date: "August 2026",
+    dateISO: "2026-08-08",
+    readTime: "6 min read",
+    description: "How to write an AI policy for a small business: approved tools, the never-paste list, human review rules, decisions AI can't make, disclosure, incident reporting, and ownership — one page, seven sections.",
+    keywords: ["ai policy small business", "ai policy template uk", "sme ai policy", "ai acceptable use policy", "company ai policy example", "ai usage policy employees", "ai governance small business", "workplace ai rules"],
+    tags: ["Governance", "Policy", "SME", "Compliance"],
+  },
+  {
     slug: "ai-automation-cost",
     title: "How Much Does AI Automation Cost a Small Business? Real Numbers",
     subtitle: "The three tiers of AI spend — off-the-shelf tools, connected automation, and ongoing support — with actual price ranges and the arithmetic for deciding what's worth it.",
