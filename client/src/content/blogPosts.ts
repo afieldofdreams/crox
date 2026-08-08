@@ -12,6 +12,54 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'ai-for-gp-practices',
+    title: 'AI for GP Practices: The Document Mountain, DNAs, and the Lines Not to Cross',
+    subtitle: 'Document workflow, recalls, and care navigation support — where AI genuinely helps general practice, inside NHS information governance rather than around it.',
+    date: 'August 2026',
+    dateISO: '2026-08-08',
+    readTime: '6 min read',
+    description:
+      'Where AI actually helps a UK GP practice — incoming document workflow, DNA reduction and QOF recalls, care navigation support, practice admin — and the governance lines: DPIAs, ambient scribes, and keeping clinical judgement human.',
+    keywords: ['ai for gp practices', 'ai general practice uk', 'ai document workflow gp', 'ai nhs primary care', 'gp practice automation', 'ai patient recalls', 'ambient scribe gp', 'practice manager ai'],
+    tags: ['General Practice', 'Healthcare', 'AI Automation', 'NHS'],
+  },
+  {
+    slug: 'ai-for-logistics-haulage',
+    title: 'AI for Logistics and Haulage: PODs, Chasers, and Cash Flow',
+    subtitle: 'POD chasing, invoice matching, status queries, and load quoting — the transport office is one of the best-fit environments for AI there is.',
+    date: 'August 2026',
+    dateISO: '2026-08-08',
+    readTime: '5 min read',
+    description:
+      'What AI does well in a UK haulage or logistics firm — POD chasing and invoicing, answering delivery status queries from the TMS, quoting loads, driver document compliance — with honest costs and the right first process.',
+    keywords: ['ai for logistics', 'ai haulage uk', 'pod chasing automation', 'transport office automation', 'ai freight quoting', 'tms ai integration', 'ai for transport companies', 'logistics invoicing automation'],
+    tags: ['Logistics', 'Haulage', 'AI Automation', 'SME'],
+  },
+  {
+    slug: 'ai-for-hospitality',
+    title: 'AI for Hospitality: Win the Function Enquiry, Answer Every Review',
+    subtitle: 'Event enquiries answered at midnight, reviews replied to in your voice, allergen paperwork that keeps itself current — where AI pays back in restaurants, hotels, and venues.',
+    date: 'August 2026',
+    dateISO: '2026-08-08',
+    readTime: '5 min read',
+    description:
+      'Where AI genuinely helps UK hospitality businesses — function and event enquiry handling, guest FAQs, review responses, rotas, supplier and food-safety admin — with realistic costs and what to automate first.',
+    keywords: ['ai for hospitality', 'ai for restaurants uk', 'ai for hotels', 'ai review responses', 'event enquiry automation', 'ai guest communication', 'restaurant admin automation', 'hotel direct bookings ai'],
+    tags: ['Hospitality', 'AI Automation', 'SME', 'Customer Experience'],
+  },
+  {
+    slug: 'ai-for-architects',
+    title: 'AI for Architects: Fee Proposals, Planning Packs, and the Drawing Line',
+    subtitle: 'The written layer of practice — proposals, planning documents, minutes, RFIs — automates well. The architecture stays yours, and the profession\'s rules make the boundary easy.',
+    date: 'August 2026',
+    dateISO: '2026-08-08',
+    readTime: '6 min read',
+    description:
+      'Where AI helps a UK architecture practice — fee proposals from precedents, Design and Access statement drafting, same-day minutes, RFI responses, practice admin — and the professional boundaries: design judgement, ARB accountability, PII.',
+    keywords: ['ai for architects', 'ai architecture practice', 'ai fee proposals', 'design and access statement ai', 'ai planning documents', 'architect admin automation', 'riba ai guidance', 'ai for architecture firms uk'],
+    tags: ['Architecture', 'AI Automation', 'SME', 'Professional Services'],
+  },
+  {
     slug: 'ai-for-construction-trades',
     title: 'AI for Construction Firms and Trades: Quotes, RAMS, and Getting Paid for Variations',
     subtitle: 'Faster quotes, job-specific health and safety paperwork, and site notes that become records — where AI genuinely helps a UK construction firm, and what to keep away from it.',
