@@ -1,11 +1,22 @@
 // AI Readiness Scorecard quiz — five questions, scored 0–15, banded.
 //
-// On submit POSTs to chat.crox.io/assessment which:
+// The score, band, and recommendation are computed client-side and shown
+// IMMEDIATELY after the last answer — ungated. Leaving contact details is
+// the optional step afterwards ("get Adam's read on your result"), not a
+// wall in front of the score: gating the result killed completions.
+//
+// When the visitor does submit, we POST to chat.crox.io/assessment which:
 //   - recomputes the score server-side (never trusts the client)
 //   - upserts the visitor as a CRM/Contact via flight-deck /api/forms
 //   - appends an "Assessment capture" entry to the Activity Stream
 //   - emails Adam via Resend
 //   - fires PostHog assessment_completed
+//
+// Funnel analytics (PostHog, client-side):
+//   assessment_started            first answer clicked
+//   assessment_question_answered  per question, with id + index
+//   assessment_result_shown       score revealed (the new "completion")
+//   assessment_completed          contact details submitted
 //
 // Identity: reads window.croxAttribution from flight-deck's track.js
 // so the assessment lead joins up with the visitor's prior pageviews
@@ -21,7 +32,8 @@ import {
   scoreToBand,
 } from '../lib/assessment';
 
-type Step = 'questions' | 'gate' | 'submitting' | 'done' | 'error';
+type Step = 'questions' | 'result';
+type SubmitState = 'idle' | 'submitting' | 'sent' | 'error';
 
 interface CroxAttribution {
   visitorId?: string;
@@ -54,12 +66,14 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [questionIdx, setQuestionIdx] = useState(0);
   const [step, setStep] = useState<Step>('questions');
+  const [submitState, setSubmitState] = useState<SubmitState>('idle');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [website, setWebsite] = useState('');
   const [error, setError] = useState<string | null>(null);
   const startedTracked = useRef(false);
+  const resultTracked = useRef(false);
 
   const score = useMemo(() => calculateScore(answers), [answers]);
   const band = useMemo(() => scoreToBand(score), [score]);
@@ -68,22 +82,39 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
   const total = ASSESSMENT_QUESTIONS.length;
   const allAnswered = ASSESSMENT_QUESTIONS.every((q) => typeof answers[q.id] === 'number');
 
+  function showResult(finalAnswers: Record<string, number>) {
+    if (!resultTracked.current) {
+      resultTracked.current = true;
+      const finalScore = calculateScore(finalAnswers);
+      ph()?.capture('assessment_result_shown', {
+        score: finalScore,
+        max_score: MAX_SCORE,
+        band: scoreToBand(finalScore).name,
+      });
+    }
+    setStep('result');
+  }
+
   function selectAnswer(qid: string, optionIdx: number) {
     if (!startedTracked.current) {
       startedTracked.current = true;
       ph()?.capture('assessment_started');
     }
+    ph()?.capture('assessment_question_answered', {
+      question_id: qid,
+      question_index: questionIdx,
+    });
     const next = { ...answers, [qid]: optionIdx };
     setAnswers(next);
     if (questionIdx < total - 1) {
       setTimeout(() => setQuestionIdx(questionIdx + 1), 180);
     } else {
-      setTimeout(() => setStep('gate'), 180);
+      setTimeout(() => showResult(next), 180);
     }
   }
 
   function goBack() {
-    if (step === 'gate' || step === 'error') {
+    if (step === 'result') {
       setStep('questions');
       return;
     }
@@ -105,7 +136,7 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
       return;
     }
 
-    setStep('submitting');
+    setSubmitState('submitting');
     try {
       const res = await fetch(`${chatBaseUrl}/assessment`, {
         method: 'POST',
@@ -125,11 +156,6 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
         const body = await res.json().catch(() => ({}));
         throw new Error(body.detail || body.error || `Submit failed (${res.status})`);
       }
-      const data = await res.json().catch(() => ({})) as {
-        ok?: boolean;
-        score?: number;
-        band?: string;
-      };
 
       const posthog = ph();
       if (posthog) {
@@ -139,31 +165,24 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
           email: trimmedEmail,
         });
         posthog.capture('assessment_completed', {
-          score: data.score ?? score,
+          score,
           max_score: MAX_SCORE,
-          band: data.band ?? band.name,
+          band: band.name,
           has_company: Boolean(company.trim()),
         });
       }
-      setStep('done');
+      setSubmitState('sent');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please email adam@crox.io.');
-      setStep('error');
+      setSubmitState('error');
     }
   }
 
-  // --- Done state: reveal score, band, recommendation, next steps -------
-  if (step === 'done') {
+  // --- Result: score first, no gate. Contact details are the optional
+  // --- follow-up underneath, once the visitor has a reason to care. ------
+  if (step === 'result') {
     return (
       <div>
-        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-4">
-          Thanks, {name.split(' ')[0]}.
-        </p>
-        <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-12">
-          Adam will read your answers and reply within two working days from{' '}
-          <span className="text-fg">adam@crox.io</span>. In the meantime, here's the read.
-        </p>
-
         <ScoreSummary
           score={score}
           bandName={band.name}
@@ -171,6 +190,93 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
           description={band.description}
           recommendation={band.recommendation}
         />
+
+        {/* Optional: Adam's personal read on the result */}
+        <div className="mt-12 pt-10 border-t border-border">
+          {submitState === 'sent' ? (
+            <div>
+              <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-4">
+                Thanks, {name.trim().split(' ')[0]}.
+              </p>
+              <p className="text-[0.95rem] text-fg-dim leading-[1.8]">
+                Adam will read your answers and reply within two working days from{' '}
+                <span className="text-fg">adam@crox.io</span>.
+              </p>
+            </div>
+          ) : (
+            <div>
+              <h3 className="font-serif font-normal text-[1.5rem] leading-[1.2] mb-4 max-sm:text-[1.25rem]">
+                Want Adam's read on your result?
+              </h3>
+              <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-8">
+                Leave your details and Adam will look at your five answers — not just the score —
+                and reply within two working days with the one or two things that would move it
+                most. No newsletter sign-up. No call gauntlet.
+              </p>
+
+              <form onSubmit={submit} noValidate className="space-y-5">
+                <Field
+                  id="aq-name"
+                  label="Name"
+                  value={name}
+                  onChange={setName}
+                  autoComplete="name"
+                  required
+                />
+                <Field
+                  id="aq-email"
+                  label="Work email"
+                  type="email"
+                  value={email}
+                  onChange={setEmail}
+                  autoComplete="email"
+                  required
+                  placeholder="you@yourcompany.com"
+                />
+                <Field
+                  id="aq-company"
+                  label="Company (optional)"
+                  value={company}
+                  onChange={setCompany}
+                  autoComplete="organization"
+                />
+
+                {/* Honeypot — hidden from humans */}
+                <div className="absolute -left-[10000px] w-px h-px overflow-hidden" aria-hidden="true">
+                  <label htmlFor="aq-website">Website</label>
+                  <input
+                    id="aq-website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                  />
+                </div>
+
+                {error && (
+                  <p role="alert" className="text-[0.85rem] text-accent">{error}</p>
+                )}
+
+                <div className="flex flex-wrap items-center gap-6 pt-2">
+                  <button
+                    type="submit"
+                    disabled={submitState === 'submitting'}
+                    className="font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px disabled:opacity-60 disabled:hover:translate-y-0 cursor-pointer border-0"
+                  >
+                    {submitState === 'submitting' ? 'Sending…' : "Get Adam's read →"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={goBack}
+                    className="text-[0.85rem] text-fg-dim hover:text-fg transition-colors bg-transparent border-0 cursor-pointer"
+                  >
+                    &larr; Change my answers
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+        </div>
 
         {/* Recommended service + book-a-call CTA */}
         <div className="mt-12 pt-10 border-t border-border">
@@ -215,86 +321,6 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
             </a>
           </div>
         </div>
-      </div>
-    );
-  }
-
-  // --- Gate: collect name + work email before revealing the score -------
-  if (step === 'gate' || step === 'submitting' || step === 'error') {
-    return (
-      <div>
-        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-accent mb-6">
-          Almost there
-        </p>
-        <h2 className="font-serif font-normal text-[2rem] leading-[1.2] mb-6 max-sm:text-[1.5rem]">
-          Where should we send your result?
-        </h2>
-        <p className="text-[0.95rem] text-fg-dim leading-[1.8] mb-10">
-          Leave your name and work email to see your score, band, and the one or two things that
-          would move it most. Adam reads every submission and replies within two working days.
-          No newsletter sign-up. No call gauntlet.
-        </p>
-
-        <form onSubmit={submit} noValidate className="space-y-5">
-          <Field
-            id="aq-name"
-            label="Name"
-            value={name}
-            onChange={setName}
-            autoComplete="name"
-            required
-          />
-          <Field
-            id="aq-email"
-            label="Work email"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            autoComplete="email"
-            required
-            placeholder="you@yourcompany.com"
-          />
-          <Field
-            id="aq-company"
-            label="Company (optional)"
-            value={company}
-            onChange={setCompany}
-            autoComplete="organization"
-          />
-
-          {/* Honeypot — hidden from humans */}
-          <div className="absolute -left-[10000px] w-px h-px overflow-hidden" aria-hidden="true">
-            <label htmlFor="aq-website">Website</label>
-            <input
-              id="aq-website"
-              tabIndex={-1}
-              autoComplete="off"
-              value={website}
-              onChange={(e) => setWebsite(e.target.value)}
-            />
-          </div>
-
-          {error && (
-            <p role="alert" className="text-[0.85rem] text-accent">{error}</p>
-          )}
-
-          <div className="flex flex-wrap items-center gap-6 pt-2">
-            <button
-              type="submit"
-              disabled={step === 'submitting'}
-              className="font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-10 py-4 transition-all hover:bg-[#c4472e] hover:-translate-y-px disabled:opacity-60 disabled:hover:translate-y-0 cursor-pointer border-0"
-            >
-              {step === 'submitting' ? 'Sending…' : 'See my result →'}
-            </button>
-            <button
-              type="button"
-              onClick={goBack}
-              className="text-[0.85rem] text-fg-dim hover:text-fg transition-colors bg-transparent border-0 cursor-pointer"
-            >
-              &larr; Change my answers
-            </button>
-          </div>
-        </form>
       </div>
     );
   }
@@ -364,7 +390,7 @@ export default function AssessmentQuiz({ chatBaseUrl = DEFAULT_CHAT_BASE_URL }: 
         {allAnswered && questionIdx === total - 1 && (
           <button
             type="button"
-            onClick={() => setStep('gate')}
+            onClick={() => showResult(answers)}
             className="font-mono text-[0.8rem] font-medium tracking-[0.15em] uppercase text-fg bg-accent px-8 py-3 transition-all hover:bg-[#c4472e] hover:-translate-y-px cursor-pointer border-0"
           >
             See my score &rarr;
