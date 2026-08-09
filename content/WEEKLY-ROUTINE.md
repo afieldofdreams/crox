@@ -1,8 +1,8 @@
 # The weekly LinkedIn routine
 
-The instructions a scheduled Claude session follows every Monday morning
-to keep the LinkedIn cadence running. This file is the routine. The
-schedule only points at it.
+The instructions a scheduled Claude session follows every Sunday to keep
+the LinkedIn cadence running: write the week, queue it, publish Monday to
+Friday. This file is the routine. The schedule only points at it.
 
 **Why this file exists.** The first version of this routine lived only
 inside a scheduled session — its instructions were nowhere in the repo.
@@ -12,16 +12,32 @@ runbook lives in git now so the schedule is the only thing that can go
 missing, and a missing schedule is visible (see "If posting has
 stopped").
 
+## How the two halves work
+
+**Posting is already durable and needs no schedule.** The
+`_linkedin_poster` loop inside the deployed server flushes due posts
+every ten minutes, 24/7, independent of any Claude session. It has never
+been the thing that failed.
+
+**Writing is the fragile half.** It needs research, source-checking, and
+judgement, so it runs as a Claude session — and a session that stops
+running is exactly how the August outage happened. Two guards now exist:
+
+- `_queue_watchdog` in the server emails adam@crox.io if the queue is
+  ever empty (checked every 6h, at most one mail every 48h). Silence is
+  no longer invisible.
+- A missing entry in `LEARNING-LOG.md` means the routine didn't run.
+
 ## Setup (one-off, human)
 
-Create a recurring Claude session, Mondays 07:00 Europe/London, whose
-prompt is:
+Create a recurring Claude session, **Sundays 17:00 Europe/London**,
+whose prompt is:
 
 > Read `content/WEEKLY-ROUTINE.md` in the crox repo and follow it.
 
-That is the whole schedule. Everything else changes here.
+That is the whole schedule. Everything else changes in this file.
 
-## Every Monday
+## Every Sunday
 
 ### 1. Read before writing
 
@@ -60,13 +76,15 @@ noise.
 
 ### 5. Write five posts
 
-Monday to Friday, `07:30` UTC each day, staggered by day.
+Monday to Friday, `07:30` UTC each day, staggered by day. Written
+Sunday, so the whole week is queued before it starts and there is a
+full veto window on every post.
 
 **Standing format mix** (Adam's call, 2026-08-09):
 
 | Day | Format |
 |---|---|
-| Mon | **Something in the news.** Research it that morning — do not post stale news. Verify every factual claim against a primary or reputable source before writing, and cite the source in the log entry. |
+| Mon | **Something in the news.** Research it Sunday afternoon and check nothing has moved before it goes out — do not post stale news. Verify every factual claim against a primary or reputable source before writing, and cite the source in the log entry. |
 | Tue | **Build in public.** A real thing that happened building Crox this week, with the actual numbers. Failures outperform wins. |
 | Wed | Research or data observation, with figures that can be traced to a named source. |
 | Thu | Sector-specific and concrete — accounting, care, insurance broking first (see `OUTBOUND.md` targeting). |
@@ -94,15 +112,16 @@ POST https://chat.crox.io/linkedin/queue
 ```
 
 Queuing is not publishing. The background poster flushes due items every
-ten minutes, so anything queued Monday morning for Tuesday onwards has a
-veto window. Veto with `DELETE /linkedin/queue/{id}`.
+ten minutes, so a week queued on Sunday has a veto window on every post —
+the earliest fires Monday morning. Veto with `DELETE /linkedin/queue/{id}`.
 
 ### 7. Append the log entry
 
 Newest first in `content/LEARNING-LOG.md`: the date, last week's verdict,
 this week's hypothesis, the five posts with their formats, and the
 sources behind any factual claims. Commit it. **An unappended log entry
-means the routine did not run** — that is the tripwire.
+means the routine did not run** — that is the tripwire, backed by the
+server's empty-queue alarm.
 
 ## Measurement (changed 2026-08-09)
 
@@ -134,6 +153,12 @@ Diagnose in this order — the last outage was the third one:
    `server/app/services/linkedin.py` has aged out; LinkedIn sunsets
    versions about twelve months after release.
 3. **Is the queue simply empty?** Then nothing is broken and the
-   schedule stopped running. Check the recurring session still exists,
-   and check whether `LEARNING-LOG.md` has an entry for the last Monday.
+   Sunday schedule stopped running. The server should already have
+   emailed about this. Check the recurring session still exists,
+   and check whether `LEARNING-LOG.md` has an entry for the last Sunday.
    No entry, empty queue, healthy token — the routine did not run.
+
+## Cadence
+
+Written Sundays, published Monday to Friday. Every working day, always
+a week in hand.
