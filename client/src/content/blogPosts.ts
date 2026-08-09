@@ -122,12 +122,12 @@ export const blogPosts: BlogPost[] = [
   {
     slug: 'eu-ai-act-uk-business',
     title: 'EU AI Act: Does It Apply to a UK Business?',
-    subtitle: 'The Act follows the market, not the company registration. How to work out whether it reaches you before enforcement starts on 2 August 2026.',
+    subtitle: 'The Act follows the market, not the company registration. What went live on 2 August 2026, what moved to December 2027, and how to work out which half reaches you.',
     date: 'July 2026',
     dateISO: '2026-07-28',
     readTime: '6 min read',
     description:
-      'From 2 August 2026 the bulk of the EU AI Act becomes enforceable. UK businesses are in scope when they sell AI into the EU — or when the output of an AI tool they use lands there. What that means for SMEs, and the four steps to take this week.',
+      'The EU AI Act transparency duties went live on 2 August 2026; the high-risk obligations were pushed to December 2027. UK businesses are in scope when they sell AI into the EU — or when the output of an AI tool they use lands there. What each date means for SMEs, and the four steps to take this week.',
     keywords: ['eu ai act uk business', 'does eu ai act apply to uk', 'eu ai act august 2026', 'ai act deployer obligations', 'ai act sme', 'uk ai regulation', 'ai governance sme', 'high risk ai systems'],
     tags: ['EU AI Act', 'AI Governance', 'Compliance', 'SME'],
   },
@@ -163,7 +163,7 @@ export const blogPosts: BlogPost[] = [
     dateISO: '2026-05-05',
     readTime: '18 min read',
     description:
-      'Five lenses for board-level AI governance. Why the conventional policy-and-committee playbook is structurally insufficient, what the August 2026 EU AI Act high-risk timetable actually requires, and the diagnostic question most board packs are missing: when the model your firm depends on changes silently next Thursday, what is your process?',
+      'Five lenses for board-level AI governance. Why the conventional policy-and-committee playbook is structurally insufficient, what the EU AI Act high-risk timetable actually requires now it has moved to December 2027, and the diagnostic question most board packs are missing: when the model your firm depends on changes silently next Thursday, what is your process?',
     keywords: ['ai board governance', 'eu ai act 2026', 'ai high risk obligations', 'board ai oversight regulated industries', 'ai supply chain risk', 'ai change detection', 'ai compliance briefing'],
     tags: ['Briefing', 'Board Governance', 'Regulated Industries', 'EU AI Act'],
   },
