@@ -34,6 +34,18 @@ export const StaticControlsLiveModelsBriefing: React.FC = () => {
 
       <P>The piece is free, ungated, and written to be forwarded.</P>
 
+      <div className="border-l-2 border-accent pl-6 py-1 my-10">
+        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase text-fg-dim mb-2">
+          Update, 9 August 2026
+        </p>
+        <p className="text-[0.95rem] text-fg-dim leading-[1.8]">
+          The deferral this briefing analysed as unresolved has since been adopted. The Digital Omnibus on AI moved the high-risk obligations to <span className="text-fg">2 December 2027</span>, and to 2 August 2028 for AI embedded in regulated products. What did begin on 2 August 2026 is the Article 50 transparency regime — disclosure that a system is AI, labelling of synthetic media, machine-readable marking of generated content — along with the Commission's enforcement powers over general-purpose model providers.
+        </p>
+        <p className="text-[0.95rem] text-fg-dim leading-[1.8] mt-4">
+          The body below is left as written in May 2026, including its judgement that the deadline bound as drafted. That judgement was correct on the evidence at the time and is now overtaken. The argument the briefing actually makes does not depend on the date: a firm that cannot say what happens when its model changes silently has the same problem in December 2027 that it had in August 2026, with sixteen more months of drift behind it.
+        </p>
+      </div>
+
       <h2 className="font-serif font-normal text-[1.8rem] mb-4 mt-12 text-fg">
         1. The confidence gap
       </h2>
@@ -286,6 +298,10 @@ export const StaticControlsLiveModelsBriefing: React.FC = () => {
 
       <P>
         The Digital Omnibus proposal of 19 November 2025 sought to defer this to 2 December 2027. The second trilogue on 28 April 2026 ended without agreement. The Commission has not withdrawn the proposal and there are political signals it could return. As of writing, no formal amendment has been adopted. The 2 August 2026 deadline binds as drafted.
+      </P>
+
+      <P>
+        <span className="text-fg font-medium">Update, 9 August 2026:</span> the deferral was subsequently adopted. The high-risk obligations described in this section now apply from 2 December 2027, and from 2 August 2028 for AI embedded in regulated products. The obligations themselves are unchanged — only the date. Boards that used the original deadline as the forcing function now need a different one, which is rather the point of the section that follows.
       </P>
 
       <P>
