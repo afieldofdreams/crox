@@ -180,6 +180,38 @@ async def publish(
         return {"ok": False, "post_id": None, "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
 
 
+async def status_summary() -> str:
+    """One-line health summary for alarm emails: is the connection still
+    good, so the reader knows whether re-auth is also needed."""
+    if not is_configured():
+        return "LinkedIn: not configured (no client id/secret)."
+    auth = await db.get_linkedin_auth()
+    if not auth:
+        return "LinkedIn: not connected — re-authorise at /linkedin/auth."
+    days = (auth["expires_at"] - datetime.now(timezone.utc)).days
+    if days <= 0:
+        return "LinkedIn: token EXPIRED — re-authorise at /linkedin/auth."
+    warn = " (expiring soon — re-authorise)" if days <= 14 else ""
+    return f"LinkedIn: connected, token valid for {days} more days{warn}."
+
+
+async def pending_upcoming() -> int | None:
+    """How many posts are queued and still to go out. Returns None if the
+    queue can't be read (so callers can tell 'empty' from 'unknown')."""
+    rows = await db.list_linkedin_queue(limit=50)
+    if rows is None:
+        return None
+    now = datetime.now(timezone.utc)
+    return sum(
+        1
+        for r in rows
+        if r.get("posted_at") is None
+        and r.get("post_error") is None
+        and r.get("post_at")
+        and r["post_at"] > now
+    )
+
+
 async def flush_due() -> None:
     """Publish every queued post whose time has come. Called by the
     background loop in main.py; each post is marked posted or errored
