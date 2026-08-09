@@ -1,0 +1,139 @@
+# The weekly LinkedIn routine
+
+The instructions a scheduled Claude session follows every Monday morning
+to keep the LinkedIn cadence running. This file is the routine. The
+schedule only points at it.
+
+**Why this file exists.** The first version of this routine lived only
+inside a scheduled session — its instructions were nowhere in the repo.
+When the schedule stopped, nothing remembered what it was supposed to
+do, and posting went quiet for nine days without a single error. The
+runbook lives in git now so the schedule is the only thing that can go
+missing, and a missing schedule is visible (see "If posting has
+stopped").
+
+## Setup (one-off, human)
+
+Create a recurring Claude session, Mondays 07:00 Europe/London, whose
+prompt is:
+
+> Read `content/WEEKLY-ROUTINE.md` in the crox repo and follow it.
+
+That is the whole schedule. Everything else changes here.
+
+## Every Monday
+
+### 1. Read before writing
+
+Read `content/LEARNING-LOG.md` end to end, newest entry first. It is the
+memory of this loop. Never write posts before reading it.
+
+### 2. Pull last week's numbers
+
+```
+GET https://chat.crox.io/linkedin/queue     (admin bearer token)
+GET https://chat.crox.io/links/stats        (admin bearer token)
+```
+
+- Confirm last week's five posts actually published: every item should
+  have `posted_at` set and `post_error: null`. **A `post_error` is the
+  headline of this week's log entry** — do not bury it.
+- Check the token: `GET /linkedin/status` reports `token_days_left`.
+  **Under 14 days, say so loudly in the report** — the member token
+  cannot refresh itself and posting stops dead when it lapses.
+- Conversions are the real signal now (see Measurement below): count
+  assessment submissions, contact forms, and chat conversations in the
+  crox-chat DB in the hours after each post window.
+
+### 3. Score last week
+
+For last week's stated hypothesis: what happened, and what is the
+decision — keep, kill, or double down? One variable, one verdict.
+Small numbers are normal; judge direction over weeks, never a single
+post. Only act on a difference that repeats.
+
+### 4. State this week's hypothesis
+
+Exactly one, testing exactly one variable: hook style, topic, sector,
+format, or posting day. Never several at once or the result reads as
+noise.
+
+### 5. Write five posts
+
+Monday to Friday, `07:30` UTC each day, staggered by day.
+
+**Standing format mix** (Adam's call, 2026-08-09):
+
+| Day | Format |
+|---|---|
+| Mon | **Something in the news.** Research it that morning — do not post stale news. Verify every factual claim against a primary or reputable source before writing, and cite the source in the log entry. |
+| Tue | **Build in public.** A real thing that happened building Crox this week, with the actual numbers. Failures outperform wins. |
+| Wed | Research or data observation, with figures that can be traced to a named source. |
+| Thu | Sector-specific and concrete — accounting, care, insurance broking first (see `OUTBOUND.md` targeting). |
+| Fri | Opinion, ending in a genuine question. |
+
+**Hard rules for the post bodies:**
+
+- **No links.** Text only — no `link_url`, no `image_url`. Adam's call:
+  he believes outbound links suppress reach. This costs us click
+  tracking (see Measurement).
+- **Never invent.** No made-up clients, quotes, conversations, or
+  statistics. If a number cannot be traced to a real source or Adam's
+  own work, it does not go in the post. This is the whole basis of the
+  positioning and one fabricated detail spends all of it.
+- Reads-human: short sentences, blank line between thoughts, concrete
+  specifics over adjectives, British spelling. No emoji, no hashtags,
+  no "🚀 excited to share". If a line sounds like a brochure, cut it.
+- 2,900 character hard limit (API rejects longer).
+
+### 6. Queue them
+
+```
+POST https://chat.crox.io/linkedin/queue
+{"posts": [{"body": "...", "post_at": "2026-08-10T07:30:00Z"}, ...]}
+```
+
+Queuing is not publishing. The background poster flushes due items every
+ten minutes, so anything queued Monday morning for Tuesday onwards has a
+veto window. Veto with `DELETE /linkedin/queue/{id}`.
+
+### 7. Append the log entry
+
+Newest first in `content/LEARNING-LOG.md`: the date, last week's verdict,
+this week's hypothesis, the five posts with their formats, and the
+sources behind any factual claims. Commit it. **An unappended log entry
+means the routine did not run** — that is the tripwire.
+
+## Measurement (changed 2026-08-09)
+
+Dropping links removed the only automated per-post signal. Clicks per
+post no longer exist. What is left, in order of worth:
+
+1. **Conversions.** Assessment submissions, contact forms, and chat
+   conversations in the window after a post. Fewer, slower, and worth
+   more than any click ever was.
+2. **Replies and DMs.** Adam-reported. On a no-link cadence, a reply is
+   the strongest signal available.
+3. **Impressions and reactions.** Adam-supplied from LinkedIn's own
+   analytics; the API cannot read them. Optional — never block the loop
+   waiting for them.
+
+Attribution is now weaker and honest about it. If we ever want per-post
+numbers back without putting a link in the body, the middle path is a
+tracked link in the first comment — worth testing as a deliberate
+hypothesis, not a silent change.
+
+## If posting has stopped
+
+Diagnose in this order — the last outage was the third one:
+
+1. `GET /linkedin/status` — token expired? (`token_days_left`) Not
+   connected? Re-auth at `/linkedin/auth`.
+2. `GET /linkedin/queue` — any item with `post_error`? A `426
+   NONEXISTENT_VERSION` means `_API_VERSION` in
+   `server/app/services/linkedin.py` has aged out; LinkedIn sunsets
+   versions about twelve months after release.
+3. **Is the queue simply empty?** Then nothing is broken and the
+   schedule stopped running. Check the recurring session still exists,
+   and check whether `LEARNING-LOG.md` has an entry for the last Monday.
+   No entry, empty queue, healthy token — the routine did not run.
