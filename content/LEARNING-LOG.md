@@ -48,7 +48,51 @@ is pending his data export — its conclusions go here as week zero.)
 
 ## Weekly entries
 
+### 2026-08-10 — correction to the diagnosis below
+
+**The routine was never missing. It ran, twice, and produced nothing.**
+
+Yesterday's entry said the recurring session had never been created.
+That was wrong, and worth recording plainly because the real failure is
+more instructive than the one I invented.
+
+The routine — "Crox weekly content — LinkedIn, insights piece, TikTok
+scripts" — exists, is active, and fired on schedule on **Monday 3 August
+at 09:16** and again on **Monday 10 August at 09:15**. Both runs are
+marked successful. Both produced nothing: no queued posts, no article, no
+entry in this log, no commit of any kind. Ten days of silence with a
+green tick at each end.
+
+The likely mechanism, and it is inference rather than proof — the run
+logs are not available to read: the instructions put the long-form
+article ahead of queueing the five posts. The article is the expensive
+task and the queue is the cheap, time-critical one, so anything that
+exhausted a run — budget, context, a swallowed error — took out the
+daily cadence first and left the run looking clean.
+
+**What changed as a result:**
+
+1. Order inverted. Queue the five posts, *then* write the article. If a
+   run runs short it now runs short on the article.
+2. New step 8: the run must re-read the queue and confirm five pending
+   items before finishing. A run that queued nothing has to say so at
+   the top of its report and must not describe itself as successful.
+3. `_queue_watchdog` in the server (shipped 2026-08-09) emails
+   adam@crox.io whenever the queue is empty. Independent of any session,
+   so it catches this class of failure whatever the cause.
+4. `WEEKLY-ROUTINE.md` now covers all three outputs, not just LinkedIn —
+   the earlier version silently narrowed the routine's job to the part I
+   happened to be looking at.
+
+**Lesson for this log:** "the automation didn't run" and "the automation
+ran and did nothing" look identical from the outside and have opposite
+fixes. Check the run history before diagnosing the schedule.
+
 ### 2026-08-09 — week one (restart after a nine-day outage)
+
+> **Superseded in part by the 2026-08-10 entry above.** The claim below
+> that the recurring session "was never created" is incorrect — it
+> existed and had been running. Everything else here stands.
 
 **What happened to week zero's follow-up:** nothing was queued after
 Friday 31 July, so posting stopped for nine days. Diagnosis: not a
