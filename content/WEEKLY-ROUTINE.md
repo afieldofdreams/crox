@@ -1,16 +1,36 @@
-# The weekly LinkedIn routine
+# The weekly content routine
 
-The instructions a scheduled Claude session follows every Sunday to keep
-the LinkedIn cadence running: write the week, queue it, publish Monday to
-Friday. This file is the routine. The schedule only points at it.
+The instructions a scheduled Claude session follows every Sunday. Three
+outputs, in this order: **queue the week's LinkedIn posts, publish the
+long-form piece, draft the TikTok scripts.** This file is the routine.
+The schedule only points at it.
 
-**Why this file exists.** The first version of this routine lived only
-inside a scheduled session — its instructions were nowhere in the repo.
-When the schedule stopped, nothing remembered what it was supposed to
-do, and posting went quiet for nine days without a single error. The
-runbook lives in git now so the schedule is the only thing that can go
-missing, and a missing schedule is visible (see "If posting has
-stopped").
+**Why this file exists, and why the order is fixed.** The routine ran on
+3 and 10 August, reported success both times, and produced nothing:
+no queued posts, no article, no log entry. Posting went quiet for ten
+days without a single error anywhere.
+
+The instructions at the time lived only inside the scheduled session and
+put the most expensive task — a long-form article — before the cheapest
+and most time-critical one, queueing five posts. Anything that exhausts a
+run's budget therefore killed exactly the output that mattered daily,
+while the run still ended looking clean.
+
+So: the runbook lives in git, the cheap-and-urgent work happens first,
+and the run **verifies its own output before it finishes** (step 8). A
+run that queues nothing must say so loudly rather than ending green.
+
+## Order of work — the one rule that matters
+
+1. Review last week (steps 1–4)
+2. **Write and queue the five LinkedIn posts (steps 5–6)**
+3. Publish the long-form piece, draft the TikTok scripts (step 7)
+4. **Verify the queue is actually full (step 8)**
+5. Log it (step 9)
+
+The queue comes before the article, always. Five posts take minutes and
+carry the week; an article takes the rest of the run. Doing them the
+other way round is what produced two silent weeks.
 
 ## How the two halves work
 
@@ -20,13 +40,16 @@ every ten minutes, 24/7, independent of any Claude session. It has never
 been the thing that failed.
 
 **Writing is the fragile half.** It needs research, source-checking, and
-judgement, so it runs as a Claude session — and a session that stops
-running is exactly how the August outage happened. Two guards now exist:
+judgement, so it runs as a Claude session — and a session that runs but
+produces nothing is exactly how the August outage happened. Three guards
+now exist:
 
 - `_queue_watchdog` in the server emails adam@crox.io if the queue is
   ever empty (checked every 6h, at most one mail every 48h). Silence is
   no longer invisible.
-- A missing entry in `LEARNING-LOG.md` means the routine didn't run.
+- A missing entry in `LEARNING-LOG.md` means the routine did not run, or
+  ran without finishing.
+- Step 8 makes the run check its own output before reporting success.
 
 ## Setup (one-off, human)
 
@@ -41,25 +64,31 @@ That is the whole schedule. Everything else changes in this file.
 
 ### 1. Read before writing
 
-Read `content/LEARNING-LOG.md` end to end, newest entry first. It is the
+Fetch `origin/main` first — the log lives on main. Then read
+`content/LEARNING-LOG.md` end to end, newest entry first. It is the
 memory of this loop. Never write posts before reading it.
 
 ### 2. Pull last week's numbers
 
 ```
-GET https://chat.crox.io/linkedin/queue     (admin bearer token)
-GET https://chat.crox.io/links/stats        (admin bearer token)
+GET https://chat.crox.io/linkedin/queue        (admin bearer token)
+GET https://chat.crox.io/outbound/engagement   (admin bearer token)
 ```
+
+Never print the token.
 
 - Confirm last week's five posts actually published: every item should
   have `posted_at` set and `post_error: null`. **A `post_error` is the
-  headline of this week's log entry** — do not bury it.
+  headline of this week's log entry** — do not bury it. So is a week
+  where nothing was queued at all.
 - Check the token: `GET /linkedin/status` reports `token_days_left`.
   **Under 14 days, say so loudly in the report** — the member token
   cannot refresh itself and posting stops dead when it lapses.
 - Conversions are the real signal now (see Measurement below): count
   assessment submissions, contact forms, and chat conversations in the
   crox-chat DB in the hours after each post window.
+- `GET /links/stats` still works but only covers the 27–31 July posts.
+  Posts carry no links now, so there are no new clicks to read.
 
 ### 3. Score last week
 
@@ -102,6 +131,8 @@ full veto window on every post.
 - Reads-human: short sentences, blank line between thoughts, concrete
   specifics over adjectives, British spelling. No emoji, no hashtags,
   no "🚀 excited to share". If a line sounds like a brochure, cut it.
+  The Reads-human rules and Voice examples in `OUTBOUND.md` apply to
+  every piece of content this routine produces, not just the posts.
 - 2,900 character hard limit (API rejects longer).
 
 ### 6. Queue them
@@ -115,13 +146,53 @@ Queuing is not publishing. The background poster flushes due items every
 ten minutes, so a week queued on Sunday has a veto window on every post —
 the earliest fires Monday morning. Veto with `DELETE /linkedin/queue/{id}`.
 
-### 7. Append the log entry
+### 7. Then, and only then, the rest of the week's content
+
+The posts are queued and the cadence is safe. Now do the expensive work.
+If a run is going to run short, it runs short **here**, not above.
+
+**7a. The long-form piece — published to crox.io.**
+
+- Topic comes from the **SME AI governance and readiness cluster**
+  (decided 2026-07-28): one topical cluster matching the homepage buyer.
+- Every article ends at the readiness scorecard (`/assessment`).
+- Publish via the markdown pipeline: `client/src/content/insights/<slug>.md`
+  plus a `blogPosts.ts` entry (or `content/learn/` plus `learnPosts.ts`
+  for a Learn piece). `llms.txt` and the RSS feed pick it up on build.
+- Check it builds (`cd client && npm run build`) before committing.
+- Verify any factual or legal claim against a primary source. The site's
+  EU AI Act content was wrong for a week in August 2026 because a
+  deadline moved and nothing re-checked it.
+
+**7b. TikTok scripts — drafts only.**
+
+Never posted by this routine or any other automation. Drafts for Adam.
+
+**Authorisation, unchanged (Adam, 2026-07-27):** publishing the article
+to crox.io and queueing the LinkedIn posts are both authorised. Nothing
+else posts to any platform by any other means.
+
+### 8. Verify before finishing — do not skip
+
+The failure this routine is recovering from was a run that ended green
+having produced nothing. Before writing the log entry:
+
+```
+GET https://chat.crox.io/linkedin/queue
+```
+
+Confirm **five pending items** exist for the coming Monday–Friday. If
+there are fewer, the run has failed at its most important job: say so at
+the top of the report, in plain words, and do not describe the run as
+successful. A quiet week is the one outcome that must never look fine.
+
+### 9. Append the log entry
 
 Newest first in `content/LEARNING-LOG.md`: the date, last week's verdict,
-this week's hypothesis, the five posts with their formats, and the
-sources behind any factual claims. Commit it. **An unappended log entry
-means the routine did not run** — that is the tripwire, backed by the
-server's empty-queue alarm.
+this week's hypothesis, the five posts with their formats, the article
+published, and the sources behind any factual claims. Commit it. **An
+unappended log entry means the routine did not run** — that is the
+tripwire, backed by the server's empty-queue alarm.
 
 ## Measurement (changed 2026-08-09)
 
