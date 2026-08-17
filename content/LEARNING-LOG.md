@@ -92,6 +92,13 @@ the stack can read replies. That is a loop defect, not a content result.
 From now on a hypothesis has to name a metric this routine can pull
 itself, or it does not get set.
 
+**Where the 62 emails actually went** (Adam asked; worth keeping): 35
+firms, not 62 — 13 got one email, 17 got two, 5 got three. Accounting is
+24 of the 35 firms and 45 of the 62 sends; care 6 firms; lending/fintech
+3; insurance broking only 2. All sent 22–31 July, and **nothing has gone
+out in the 17 days since**. Broking being nearly untouched is why
+Thursday's sector post went there.
+
 **Escalated to Adam, because it is his call and not mine:** the no-link
 cadence has now run two weeks and produced one traceable conversion
 across nine posts. The routine cannot A/B a reach hypothesis it has no
@@ -116,11 +123,16 @@ Scoreable on conversions, and on impressions if Adam sends them.
   closed, due winter 2026) is the one that reaches a UK SME. Source:
   ICO, "Our plans for new and updated guidance — technology",
   ico.org.uk, fetched 17 Aug 2026.
-- Tue 07:30 (id 13) — **Build in public.** 48 of 62 cold emails went to
-  a firm inbox (info@/enquiries@) against the playbook's own named-person
-  rule — 77% of sends. The harvester that fixes it already existed and
-  was not being run. Source: `/outbound/engagement`, 62 emails, 35
-  domains, 2 bounced.
+- Tue 07:30 (id 17) — **Build in public.** Only 5 of 62 cold emails
+  reached a named person; the other 57 went to a firm inbox or a branch
+  address, against the playbook's own named-person rule — 92% of sends.
+  The harvester that fixes it already existed and was not being run.
+  Source: `/outbound/engagement`, 62 emails, 35 firms, 2 bounced.
+  **Corrected before it sent:** the first draft said "48 of 62 / 77%",
+  from a pattern-match that missed `contactus@`, `getintouch@` and
+  `service@`. Id 13 was deleted and re-queued as id 17. Classify
+  addresses explicitly, never by regex — a post whose whole argument is
+  "I broke my own rule" cannot afford a soft number.
 - Wed 07:30 (id 14) — **Data.** £200m government AI adoption funding,
   £100m of it expanding BridgeAI, announced at the first AI Adoption
   Summit, 8 June 2026 (gov.uk). Argument: the blocker is not money, it
