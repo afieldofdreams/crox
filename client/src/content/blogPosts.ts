@@ -12,6 +12,18 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: 'ai-governance-for-smes',
+    title: 'AI Governance for SMEs: What You Actually Need Before You Deploy',
+    subtitle: 'Not a framework. Four things on two sides of paper — an inventory, a never-list, a named human, and what happens when it is wrong.',
+    date: 'August 2026',
+    dateISO: '2026-08-17',
+    readTime: '5 min read',
+    description:
+      'The AI governance a 30-person UK firm actually needs before deploying anything: an inventory of tools in use, a list of data that never goes in, a named human on outbound work, and a correction process — plus what UK GDPR and the EU AI Act really require.',
+    keywords: ['ai governance for smes', 'ai governance small business uk', 'what you need before deploying ai', 'sme ai policy', 'ai risk management sme', 'uk gdpr ai compliance', 'ai inventory', 'ai readiness'],
+    tags: ['AI Governance', 'SME', 'Compliance', 'AI Readiness'],
+  },
+  {
     slug: 'ai-for-gp-practices',
     title: 'AI for GP Practices: The Document Mountain, DNAs, and the Lines Not to Cross',
     subtitle: 'Document workflow, recalls, and care navigation support — where AI genuinely helps general practice, inside NHS information governance rather than around it.',
