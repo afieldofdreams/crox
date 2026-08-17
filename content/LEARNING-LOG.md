@@ -48,6 +48,111 @@ is pending his data export — its conclusions go here as week zero.)
 
 ## Weekly entries
 
+### 2026-08-17 — week two
+
+**The run fired Monday 07:10 UTC, not Sunday 17:00 as the runbook
+specifies.** The Monday 07:30 UTC slot was 20 minutes away and
+unreachable, so Monday's post was queued for 11:00 UTC instead. Tue–Fri
+are on the normal 07:30. This is a schedule problem, not a content one:
+`WEEKLY-ROUTINE.md` says Sundays 17:00 Europe/London, and the recurring
+job is still on its old Monday-morning trigger. Until the schedule moves,
+every Monday post will either be late or be written under time pressure.
+Adam needs to move the trigger.
+
+**Last week's posts all published cleanly.** Ids 7–11, Mon 10 – Fri 14
+August, every one with `posted_at` set and `post_error: null`. Token
+healthy at 39 days.
+
+**Last week's hypothesis was: timely news commentary, published while
+the story is live, out-performs evergreen advice on replies.**
+
+**Verdict: unscoreable, and that is the finding.** Replies and DMs are
+Adam-reported and none were reported. The only automated signal left is
+conversions, and the whole week produced one:
+
+| Signal | Week of 10–14 Aug |
+|---|---|
+| Assessment submissions | 1 (Tue 11 Aug, 07:53 UTC) |
+| Chat conversations | 0 |
+| Contact forms | 0 |
+| New pipeline contacts | 0 |
+| Clicks | n/a — no links in bodies |
+
+The single submission landed **15 minutes after Tuesday's build-in-public
+post**, not after Monday's news post. So the one data point we have
+points away from the news hypothesis and, for the second time, towards
+build-in-public. The submitter (a Gmail address, company field
+"Computer", band Mixed) does not look like a UK SME buyer, so this is
+one weak data point and is not being treated as more.
+
+**Decision: kill the practice of setting hypotheses that can only be
+scored by data we do not collect.** Last week's test was unfalsifiable
+the day it was written — replies were the stated metric and nothing in
+the stack can read replies. That is a loop defect, not a content result.
+From now on a hypothesis has to name a metric this routine can pull
+itself, or it does not get set.
+
+**Escalated to Adam, because it is his call and not mine:** the no-link
+cadence has now run two weeks and produced one traceable conversion
+across nine posts. The routine cannot A/B a reach hypothesis it has no
+reach data for. The middle path this log has already named — a tracked
+link in the first comment — is **not executable by this routine**, since
+the LinkedIn queue API posts a body and nothing else. So the real choice
+is: keep flying blind on reach, or put a link back on one post a week and
+accept the reach cost. Not changing it unilaterally.
+
+**This week's hypothesis: a specific number in the first line lifts
+engagement, whatever the format.** One variable — the opening line
+carries a concrete quantity, as digits. Everything else held: same
+format mix, same days, same 07:30 slots (bar Monday), no links. Last
+week only 2 of 5 posts opened on a number. This week all 5 do.
+Scoreable on conversions, and on impressions if Adam sends them.
+
+**Posts, Mon 17 – Fri 21 August (ids 12–16):**
+
+- Mon 11:00 UTC (id 12) — **News.** ICO has 7 pieces of AI/data guidance
+  in drafting; 3 will never go to public consultation, including agentic
+  AI (final due winter 2026). The ADM and profiling update (consultation
+  closed, due winter 2026) is the one that reaches a UK SME. Source:
+  ICO, "Our plans for new and updated guidance — technology",
+  ico.org.uk, fetched 17 Aug 2026.
+- Tue 07:30 (id 13) — **Build in public.** 48 of 62 cold emails went to
+  a firm inbox (info@/enquiries@) against the playbook's own named-person
+  rule — 77% of sends. The harvester that fixes it already existed and
+  was not being run. Source: `/outbound/engagement`, 62 emails, 35
+  domains, 2 bounced.
+- Wed 07:30 (id 14) — **Data.** £200m government AI adoption funding,
+  £100m of it expanding BridgeAI, announced at the first AI Adoption
+  Summit, 8 June 2026 (gov.uk). Argument: the blocker is not money, it
+  is that nobody can say what the firm already uses.
+- Thu 07:30 (id 15) — **Sector: insurance broking.** A 7-question AI
+  policy under Consumer Duty; the never-list is the question doing the
+  work. First use of broking — accounting and care are already spent.
+- Fri 07:30 (id 16) — **Opinion + question.** 9 posts, 1 measurable
+  result; the measurement gap is self-inflicted and the same one the
+  firms we sell to have. Ends on a real question, which is also an
+  attempt to generate the reply signal we lack.
+
+**Article published:** `/insights/ai-governance-for-smes` — "AI
+Governance for SMEs: What You Actually Need Before You Deploy". First
+item off the governance/readiness backlog. Ends at `/assessment`, links
+the `static-controls-live-models` pillar. Legal claims re-verified
+before publishing: ICO ADM guidance due winter 2026 (ico.org.uk); EU AI
+Act transparency live 2 Aug 2026, high-risk moved to 2 Dec 2027 —
+consistent with the site's corrected EU AI Act article.
+
+**Discarded during research, do not let it back in:** "SME AI adoption
+rose from 25% in 2024 to 54% by early 2026" appeared on two low-authority
+marketing blogs, contradicts the ONS figure of 35% for businesses with
+10+ staff, and has no primary source. Same treatment as the "70% of UK
+SMBs" number binned last week.
+
+**Housekeeping:** queue item id 1 is still sitting there from 27 July
+with a permanent `linkedin_426 NONEXISTENT_VERSION` error and a body
+that reads "Testing a new publishing setup." It has never posted and
+appears not to be retried, but it is noise in every queue check. Worth
+deleting.
+
 ### 2026-08-10 — correction to the diagnosis below
 
 **The routine was never missing. It ran, twice, and produced nothing.**
