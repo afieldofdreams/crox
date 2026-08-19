@@ -119,6 +119,12 @@ full veto window on every post.
 | Thu | Sector-specific and concrete — accounting, care, insurance broking first (see `OUTBOUND.md` targeting). |
 | Fri | Opinion, ending in a genuine question. |
 
+**Fred** (the family AI product) rotates through the Tuesday
+build-in-public slot on LinkedIn and gets its own posts on X. It is never
+pitched as a product on LinkedIn — that audience is SME owners, and Fred
+is proof Adam builds things, not something they'll buy. Framing per
+platform is in `content/FRED-SOCIAL.md`.
+
 **Hard rules for the post bodies:**
 
 - **No links.** Text only — no `link_url`, no `image_url`. Adam's call:
@@ -139,8 +145,19 @@ full veto window on every post.
 
 ```
 POST https://chat.crox.io/linkedin/queue
-{"posts": [{"body": "...", "post_at": "2026-08-10T07:30:00Z"}, ...]}
+{"posts": [
+  {"body": "...", "post_at": "2026-08-10T07:30:00Z", "platform": "linkedin"},
+  {"body": "...", "post_at": "2026-08-10T12:00:00Z", "platform": "x"}
+]}
 ```
+
+`platform` is `linkedin` (the default) or `x`. Adam is on X Premium, so
+long-form copy posts to X verbatim — repost the LinkedIn body rather
+than writing it twice, unless the framing genuinely differs.
+
+Instagram is **not** a valid platform value and the API rejects it. It
+has no text-only post type, so it needs an image for every post: see
+`content/FRED-SOCIAL.md` and `scripts/social-card.mjs`.
 
 Queuing is not publishing. The background poster flushes due items every
 ten minutes, so a week queued on Sunday has a veto window on every post —

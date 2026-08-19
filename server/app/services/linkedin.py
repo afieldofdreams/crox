@@ -21,7 +21,7 @@ from urllib.parse import urlencode
 import httpx
 
 from app.config import settings
-from app.services import db
+from app.services import db, x_social
 
 _AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization"
 _TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
@@ -180,6 +180,16 @@ async def publish(
         return {"ok": False, "post_id": None, "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
 
 
+# Platform dispatch for the shared queue. Each publisher takes the body
+# plus optional attachments and returns {"ok", "post_id", "error"}.
+# Instagram is deliberately absent: it has no text-only post type, so it
+# needs the image pipeline before it can be wired in at all.
+_PUBLISHERS = {
+    "linkedin": lambda body, **kw: publish(body, **kw),
+    "x": lambda body, **kw: x_social.publish(body, **kw),
+}
+
+
 async def status_summary() -> str:
     """One-line health summary for alarm emails: is the connection still
     good, so the reader knows whether re-auth is also needed."""
@@ -217,7 +227,18 @@ async def flush_due() -> None:
     background loop in main.py; each post is marked posted or errored
     so failures never retry silently forever."""
     for row in await db.due_linkedin_posts():
-        result = await publish(
+        platform = row.get("platform") or "linkedin"
+        publisher = _PUBLISHERS.get(platform)
+        if publisher is None:
+            # Unknown platform: record it rather than retrying forever.
+            # due_linkedin_posts() skips rows with post_error, so this
+            # errors once and stays put until someone looks.
+            await db.mark_linkedin_post(
+                row["id"], linkedin_post_id=None, error=f"unknown_platform_{platform}"
+            )
+            print(f"[social] queue item {row['id']} unknown platform {platform!r}")
+            continue
+        result = await publisher(
             row["body"],
             link_url=row.get("link_url"),
             link_title=row.get("link_title"),
@@ -227,4 +248,4 @@ async def flush_due() -> None:
             row["id"], linkedin_post_id=result.get("post_id"), error=result.get("error")
         )
         state = "posted" if result["ok"] else f"failed: {result['error']}"
-        print(f"[linkedin] queue item {row['id']} {state}")
+        print(f"[{platform}] queue item {row['id']} {state}")
