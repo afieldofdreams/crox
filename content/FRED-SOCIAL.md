@@ -85,12 +85,49 @@ actually built and uses. Nothing about a real family goes in a post
 without Adam saying so explicitly, and it is his family, so the default
 is nothing.
 
+## Connecting X (one-off)
+
+The callback URL X asks for is:
+
+```
+https://chat.crox.io/x/callback
+```
+
+X matches it **exactly** — scheme, host, path, no trailing slash. Paste
+it, don't retype it. `GET /x/status` returns the same string if it's ever
+in doubt.
+
+In the X developer portal, on the app:
+
+1. **User authentication settings** → App permissions **Read and write**,
+   Type of App **Web App / Automated App or Bot** (a confidential client,
+   which is what the token exchange assumes).
+2. **Callback URI**: the URL above. **Website URL**: `https://crox.io`.
+3. Copy the OAuth 2.0 **Client ID** and **Client Secret** into the server
+   env as `X_CLIENT_ID` and `X_CLIENT_SECRET`. Leave `X_REFRESH_TOKEN`
+   empty — the connect flow fills it in.
+
+Then, with the admin token:
+
+```bash
+curl -s -H "Authorization: Bearer $CROX_ADMIN_TOKEN" \
+  https://chat.crox.io/x/auth
+```
+
+Open the `open_this_url` value in a logged-in browser and approve.
+**Don't leave the tab sitting** — X authorisation codes expire 30 seconds
+after approval, and a slow click comes back as `invalid_grant`.
+
+Check it took with `GET /x/status`. This should be a one-time job: X
+rotates the refresh token on every post and the new one is persisted, so
+the connection renews itself rather than expiring like LinkedIn's
+60-day member token.
+
 ## Status
 
 - **LinkedIn** — live, working.
-- **X** — code shipped, needs credentials (see `ROUTINE-PROMPT.md` and
-  the config block in `server/app/config.py`). Queued X posts error
-  rather than vanish until then.
+- **X** — code shipped, needs the connect flow above run once.
+  Queued X posts error rather than vanish until then.
 - **Instagram** — card generator ready; publishing blocked on a Meta app,
   an Instagram Professional account linked to a Facebook Page, and App
   Review (2–4 weeks). Nothing is wired to publish there yet, deliberately.

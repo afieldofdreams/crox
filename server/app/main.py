@@ -12,6 +12,7 @@ from app.api.contact_form import router as contact_form_router
 from app.api.linkedin import router as linkedin_router
 from app.api.links import router as links_router
 from app.api.outbound import router as outbound_router
+from app.api.x_auth import router as x_auth_router
 from app.config import settings
 from app.services import db, email, linkedin
 
@@ -118,4 +119,5 @@ app.include_router(assessment_router)
 app.include_router(admin_router)
 app.include_router(outbound_router)
 app.include_router(linkedin_router)
+app.include_router(x_auth_router)
 app.include_router(links_router)
