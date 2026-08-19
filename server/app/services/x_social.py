@@ -18,14 +18,23 @@ tokens rotate on every use, so the newly returned one is persisted.
 from __future__ import annotations
 
 import base64
+import hashlib
+import hmac
+from urllib.parse import urlencode
 
 import httpx
 
 from app.config import settings
 from app.services import db
 
+_AUTH_URL = "https://x.com/i/oauth2/authorize"
 _TOKEN_URL = "https://api.x.com/2/oauth2/token"
 _TWEETS_URL = "https://api.x.com/2/tweets"
+
+# tweet.write to post, users.read because X requires it alongside, and
+# offline.access — without which no refresh token is issued at all and
+# the connection dies in two hours.
+_SCOPES = "tweet.read tweet.write users.read offline.access"
 
 # X Premium raises the limit to 25,000; standard accounts are 280. Adam
 # is on Premium (confirmed 2026-08-10), so the long-form LinkedIn copy
@@ -40,6 +49,82 @@ def is_configured() -> bool:
         and settings.x_client_secret
         and settings.x_refresh_token
     )
+
+
+def redirect_uri() -> str:
+    """Must match a Callback URI registered on the X app *exactly* —
+    including scheme, host, path, and absence of a trailing slash."""
+    return f"{settings.base_url}/x/callback"
+
+
+def _code_verifier() -> str:
+    """PKCE verifier, derived deterministically from a server-side secret
+    rather than stored between the two legs of the flow.
+
+    PKCE's security property is that whoever redeems the authorisation
+    code must also know the verifier. Deriving it from a secret that
+    never leaves the server preserves that, and avoids needing session
+    state for a flow one person runs twice a year. 64 hex chars sits
+    inside the 43–128 unreserved-character range the spec requires.
+    """
+    secret = settings.unsubscribe_secret or settings.admin_token
+    return hmac.new(secret.encode(), b"x-oauth-pkce-verifier", hashlib.sha256).hexdigest()
+
+
+def _code_challenge() -> str:
+    digest = hashlib.sha256(_code_verifier().encode()).digest()
+    return base64.urlsafe_b64encode(digest).decode().rstrip("=")
+
+
+def auth_url(state: str) -> str:
+    params = {
+        "response_type": "code",
+        "client_id": settings.x_client_id,
+        "redirect_uri": redirect_uri(),
+        "scope": _SCOPES,
+        "state": state,
+        "code_challenge": _code_challenge(),
+        "code_challenge_method": "S256",
+    }
+    return f"{_AUTH_URL}?{urlencode(params)}"
+
+
+async def exchange_code(code: str) -> dict:
+    """Swap the authorisation code for tokens and persist the refresh
+    token. X authorisation codes expire in 30 seconds, so a slow click
+    through the consent screen shows up here as invalid_grant rather
+    than anything more descriptive."""
+    basic = base64.b64encode(
+        f"{settings.x_client_id}:{settings.x_client_secret}".encode()
+    ).decode()
+    try:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            resp = await client.post(
+                _TOKEN_URL,
+                data={
+                    "grant_type": "authorization_code",
+                    "code": code,
+                    "client_id": settings.x_client_id,
+                    "redirect_uri": redirect_uri(),
+                    "code_verifier": _code_verifier(),
+                },
+                headers={
+                    "Authorization": f"Basic {basic}",
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            )
+        if resp.status_code >= 300:
+            return {"ok": False, "error": f"x_token_{resp.status_code}: {resp.text[:200]}"}
+        body = resp.json()
+        refresh = body.get("refresh_token")
+        if not refresh:
+            # Almost always a missing offline.access scope on the app.
+            return {"ok": False, "error": "no_refresh_token (is offline.access enabled?)"}
+        if not await db.save_x_refresh_token(refresh):
+            return {"ok": False, "error": "db_unavailable"}
+        return {"ok": True, "error": None}
+    except Exception as exc:
+        return {"ok": False, "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
 
 
 async def _access_token() -> dict:
