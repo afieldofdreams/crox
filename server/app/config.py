@@ -63,6 +63,17 @@ class Settings(BaseSettings):
     linkedin_client_id: str = ""
     linkedin_client_secret: str = ""
 
+    # X (Twitter) API v2, OAuth 2.0 with refresh token. From an app at
+    # developer.x.com with tweet.write + offline.access scopes. Empty
+    # disables X publishing (queued X posts error rather than vanish).
+    # Billing is pay-per-use since Feb 2026: ~$0.015/post, ~$0.20 if the
+    # post contains a link — our posts are text-only, so the cheap rate.
+    x_client_id: str = ""
+    x_client_secret: str = ""
+    # Seed value only. X rotates refresh tokens on every use, so the
+    # live one is persisted in the DB after the first refresh.
+    x_refresh_token: str = ""
+
     @property
     def unsubscribe_secret(self) -> str:
         return self.outbound_unsubscribe_secret or self.form_csrf_secret

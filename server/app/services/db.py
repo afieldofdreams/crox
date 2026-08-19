@@ -182,6 +182,14 @@ CREATE TABLE IF NOT EXISTS linkedin_auth (
     updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- X rotates its refresh token on every use, so the live one has to be
+-- persisted; the config value is only ever a seed.
+CREATE TABLE IF NOT EXISTS x_auth (
+    id            INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    refresh_token TEXT NOT NULL,
+    updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS linkedin_queue (
     id               BIGSERIAL PRIMARY KEY,
     body             TEXT NOT NULL,
@@ -199,6 +207,12 @@ CREATE INDEX IF NOT EXISTS linkedin_queue_due_idx
 ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS link_url   TEXT;
 ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS link_title TEXT;
 ALTER TABLE linkedin_queue ADD COLUMN IF NOT EXISTS image_url  TEXT;
+
+-- The queue went multi-platform in August 2026 (LinkedIn, X, later
+-- Instagram). The table keeps its name so no data migrates; every
+-- existing row is a LinkedIn post and the default preserves that.
+ALTER TABLE linkedin_queue
+    ADD COLUMN IF NOT EXISTS platform TEXT NOT NULL DEFAULT 'linkedin';
 
 -- Tracked short links (/l/<tag>) so social posts get owned click data.
 CREATE TABLE IF NOT EXISTS tracked_links (
@@ -327,6 +341,38 @@ async def get_linkedin_auth() -> dict | None:
         return None
 
 
+async def get_x_refresh_token() -> str | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow("SELECT refresh_token FROM x_auth WHERE id = 1")
+            return row["refresh_token"] if row else None
+    except Exception as exc:
+        print(f"[db] get_x_refresh_token failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def save_x_refresh_token(refresh_token: str) -> bool:
+    if not _pool:
+        return False
+    try:
+        async with _pool.acquire() as conn:
+            await conn.execute(
+                """
+                INSERT INTO x_auth (id, refresh_token, updated_at)
+                VALUES (1, $1, NOW())
+                ON CONFLICT (id) DO UPDATE
+                    SET refresh_token = EXCLUDED.refresh_token, updated_at = NOW()
+                """,
+                refresh_token,
+            )
+            return True
+    except Exception as exc:
+        print(f"[db] save_x_refresh_token failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return False
+
+
 async def queue_linkedin_post(
     body: str,
     post_at,
@@ -334,6 +380,7 @@ async def queue_linkedin_post(
     link_url: str | None = None,
     link_title: str | None = None,
     image_url: str | None = None,
+    platform: str = "linkedin",
 ) -> int | None:
     if not _pool:
         return None
@@ -341,10 +388,11 @@ async def queue_linkedin_post(
         async with _pool.acquire() as conn:
             row = await conn.fetchrow(
                 """
-                INSERT INTO linkedin_queue (body, post_at, link_url, link_title, image_url)
-                VALUES ($1, $2, $3, $4, $5) RETURNING id
+                INSERT INTO linkedin_queue
+                    (body, post_at, link_url, link_title, image_url, platform)
+                VALUES ($1, $2, $3, $4, $5, $6) RETURNING id
                 """,
-                body, post_at, link_url, link_title, image_url,
+                body, post_at, link_url, link_title, image_url, platform,
             )
             return int(row["id"]) if row else None
     except Exception as exc:

@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 from datetime import datetime, timezone
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import HTMLResponse
@@ -93,6 +94,10 @@ async def linkedin_callback(code: str = "", state: str = "", error: str = "") ->
 class QueueItem(BaseModel):
     body: str = Field(..., min_length=1, max_length=2900)
     post_at: datetime
+    # Which network to publish to. Defaults to linkedin so every existing
+    # caller keeps working unchanged. Instagram is not accepted: it has
+    # no text-only post type, so it needs the image pipeline first.
+    platform: Literal["linkedin", "x"] = "linkedin"
     # Optional attachment: a link card (link_url + link_title) OR an
     # image fetched from image_url — not both.
     link_url: str | None = Field(default=None, max_length=1000)
@@ -120,10 +125,15 @@ async def queue_posts(req: QueueRequest, _: None = Depends(_require_admin)) -> d
             link_url=item.link_url,
             link_title=item.link_title,
             image_url=item.image_url,
+            platform=item.platform,
         )
         if post_id is None:
             raise HTTPException(status_code=503, detail="db_unavailable")
-        queued.append({"id": post_id, "post_at": item.post_at.isoformat()})
+        queued.append({
+            "id": post_id,
+            "post_at": item.post_at.isoformat(),
+            "platform": item.platform,
+        })
     return {"queued": queued}
 
 
