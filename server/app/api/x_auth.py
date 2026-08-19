@@ -21,7 +21,7 @@ from fastapi.responses import HTMLResponse
 
 from app.api.admin import _require_admin
 from app.config import settings
-from app.services import db, x_social
+from app.services import x_social
 
 router = APIRouter()
 
@@ -43,11 +43,10 @@ def _require_configured() -> None:
 
 @router.get("/x/status")
 async def x_status(_: None = Depends(_require_admin)) -> dict:
-    configured = bool(settings.x_client_id and settings.x_client_secret)
-    refresh = await db.get_x_refresh_token() if configured else None
+    configured = x_social.is_configured()
     return {
         "configured": configured,
-        "connected": bool(refresh or settings.x_refresh_token),
+        "connected": await x_social.is_connected() if configured else False,
         # The exact string to paste into the X app's Callback URI field.
         # X requires an exact match, so this is worth reading rather than
         # retyping from memory.
