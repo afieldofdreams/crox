@@ -44,11 +44,18 @@ MAX_CHARS = 25_000
 
 
 def is_configured() -> bool:
-    return bool(
-        settings.x_client_id
-        and settings.x_client_secret
-        and settings.x_refresh_token
-    )
+    """App credentials present — i.e. the connect flow can be run.
+
+    Deliberately does NOT require a refresh token: that is what being
+    *connected* means, and conflating the two made /x/status report
+    "configured: true" and "X: not configured" in the same response.
+    """
+    return bool(settings.x_client_id and settings.x_client_secret)
+
+
+async def is_connected() -> bool:
+    """A refresh token exists, so publishing can actually be attempted."""
+    return bool(await db.get_x_refresh_token() or settings.x_refresh_token)
 
 
 def redirect_uri() -> str:
@@ -171,6 +178,8 @@ async def publish(body: str, **_ignored) -> dict:
     """
     if not is_configured():
         return {"ok": False, "post_id": None, "error": "x_not_configured"}
+    if not await is_connected():
+        return {"ok": False, "post_id": None, "error": "x_not_connected"}
     if len(body) > MAX_CHARS:
         return {"ok": False, "post_id": None, "error": f"x_too_long_{len(body)}"}
 
@@ -197,7 +206,9 @@ async def publish(body: str, **_ignored) -> dict:
 
 async def status_summary() -> str:
     if not is_configured():
-        return "X: not configured (needs x_client_id, x_client_secret, x_refresh_token)."
+        return "X: not configured (needs x_client_id and x_client_secret)."
+    if not await is_connected():
+        return "X: configured but not connected — run the flow at /x/auth."
     auth = await _access_token()
     if not auth["token"]:
         return f"X: configured but cannot mint a token — {auth['error']}. Re-authorise."
