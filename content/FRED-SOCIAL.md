@@ -11,7 +11,7 @@ LinkedIn as build-in-public, not as a product pitch.**
 
 | Platform | Framing | Why |
 |---|---|---|
-| **LinkedIn** | Build-in-public. What building Fred taught me, with real numbers. | The audience is SME owners deciding whether Adam can build. Fred is proof of capability, not a product they'll buy. A family-AI pitch here dilutes the SME positioning the rest of the content strategy rests on. |
+| **LinkedIn** | An episode of the solo builder journey: building Fred, with real numbers. | LinkedIn is Adam's builder-journey channel (his call, 2026-08-20). Fred is proof he builds things, told as story — never pitched as a product there. |
 | **X** | The product, plainly. What Fred does, what it costs, what broke. | Mixed audience, tolerant of both builder and product talk. Premium account, so LinkedIn copy can be reposted nearly verbatim when it fits. |
 | **Instagram** | Visual. Cards, screenshots, short demos. | The consumer audience actually lives here. Also the only platform where the copy *cannot* be reused — see below. |
 

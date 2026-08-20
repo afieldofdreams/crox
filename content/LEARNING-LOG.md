@@ -48,6 +48,26 @@ is pending his data export — its conclusions go here as week zero.)
 
 ## Weekly entries
 
+### 2026-08-20 — LinkedIn repositioned: the solo builder journey (Adam's call)
+
+Owner directive, mid-week: **every LinkedIn post is now an episode of
+Adam's solo builder journey** — one person building a consultancy and a
+stable of products in public, with real numbers. Detached AI advice is
+out; today's insurance-broker policy post (id 15) is the last of that
+genre. The test written into the runbook: could a competent competitor
+have written this post? If yes, it isn't a journey post.
+
+Not evidence-led, but the evidence points the same way: build-in-public
+took 10 of week zero's 20 clicks, and the only traceable conversion
+since (11 Aug, 07:53) landed fifteen minutes after a build-in-public
+post.
+
+Effective from the next Sunday run. Friday's queued post (id 16 — nine
+posts, one measurable result) already fits the frame and stands. Next
+Tuesday's build log should be the Fred launch story: shipped to X on 20
+August, first post live, what building and launching it taught.
+
+
 ### 2026-08-17 — week two
 
 **The run fired Monday 07:10 UTC, not Sunday 17:00 as the runbook
