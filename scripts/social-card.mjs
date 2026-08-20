@@ -43,10 +43,19 @@ const SHAPES = {
   story: { w: 1080, h: 1920 },
 };
 
+// Palettes come from each brand's live site, not from taste. Fred's is
+// WhatsApp-flavoured because Fred lives in WhatsApp: chat-background
+// beige, charcoal text, WhatsApp teal, message-bubble green, Inter.
+// Crox keeps its dark serif look.
 const THEMES = {
-  // Fred is the family product: warmer and lighter than the consultancy.
-  fred: { bg: '#1a1512', fg: '#f2ede5', dim: '#c9bfb2', accent: '#e07a3f' },
-  crox: { bg: '#12100e', fg: '#e8e4de', dim: '#d0cbc5', accent: '#e05a3a' },
+  fred: {
+    bg: '#ece5dd', fg: '#111b21', dim: '#667781', accent: '#075e54',
+    bubble: '#dcf8c6', font: 'inter', style: 'bubble',
+  },
+  crox: {
+    bg: '#12100e', fg: '#e8e4de', dim: '#d0cbc5', accent: '#e05a3a',
+    font: 'serif', style: 'plain',
+  },
 };
 
 function parseArgs(argv) {
@@ -94,32 +103,50 @@ function buildHtml({ text, kicker, footer, shape, theme }) {
   const t = THEMES[theme];
   const serif = readFileSync(join(HERE, 'assets/fonts/InstrumentSerif-Regular.ttf')).toString('base64');
   const mono = readFileSync(join(HERE, 'assets/fonts/DMMono-Regular.ttf')).toString('base64');
+  const inter = readFileSync(join(HERE, 'assets/fonts/Inter-Variable.ttf')).toString('base64');
   const size = fontSizeFor(text, shape);
   const pad = Math.round(w * 0.09);
+  const headFont = t.font === 'inter' ? "'Inter',system-ui,sans-serif" : "'Instrument Serif',Georgia,serif";
+  const smallFont = t.font === 'inter' ? "'Inter',system-ui,sans-serif" : "'DM Mono',monospace";
+  const headWeight = t.font === 'inter' ? 700 : 400;
+  // Fred cards set the headline in a WhatsApp-style message bubble on
+  // the chat-beige ground; Crox cards stay plain type on dark.
+  const mainHtml = t.style === 'bubble'
+    ? `<main><div class="bubble"><h1>${esc(text)}</h1><div class="tick">✓✓</div></div></main>`
+    : `<main><h1>${esc(text)}</h1></main>`;
+  const bubbleCss = t.style === 'bubble' ? `
+.bubble{background:#ffffff;border-radius:${Math.round(w * 0.024)}px;
+        border-bottom-left-radius:${Math.round(w * 0.006)}px;
+        padding:${Math.round(pad * 0.55)}px ${Math.round(pad * 0.6)}px;
+        box-shadow:0 1px 2px rgba(17,27,33,.13);max-width:92%}
+.tick{text-align:right;color:#4fc3f7;font-family:${smallFont};
+      font-size:${Math.round(w * 0.024)}px;margin-top:${Math.round(pad * 0.18)}px}` : '';
 
   return `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face { font-family:'Instrument Serif'; src:url(data:font/ttf;base64,${serif}) format('truetype'); }
 @font-face { font-family:'DM Mono'; src:url(data:font/ttf;base64,${mono}) format('truetype'); }
+@font-face { font-family:'Inter'; src:url(data:font/ttf;base64,${inter}) format('truetype'); font-weight:100 900; }
 *{margin:0;padding:0;box-sizing:border-box}
 body{width:${w}px;height:${h}px;background:${t.bg};color:${t.fg};
      display:flex;flex-direction:column;justify-content:space-between;
      padding:${pad}px;position:relative;overflow:hidden}
-.kicker{font-family:'DM Mono',monospace;font-size:${Math.round(w * 0.026)}px;
-        letter-spacing:.24em;text-transform:uppercase;color:${t.accent}}
+.kicker{font-family:${smallFont};font-size:${Math.round(w * 0.026)}px;
+        letter-spacing:.24em;text-transform:uppercase;color:${t.accent};font-weight:600}
 main{display:flex;align-items:center;flex:1;padding:${Math.round(pad * 0.6)}px 0}
-h1{font-family:'Instrument Serif',Georgia,serif;font-weight:400;
-   font-size:${size}px;line-height:1.14;letter-spacing:-.01em;
+h1{font-family:${headFont};font-weight:${headWeight};
+   font-size:${size}px;line-height:1.18;letter-spacing:-.015em;
    /* Long words must break rather than bleed off the card edge. */
    overflow-wrap:anywhere}
 .rule{width:${Math.round(w * 0.11)}px;height:5px;background:${t.accent};margin-bottom:${Math.round(pad * 0.5)}px}
-footer{display:flex;justify-content:space-between;align-items:flex-end;
-       font-family:'DM Mono',monospace;font-size:${Math.round(w * 0.024)}px;color:${t.dim}}
+footer{display:flex;justify-content:space-between;align-items:flex-end;gap:${Math.round(pad*0.4)}px;
+       font-family:${smallFont};font-size:${Math.round(w * 0.024)}px;color:${t.dim}}
 .glow{position:absolute;right:-14%;top:-14%;width:62%;aspect-ratio:1;border-radius:50%;
-      background:radial-gradient(circle,${t.accent}2b 0%,transparent 68%)}
+      background:radial-gradient(circle,${t.bubble || t.accent}${t.bubble ? '' : '2b'} 0%,transparent 68%)}
+${bubbleCss}
 </style></head><body>
 <div class="glow"></div>
 <div class="kicker">${esc(kicker)}</div>
-<main><h1>${esc(text)}</h1></main>
+${mainHtml}
 <div>
   <div class="rule"></div>
   <footer><span>${esc(footer)}</span><span>Your family assistant. On WhatsApp.</span></footer>
