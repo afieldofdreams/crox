@@ -1,7 +1,7 @@
 # Fred on social
 
-Fred is a consumer product — an AI agent for families, live at
-fred.crox.io. Crox is a B2B consultancy selling to SME owners. They are
+Fred is a consumer product — your family assistant, on WhatsApp, live
+at fredhelpsyour.family. Crox is a B2B consultancy selling to SME owners. They are
 different audiences and the same post will not serve both.
 
 Adam's call (2026-08-10): **all three platforms, but Fred appears on
@@ -126,8 +126,14 @@ the connection renews itself rather than expiring like LinkedIn's
 ## Status
 
 - **LinkedIn** — live, working.
-- **X** — code shipped, needs the connect flow above run once.
-  Queued X posts error rather than vanish until then.
+- **X** — live. Connected 19 Aug 2026; first post published the same day
+  (the Fred launch post). The connect flow above is kept for reference —
+  it should not need running again, since the refresh token renews itself
+  on every post.
+- **X billing** — prepaid credits, not a monthly bill. Posting stops with
+  a `402 credits depleted` the moment the balance hits zero, so a 402 in
+  the queue means top up at developer.x.com, not debug the code. A post
+  is ~\$0.015, or ~\$0.20 if it contains a link.
 - **Instagram** — card generator ready; publishing blocked on a Meta app,
   an Instagram Professional account linked to a Facebook Page, and App
   Review (2–4 weeks). Nothing is wired to publish there yet, deliberately.

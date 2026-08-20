@@ -14,13 +14,13 @@
  * Usage:
  *   node scripts/social-card.mjs --text "..." --out card.png
  *   node scripts/social-card.mjs --text "..." --kicker "Fred" \
- *        --footer "fred.crox.io" --shape square --theme fred
+ *        --footer "fredhelpsyour.family" --shape square --theme fred
  *
  * Options:
  *   --text     required. The line on the card. Keep it short — a card is
  *              a headline, not a paragraph. Font size auto-scales.
  *   --kicker   small uppercase label above the text. Default "Fred".
- *   --footer   bottom-right label. Default "fred.crox.io".
+ *   --footer   bottom-right label. Default "fredhelpsyour.family".
  *   --shape    portrait (1080x1350, default) | square (1080x1080) |
  *              story (1080x1920)
  *   --theme    fred (default, warm) | crox (site palette, darker)
@@ -122,7 +122,7 @@ footer{display:flex;justify-content:space-between;align-items:flex-end;
 <main><h1>${esc(text)}</h1></main>
 <div>
   <div class="rule"></div>
-  <footer><span>${esc(footer)}</span><span>An AI agent for families</span></footer>
+  <footer><span>${esc(footer)}</span><span>Your family assistant. On WhatsApp.</span></footer>
 </div>
 </body></html>`;
 }
@@ -148,7 +148,7 @@ function main() {
   const html = buildHtml({
     text,
     kicker: args.kicker || 'Fred',
-    footer: args.footer || 'fred.crox.io',
+    footer: args.footer || 'fredhelpsyour.family',
     shape,
     theme,
   });
