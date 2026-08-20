@@ -109,21 +109,30 @@ Monday to Friday, `07:30` UTC each day, staggered by day. Written
 Sunday, so the whole week is queued before it starts and there is a
 full veto window on every post.
 
-**Standing format mix** (Adam's call, 2026-08-09):
+**The LinkedIn frame** (Adam's call, 2026-08-20, replacing the
+2026-08-09 mix): **every LinkedIn post is an episode of Adam's solo
+builder journey.** One person building a consultancy and a stable of
+products — Crox, Fred, Canary, BBX, Radar, the outbound machine, this
+posting automation — in public, with the real numbers.
 
-| Day | Format |
+The test for every post: *could a competent competitor have written
+this?* If yes, it is not a journey post — rewrite it or drop it.
+"Here are 7 questions for your AI policy" fails the test. "A broker
+asked me for an AI policy this week; here's the 7-question version I
+wrote and why it's one page" passes. Same expertise, told as something
+that happened to Adam, because it did.
+
+| Day | Episode |
 |---|---|
-| Mon | **Something in the news.** Research it Sunday afternoon and check nothing has moved before it goes out — do not post stale news. Verify every factual claim against a primary or reputable source before writing, and cite the source in the log entry. |
-| Tue | **Build in public.** A real thing that happened building Crox this week, with the actual numbers. Failures outperform wins. |
-| Wed | Research or data observation, with figures that can be traced to a named source. |
-| Thu | Sector-specific and concrete — accounting, care, insurance broking first (see `OUTBOUND.md` targeting). |
-| Fri | Opinion, ending in a genuine question. |
+| Mon | **The news, as it hit the work.** Something that changed this week and what Adam is actually doing about it in his own products or clients' systems. Researched Sunday, re-checked before it goes out, every claim verified against a primary source and cited in the log. Never detached commentary. |
+| Tue | **Build log.** What got built, what broke, what it cost, what it taught. Fred, Crox tooling, the products — with the actual numbers. Failures outperform wins. |
+| Wed | **Numbers from the inside.** Adam's own operating data — outbound stats, conversion counts, spend, time. External data only when it collided with a decision he made that week. |
+| Thu | **What building for a sector taught me.** Accounting, care, insurance broking first (`OUTBOUND.md` targeting) — but told from the work, not from research summaries. |
+| Fri | **The reflection.** What this week of building solo actually felt like or taught, ending in a genuine question. |
 
-**Fred** (the family AI product) rotates through the Tuesday
-build-in-public slot on LinkedIn and gets its own posts on X. It is never
-pitched as a product on LinkedIn — that audience is SME owners, and Fred
-is proof Adam builds things, not something they'll buy. Framing per
-platform is in `content/FRED-SOCIAL.md`.
+**Fred** is journey material, not a product pitch, on LinkedIn: the
+story of building it, what it broke, what it earns. Product framing
+lives on X and Instagram — see `content/FRED-SOCIAL.md`.
 
 **Hard rules for the post bodies:**
 
