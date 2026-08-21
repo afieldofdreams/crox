@@ -1,0 +1,18 @@
+{
+  "_comment": "Adam's script (21 Aug 2026): Sarah snaps the crumpled school letter, Fred tracks the two actions, catches the gala clash question, sets the waterproof reminder and follows through at 7pm. The evening gap is told by the bubble timestamps — WhatsApp has no mid-day separator. school-letter.png is a generated stand-in; a real photo of a real letter (with nothing personal in frame) beats it for realism.",
+  "contact": "Fred",
+  "status": "online",
+  "messages": [
+    { "e2e": true },
+    { "day": "Today" },
+    { "from": "me", "image": "school-letter.png", "time": "16:07", "status": "read" },
+    { "from": "them", "time": "16:07", "text": "Read it! Year 4 trip to the Science Museum on Thu 24 Sep. Two things it needs — I’ve tracked both:\n\n• Permission slip back by Fri 18 Sep\n• £8.50 on ParentPay, same day\n\nTrip’s on the calendar, and I’ll nudge you the Wednesday before the slip’s due. 🎒" },
+    { "from": "me", "time": "16:09", "status": "read", "text": "is that the same week as the swimming gala??" },
+    { "from": "them", "time": "16:09", "text": "No — the gala’s the week after, Fri 2 Oct. Nothing clashes. Oscar just needs a packed lunch on trip day (no glass bottles, says the letter)." },
+    { "from": "me", "time": "16:10", "status": "read", "text": "ok. remind me tonight to find his waterproof, it’s meant to rain thursday" },
+    { "from": "them", "time": "16:10", "text": "Done — I’ll ping you at 7 tonight. ☔" },
+    { "from": "them", "time": "19:00", "text": "Evening! Waterproof hunt for Oscar’s trip — easier now than 7:45 on Thursday. 🧥" },
+    { "from": "me", "time": "19:04", "status": "read", "text": "found it. you’re the only one in this house who remembers anything" },
+    { "from": "them", "time": "19:05", "text": "That’s the job. Slip and £8.50 on Friday — I’ve got you." }
+  ]
+}

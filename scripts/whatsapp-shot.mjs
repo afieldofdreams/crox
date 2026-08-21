@@ -106,7 +106,10 @@ const C = {
   meta: '#8696a0',         // times, delivered ticks
   read: '#53bdeb',         // read ticks
   sub: '#667781',          // day pill / e2e text
-  bar: 'rgba(249,249,249,0.94)',
+  // Opaque, not iOS's translucent blur: headless Chromium doesn't apply
+  // backdrop-filter, and crisp chat text ghosting through the bars
+  // looks broken where real blur would look right.
+  bar: '#f9f9f9',
   hairline: 'rgba(60,60,67,0.29)',
   icon: '#54656f',
 };
@@ -158,6 +161,16 @@ function bubbleHtml(msg, side, groupFirst) {
       .map((o, i) => `<span class="dot" style="opacity:${o}${i === 2 ? ';margin-right:0' : ''}"></span>`)
       .join('');
     return `<div class="row them"><div class="bubble them${groupFirst ? ' first' : ''} typing">${dots}</div></div>`;
+  }
+  if (msg.image) {
+    // Photo message: image fills the bubble edge-to-edge inside a thin
+    // border, with time and ticks overlaid on a scrim, WhatsApp-style.
+    const data = readFileSync(msg.image).toString('base64');
+    const mime = msg.image.endsWith('.jpg') || msg.image.endsWith('.jpeg') ? 'image/jpeg' : 'image/png';
+    const meta = `<span class="imgmeta">${esc(msg.time || '')}${side === 'me' ? ticks(msg.status || 'read') : ''}</span>`;
+    return `<div class="row ${side}"><div class="bubble ${side}${groupFirst ? ' first' : ''} imgb">
+      <div class="imgwrap"><img src="data:${mime};base64,${data}">${meta}</div>
+    </div></div>`;
   }
   const meta = `<span class="meta">${esc(msg.time || '')}${side === 'me' ? ticks(msg.status || 'read') : ''}</span>`;
   const tail = groupFirst ? ' first' : '';
@@ -300,6 +313,13 @@ body{font-family:-apple-system,'Inter',sans-serif;position:relative;
       position:relative;top:4px}
 .fwd{display:flex;align-items:center;gap:5px;font-size:13px;color:${C.meta};
      margin-bottom:3px}
+.bubble.imgb{padding:4px;max-width:66%}
+.imgwrap{position:relative;overflow:hidden;border-radius:13px}
+.imgwrap img{display:block;width:100%}
+.imgwrap::after{content:'';position:absolute;left:0;right:0;bottom:0;height:34px;
+     background:linear-gradient(transparent, rgba(11,20,26,0.45))}
+.imgmeta{position:absolute;right:9px;bottom:6px;z-index:1;display:inline-flex;
+     align-items:center;gap:3px;font-size:11px;color:#fff}
 .typing{padding:11px 13px}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
      background:#9aa4ab;margin-right:3px}
@@ -437,6 +457,7 @@ function screenshot(html, dir, name, scale, chromium) {
 /** How long a frame stays on screen: roughly reading speed, longer for
  *  Fred's replies (they carry the demo's content). Seconds. */
 function holdFor(msg) {
+  if (msg.image) return 1.8;
   const n = (msg.text || '').length;
   return msg.from === 'me'
     ? Math.min(0.9 + n / 110, 2.5)
@@ -563,6 +584,11 @@ function main() {
   if (!chat) {
     console.error('Pass --chat convo.json or --demo. See the header of this file.');
     process.exit(1);
+  }
+  if (args.chat) {
+    // Image paths in a chat script resolve relative to the script file.
+    const base = dirname(resolve(args.chat));
+    for (const m of chat.messages) if (m.image) m.image = resolve(base, m.image);
   }
 
   const scale = Number(args.scale || 3);
