@@ -47,6 +47,13 @@ with lunch (~1pm) secondary. For parents specifically the prime slot
 is the post-bedtime collapse: **8–9:30pm UK**. Weekend mornings are
 when family admin actually gets done — a natural moment for Fred.
 
+## Launch window first: back to school
+
+Before this standing calendar starts, the six banked Reels front-load
+through the back-to-school fortnight (24 Aug – 7 Sept) — the schedule
+and paste-ready captions live in `content/FRED-BACK-TO-SCHOOL.md`.
+The weekly rhythm below takes over from 8 September.
+
 ## The week (4–5 posts)
 
 | Day | Slot (UK) | Post |
