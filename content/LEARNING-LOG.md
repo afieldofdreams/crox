@@ -62,12 +62,17 @@ under the journey frame.
 **X is a real gap, now closed.** The runbook documented the
 `platform: "x"` API but never made X a standing output, so no run ever
 queued an X post — the only one ever published was the manually queued
-launch post (id 19, 20 Aug). Fix, in the same runbook edit: every week
-queues **at least three X posts** (two Fred product posts + at least
-one LinkedIn journey body reposted verbatim), and step 8's
-verification now counts pending X items as well as LinkedIn ones.
-Three interim posts (ids 22–24) were queued Friday to cover Fri–Sun
-until the next run takes over.
+launch post (id 19, 20 Aug). Fix, in the same runbook edit: X became a
+standing weekly output, and step 8's verification now counts pending
+X items as well as LinkedIn ones. Three interim posts (ids 22–24)
+were queued Friday to cover Fri–Sun until the next run takes over.
+
+**Raised the same day, Adam's call: X posts daily — seven a week,
+weekends included.** Mon–Fri repost the LinkedIn journey bodies
+verbatim (afternoon slots; swap in a product post if a body can't
+stand alone), Sat–Sun are Fred product posts. Weekends are on because
+X's consumer audience doesn't stop on Friday the way LinkedIn's does.
+Cost at daily cadence: ~\$0.11 a week from the prepaid balance.
 
 Lesson, same family as the August outage: an output that no step
 explicitly produces and no step verifies will silently not exist,
