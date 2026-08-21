@@ -383,10 +383,13 @@ ${enterP === null ? '' : `<script>
 </body></html>`;
 }
 
-// Sample conversation — a real Fred capability (parse a forwarded
-// school email, extract the actionable bits, offer reminders), told
-// with archetypal details. Times are early evening, the family admin
-// hour.
+// Sample conversation — a real Fred capability (digest a forwarded
+// school group-chat message, extract the actionable bits, offer
+// reminders), with archetypal details. The opener is a WhatsApp
+// forward from the class group because that IS how WhatsApp forwards
+// work — an earlier draft opened with a forwarded *email*, which reads
+// wrong: forwards come from other chats, and emails don't. Times are
+// early evening, the family admin hour.
 const DEMO = {
   contact: 'Fred',
   status: 'online',
@@ -395,11 +398,11 @@ const DEMO = {
     { day: 'Today' },
     {
       from: 'me', forwarded: true, time: '17:38', status: 'read',
-      text: 'Subject: Year 4 Autumn Newsletter\n\nDear Parents and Carers, there is a great deal of information below so please do read to the end…',
+      text: 'Hi all! Trip money and consent need to be in by Friday 26th Sept please — £9.50 on ParentPay. PE kits back in Monday, and school photos are Thursday 2nd October. Thanks!',
     },
     {
       from: 'them', time: '17:38',
-      text: 'Read it so you don’t have to. Three things actually need doing:\n\n1. Trip consent + £9.50 — by Fri 26 Sep\n2. PE kit in school — Monday\n3. School photos — Thu 2 Oct\n\nWant a reminder the evening before each?',
+      text: 'Out of the group chat, onto your list. Three things need doing:\n\n1. Trip consent + £9.50 — by Fri 26 Sep\n2. PE kit in school — Monday\n3. School photos — Thu 2 Oct\n\nWant a reminder the evening before each?',
     },
     { from: 'me', time: '17:39', status: 'read', text: 'Yes please' },
     {
