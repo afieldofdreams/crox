@@ -151,6 +151,10 @@ the connection renews itself rather than expiring like LinkedIn's
   a `402 credits depleted` the moment the balance hits zero, so a 402 in
   the queue means top up at developer.x.com, not debug the code. A post
   is ~\$0.015, or ~\$0.20 if it contains a link.
-- **Instagram** — card generator ready; publishing blocked on a Meta app,
-  an Instagram Professional account linked to a Facebook Page, and App
-  Review (2–4 weeks). Nothing is wired to publish there yet, deliberately.
+- **Instagram** — account live: **@familyfredmin** (created 21 Aug 2026).
+  Manual/native posting for Phase 1; the card generator produces the
+  creative. API automation can follow via a Development-mode Meta app
+  with the Instagram-Login variant — no App Review and no Facebook Page
+  needed to post to our own account (verified against Meta's developer
+  docs, Aug 2026). Note for that build: the API accepts JPEG only, and
+  images must be at a public URL.
