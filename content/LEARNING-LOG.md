@@ -48,6 +48,18 @@ is pending his data export — its conclusions go here as week zero.)
 
 ## Weekly entries
 
+### 2026-08-21 (later) — back to school is the theme until 7 September
+
+Adam's call: everything Fred-facing rides the back-to-school window.
+Six WhatsApp-demo Reels are banked and scheduled 24 Aug – 7 Sept with
+captions in `content/FRED-BACK-TO-SCHOOL.md` (Adam posts those
+natively). **For the next two runs: the daily X posts should work the
+same seam** — school letters, the class group chat, the school run,
+INSET days — because that is what the audience is living through
+right now. Same rules as ever: sell Fred, end in the
+first-month-free link, invent nothing.
+
+
 ### 2026-08-21 — X went silent for a week: the runbook never queued it
 
 Adam flagged two things on Friday: LinkedIn was "still posting AI
