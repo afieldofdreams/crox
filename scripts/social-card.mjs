@@ -121,6 +121,10 @@ function buildHtml({ text, bubble, kicker, footer, shape, theme }) {
   const inter = readFileSync(join(HERE, 'assets/fonts/Inter-Variable.ttf')).toString('base64');
   const size = fontSizeFor(text.replace(/\[\[|\]\]/g, ''), shape);
   const pad = Math.round(w * 0.09);
+  // Story/Reel (9:16) plays under Instagram's own overlays — username up
+  // top, caption/CTA at the bottom — so keep a much deeper vertical
+  // margin there or the card's chrome sits beneath the app's.
+  const padV = shape === 'story' ? Math.round(h * 0.15) : pad;
   const headFont = t.font === 'inter' ? "'Inter',system-ui,sans-serif" : "'Instrument Serif',Georgia,serif";
   const smallFont = t.font === 'inter' ? "'Inter',system-ui,sans-serif" : "'DM Mono',monospace";
 
@@ -165,7 +169,7 @@ body{width:${w}px;height:${h}px;
                 radial-gradient(ellipse at bottom right, ${t.glowB}, transparent 50%),
                 ${t.bg};
      color:${t.fg};font-family:${smallFont};
-     display:flex;flex-direction:column;padding:${pad}px;overflow:hidden}
+     display:flex;flex-direction:column;padding:${padV}px ${pad}px;overflow:hidden}
 .brand{display:flex;align-items:center;gap:${Math.round(w*0.022)}px}
 .badge{width:${Math.round(w*0.062)}px;height:${Math.round(w*0.062)}px;border-radius:50%;
        background:linear-gradient(135deg, ${t.badgeFrom}, ${t.badgeTo});
