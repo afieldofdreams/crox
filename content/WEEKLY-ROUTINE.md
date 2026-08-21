@@ -23,7 +23,7 @@ run that queues nothing must say so loudly rather than ending green.
 ## Order of work — the one rule that matters
 
 1. Review last week (steps 1–4)
-2. **Write and queue the five LinkedIn posts (steps 5–6)**
+2. **Write and queue the week's posts — LinkedIn and X (steps 5–6)**
 3. Publish the long-form piece, draft the TikTok scripts (step 7)
 4. **Verify the queue is actually full (step 8)**
 5. Log it (step 9)
@@ -77,8 +77,11 @@ GET https://chat.crox.io/outbound/engagement   (admin bearer token)
 
 Never print the token.
 
-- Confirm last week's five posts actually published: every item should
-  have `posted_at` set and `post_error: null`. **A `post_error` is the
+- Confirm last week's posts actually published — the five LinkedIn
+  items **and** the X items: every one should have `posted_at` set and
+  `post_error: null`. A `402 credits depleted` on an X item means the
+  prepaid balance ran out: flag it for Adam to top up at
+  developer.x.com, and re-queue the post once he has. **A `post_error` is the
   headline of this week's log entry** — do not bury it. So is a week
   where nothing was queued at all.
 - Check the token: `GET /linkedin/status` reports `token_days_left`.
@@ -133,6 +136,24 @@ that happened to Adam, because it did.
 **Fred** is journey material, not a product pitch, on LinkedIn: the
 story of building it, what it broke, what it earns. Product framing
 lives on X and Instagram — see `content/FRED-SOCIAL.md`.
+
+**X is a standing output, not an extra** (added 2026-08-21, after X
+went silent for a week because this file never told the routine to
+queue it). Every week, queue **at least three X posts** alongside the
+five LinkedIn posts:
+
+- **Two Fred product posts.** X is Fred's product channel
+  (`FRED-SOCIAL.md`): what Fred does, plainly, for the family audience.
+- **At least one journey repost.** Adam is on X Premium, so pick the
+  LinkedIn journey posts that stand alone and repost the body verbatim
+  — but strip anything that only makes sense with the LinkedIn
+  context, like a reference to an attached image (the X publisher is
+  text-only).
+
+Stagger them across the week at different times from the LinkedIn
+slots. The no-links rule applies on X too, with an extra reason: X
+bills per post from prepaid credits, and a post containing a link
+costs ~13× more (~\$0.20 vs ~\$0.015). The bio carries the link.
 
 **Hard rules for the post bodies:**
 
@@ -207,10 +228,12 @@ having produced nothing. Before writing the log entry:
 GET https://chat.crox.io/linkedin/queue
 ```
 
-Confirm **five pending items** exist for the coming Monday–Friday. If
-there are fewer, the run has failed at its most important job: say so at
-the top of the report, in plain words, and do not describe the run as
-successful. A quiet week is the one outcome that must never look fine.
+Confirm **five pending `linkedin` items** exist for the coming
+Monday–Friday **and at least three pending `x` items**. If there are
+fewer of either, the run has failed at its most important job: say so
+at the top of the report, in plain words, and do not describe the run
+as successful. A quiet week is the one outcome that must never look
+fine — and a week that is quiet on only one platform still counts.
 
 ### 9. Append the log entry
 

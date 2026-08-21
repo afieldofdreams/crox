@@ -48,6 +48,32 @@ is pending his data export — its conclusions go here as week zero.)
 
 ## Weekly entries
 
+### 2026-08-21 — X went silent for a week: the runbook never queued it
+
+Adam flagged two things on Friday: LinkedIn was "still posting AI
+things", and nothing had gone out on X since the launch post.
+
+**LinkedIn is timing, not a failure.** This week's five posts were
+queued by Monday's run — two days *before* Wednesday's solo-builder
+repositioning — so the pre-repositioning genre finished out the week
+as already noted in the 2026-08-20 entry. The next run writes entirely
+under the journey frame.
+
+**X is a real gap, now closed.** The runbook documented the
+`platform: "x"` API but never made X a standing output, so no run ever
+queued an X post — the only one ever published was the manually queued
+launch post (id 19, 20 Aug). Fix, in the same runbook edit: every week
+queues **at least three X posts** (two Fred product posts + at least
+one LinkedIn journey body reposted verbatim), and step 8's
+verification now counts pending X items as well as LinkedIn ones.
+Three interim posts (ids 22–24) were queued Friday to cover Fri–Sun
+until the next run takes over.
+
+Lesson, same family as the August outage: an output that no step
+explicitly produces and no step verifies will silently not exist,
+however well the mechanism underneath it works.
+
+
 ### 2026-08-20 — LinkedIn repositioned: the solo builder journey (Adam's call)
 
 Owner directive, mid-week: **every LinkedIn post is now an episode of
