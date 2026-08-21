@@ -68,11 +68,20 @@ X items as well as LinkedIn ones. Three interim posts (ids 22–24)
 were queued Friday to cover Fri–Sun until the next run takes over.
 
 **Raised the same day, Adam's call: X posts daily — seven a week,
-weekends included.** Mon–Fri repost the LinkedIn journey bodies
-verbatim (afternoon slots; swap in a product post if a body can't
-stand alone), Sat–Sun are Fred product posts. Weekends are on because
-X's consumer audience doesn't stop on Friday the way LinkedIn's does.
-Cost at daily cadence: ~\$0.11 a week from the prepaid balance.
+weekends included.** Weekends are on because X's consumer audience
+doesn't stop on Friday the way LinkedIn's does.
+
+**Redefined again the same day, Adam's call, after seeing the first
+repost live: X is Fred marketing, not a journal.** "All the content
+should be trying to sell Fred — get people to click to try." So: no
+more LinkedIn journey reposts; every X post sells Fred and ends with
+`First month free: https://fredhelpsyour.family`; solo-builder
+content only when the story is Fred, still ending in the CTA. That
+reverses the no-links rule for X — clicks are the channel's job — at
+~\$0.20 a linked post, ~\$1.40 a week, accepted as marketing spend.
+The weekend interim posts were requeued to the new brief (ids 26–27
+replacing 23–24). The morning's already-published repost (id 25, the
+launch story) stands — it is Fred content, just journey-framed.
 
 Lesson, same family as the August outage: an output that no step
 explicitly produces and no step verifies will silently not exist,
