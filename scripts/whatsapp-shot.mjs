@@ -403,34 +403,10 @@ ${enterP === null ? '' : `<script>
 </body></html>`;
 }
 
-// Sample conversation — a real Fred capability (digest a forwarded
-// school group-chat message, extract the actionable bits, offer
-// reminders), with archetypal details. The opener is a WhatsApp
-// forward from the class group because that IS how WhatsApp forwards
-// work — an earlier draft opened with a forwarded *email*, which reads
-// wrong: forwards come from other chats, and emails don't. Times are
-// early evening, the family admin hour.
-const DEMO = {
-  contact: 'Fred',
-  status: 'online',
-  messages: [
-    { e2e: true },
-    { day: 'Today' },
-    {
-      from: 'me', forwarded: true, time: '17:38', status: 'read',
-      text: 'Hi all! Trip money and consent need to be in by Friday 26th Sept please — £9.50 on ParentPay. PE kits back in Monday, and school photos are Thursday 2nd October. Thanks!',
-    },
-    {
-      from: 'them', time: '17:38',
-      text: 'Out of the group chat, onto your list. Three things need doing:\n\n1. Trip consent + £9.50 — by Fri 26 Sep\n2. PE kit in school — Monday\n3. School photos — Thu 2 Oct\n\nWant a reminder the evening before each?',
-    },
-    { from: 'me', time: '17:39', status: 'read', text: 'Yes please' },
-    {
-      from: 'them', time: '17:39',
-      text: 'Done — three reminders set. I’ll nudge you at 7pm the night before each one.',
-    },
-  ],
-};
+// The canonical demo is Adam's Sarah / Science Museum script (his
+// call, 2026-08-21) — it lives in demos/ as an ordinary chat script,
+// so --demo is just --chat pointed at it.
+const DEMO_PATH = join(HERE, 'demos', 'science-museum-trip.json');
 
 function screenshot(html, dir, name, scale, chromium) {
   const htmlPath = join(dir, `${name}.html`);
@@ -576,20 +552,14 @@ function renderVideo(chat, clock, out, scale, chromium) {
 
 function main() {
   const args = parseArgs(process.argv.slice(2));
-  const chat = args.demo
-    ? DEMO
-    : args.chat
-      ? JSON.parse(readFileSync(resolve(args.chat), 'utf8'))
-      : null;
-  if (!chat) {
+  const chatPath = args.demo ? DEMO_PATH : args.chat ? resolve(args.chat) : null;
+  if (!chatPath) {
     console.error('Pass --chat convo.json or --demo. See the header of this file.');
     process.exit(1);
   }
-  if (args.chat) {
-    // Image paths in a chat script resolve relative to the script file.
-    const base = dirname(resolve(args.chat));
-    for (const m of chat.messages) if (m.image) m.image = resolve(base, m.image);
-  }
+  const chat = JSON.parse(readFileSync(chatPath, 'utf8'));
+  // Image paths in a chat script resolve relative to the script file.
+  for (const m of chat.messages) if (m.image) m.image = resolve(dirname(chatPath), m.image);
 
   const scale = Number(args.scale || 3);
   const clock = args.time || '17:42';
