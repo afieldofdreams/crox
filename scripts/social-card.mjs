@@ -17,10 +17,15 @@
  *        --footer "fredhelpsyour.family" --shape square --theme fred
  *
  * Options:
- *   --text     required. The line on the card. Keep it short — a card is
- *              a headline, not a paragraph. Font size auto-scales.
- *   --kicker   small uppercase label above the text. Default "Fred".
- *   --footer   bottom-right label. Default "fredhelpsyour.family".
+ *   --text     required. The headline. Wrap the phrase to highlight in
+ *              double square brackets: "Family admin, [[handled.]]" —
+ *              on the fred theme it renders periwinkle, like the site.
+ *   --bubble   fred theme only: a short message shown in a white
+ *              WhatsApp-style reply bubble under the headline, as if
+ *              Fred sent it. Optional.
+ *   --kicker   label above the text. Default "Fred" (fred theme renders
+ *              it as the gradient F badge + wordmark, like the site).
+ *   --footer   bottom-left label. Default "fredhelpsyour.family".
  *   --shape    portrait (1080x1350, default) | square (1080x1080) |
  *              story (1080x1920)
  *   --theme    fred (default, warm) | crox (site palette, darker)
@@ -43,14 +48,24 @@ const SHAPES = {
   story: { w: 1080, h: 1920 },
 };
 
-// Palettes come from each brand's live site, not from taste. Fred's is
-// WhatsApp-flavoured because Fred lives in WhatsApp: chat-background
-// beige, charcoal text, WhatsApp teal, message-bubble green, Inter.
+// Palettes come from each brand's live site, not from taste.
+// Fred's is the fredhelpsyour.family hero system: near-black base with
+// indigo and pink radial glows, Inter 800 headlines with the key phrase
+// in periwinkle, the purple-to-pink gradient F badge, and white
+// WhatsApp-style reply bubbles as the product's voice. The beige/green
+// WhatsApp colours are the CHAT MOCKUP inside the page, not the brand —
+// a mistake made once already; do not reintroduce it.
 // Crox keeps its dark serif look.
 const THEMES = {
   fred: {
-    bg: '#ece5dd', fg: '#111b21', dim: '#667781', accent: '#075e54',
-    bubble: '#dcf8c6', font: 'inter', style: 'bubble',
+    bg: '#0b0d12',
+    glowA: 'rgba(99,102,241,0.28)',   // indigo, ellipse at top
+    glowB: 'rgba(236,72,153,0.20)',   // pink, ellipse at bottom right
+    fg: '#f1f5f9', dim: '#94a3b8',
+    accent: '#818cf8',                // periwinkle highlight phrase
+    badgeFrom: '#a855f7', badgeTo: '#ec4899',
+    bubbleFg: '#111b21', time: '#667781',
+    font: 'inter', style: 'panel',
   },
   crox: {
     bg: '#12100e', fg: '#e8e4de', dim: '#d0cbc5', accent: '#e05a3a',
@@ -98,31 +113,22 @@ function fontSizeFor(text, shape) {
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-function buildHtml({ text, kicker, footer, shape, theme }) {
+function buildHtml({ text, bubble, kicker, footer, shape, theme }) {
   const { w, h } = SHAPES[shape];
   const t = THEMES[theme];
   const serif = readFileSync(join(HERE, 'assets/fonts/InstrumentSerif-Regular.ttf')).toString('base64');
   const mono = readFileSync(join(HERE, 'assets/fonts/DMMono-Regular.ttf')).toString('base64');
   const inter = readFileSync(join(HERE, 'assets/fonts/Inter-Variable.ttf')).toString('base64');
-  const size = fontSizeFor(text, shape);
+  const size = fontSizeFor(text.replace(/\[\[|\]\]/g, ''), shape);
   const pad = Math.round(w * 0.09);
   const headFont = t.font === 'inter' ? "'Inter',system-ui,sans-serif" : "'Instrument Serif',Georgia,serif";
   const smallFont = t.font === 'inter' ? "'Inter',system-ui,sans-serif" : "'DM Mono',monospace";
-  const headWeight = t.font === 'inter' ? 700 : 400;
-  // Fred cards set the headline in a WhatsApp-style message bubble on
-  // the chat-beige ground; Crox cards stay plain type on dark.
-  const mainHtml = t.style === 'bubble'
-    ? `<main><div class="bubble"><h1>${esc(text)}</h1><div class="tick">✓✓</div></div></main>`
-    : `<main><h1>${esc(text)}</h1></main>`;
-  const bubbleCss = t.style === 'bubble' ? `
-.bubble{background:#ffffff;border-radius:${Math.round(w * 0.024)}px;
-        border-bottom-left-radius:${Math.round(w * 0.006)}px;
-        padding:${Math.round(pad * 0.55)}px ${Math.round(pad * 0.6)}px;
-        box-shadow:0 1px 2px rgba(17,27,33,.13);max-width:92%}
-.tick{text-align:right;color:#4fc3f7;font-family:${smallFont};
-      font-size:${Math.round(w * 0.024)}px;margin-top:${Math.round(pad * 0.18)}px}` : '';
 
-  return `<!doctype html><html><head><meta charset="utf-8"><style>
+  // [[...]] in the headline becomes the site's periwinkle highlight.
+  const headline = esc(text).replace(/\[\[/g, '<span class="hl">').replace(/\]\]/g, '</span>');
+
+  if (t.style !== 'panel') {
+    return `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face { font-family:'Instrument Serif'; src:url(data:font/ttf;base64,${serif}) format('truetype'); }
 @font-face { font-family:'DM Mono'; src:url(data:font/ttf;base64,${mono}) format('truetype'); }
 @font-face { font-family:'Inter'; src:url(data:font/ttf;base64,${inter}) format('truetype'); font-weight:100 900; }
@@ -130,27 +136,57 @@ function buildHtml({ text, kicker, footer, shape, theme }) {
 body{width:${w}px;height:${h}px;background:${t.bg};color:${t.fg};
      display:flex;flex-direction:column;justify-content:space-between;
      padding:${pad}px;position:relative;overflow:hidden}
-.kicker{font-family:${smallFont};font-size:${Math.round(w * 0.026)}px;
-        letter-spacing:.24em;text-transform:uppercase;color:${t.accent};font-weight:600}
+.kicker{font-family:'DM Mono',monospace;font-size:${Math.round(w * 0.026)}px;
+        letter-spacing:.24em;text-transform:uppercase;color:${t.accent}}
 main{display:flex;align-items:center;flex:1;padding:${Math.round(pad * 0.6)}px 0}
-h1{font-family:${headFont};font-weight:${headWeight};
-   font-size:${size}px;line-height:1.18;letter-spacing:-.015em;
-   /* Long words must break rather than bleed off the card edge. */
-   overflow-wrap:anywhere}
+h1{font-family:${headFont};font-weight:400;font-size:${size}px;line-height:1.14;
+   letter-spacing:-.01em;overflow-wrap:anywhere}
+.hl{color:${t.accent}}
 .rule{width:${Math.round(w * 0.11)}px;height:5px;background:${t.accent};margin-bottom:${Math.round(pad * 0.5)}px}
 footer{display:flex;justify-content:space-between;align-items:flex-end;gap:${Math.round(pad*0.4)}px;
-       font-family:${smallFont};font-size:${Math.round(w * 0.024)}px;color:${t.dim}}
-.glow{position:absolute;right:-14%;top:-14%;width:62%;aspect-ratio:1;border-radius:50%;
-      background:radial-gradient(circle,${t.bubble || t.accent}${t.bubble ? '' : '2b'} 0%,transparent 68%)}
-${bubbleCss}
+       font-family:'DM Mono',monospace;font-size:${Math.round(w * 0.024)}px;color:${t.dim}}
 </style></head><body>
-<div class="glow"></div>
 <div class="kicker">${esc(kicker)}</div>
-${mainHtml}
-<div>
-  <div class="rule"></div>
-  <footer><span>${esc(footer)}</span><span>Your family assistant. On WhatsApp.</span></footer>
-</div>
+<main><h1>${headline}</h1></main>
+<div><div class="rule"></div>
+<footer><span>${esc(footer)}</span></footer></div>
+</body></html>`;
+  }
+
+  // Fred panel: the fredhelpsyour.family hero, card-shaped.
+  const bubbleHtml = bubble
+    ? `<div class="reply"><div class="msg">${esc(bubble)}</div><div class="time">08:12</div></div>`
+    : '';
+  return `<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face { font-family:'Inter'; src:url(data:font/ttf;base64,${inter}) format('truetype'); font-weight:100 900; }
+*{margin:0;padding:0;box-sizing:border-box}
+body{width:${w}px;height:${h}px;
+     background:radial-gradient(ellipse at top, ${t.glowA}, transparent 60%),
+                radial-gradient(ellipse at bottom right, ${t.glowB}, transparent 50%),
+                ${t.bg};
+     color:${t.fg};font-family:${smallFont};
+     display:flex;flex-direction:column;padding:${pad}px;overflow:hidden}
+.brand{display:flex;align-items:center;gap:${Math.round(w*0.022)}px}
+.badge{width:${Math.round(w*0.062)}px;height:${Math.round(w*0.062)}px;border-radius:50%;
+       background:linear-gradient(135deg, ${t.badgeFrom}, ${t.badgeTo});
+       display:flex;align-items:center;justify-content:center;
+       font-weight:800;font-size:${Math.round(w*0.032)}px;color:#fff}
+.wordmark{font-weight:800;font-size:${Math.round(w*0.042)}px;color:${t.fg}}
+.domain{font-weight:500;font-size:${Math.round(w*0.026)}px;color:${t.dim};margin-left:${Math.round(w*0.012)}px}
+main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:${Math.round(h*0.045)}px}
+h1{font-weight:800;font-size:${size}px;line-height:1.12;letter-spacing:-.025em;overflow-wrap:anywhere}
+.hl{color:${t.accent}}
+.reply{background:#ffffff;color:${t.bubbleFg};align-self:flex-start;max-width:86%;
+       border-radius:${Math.round(w*0.022)}px;border-top-left-radius:${Math.round(w*0.006)}px;
+       padding:${Math.round(w*0.032)}px ${Math.round(w*0.04)}px ${Math.round(w*0.02)}px;
+       box-shadow:0 ${Math.round(w*0.008)}px ${Math.round(w*0.03)}px rgba(0,0,0,.35)}
+.msg{font-weight:500;font-size:${Math.round(w*0.036)}px;line-height:1.4}
+.time{text-align:right;color:${t.time};font-size:${Math.round(w*0.022)}px;margin-top:${Math.round(w*0.01)}px}
+footer{font-weight:500;font-size:${Math.round(w*0.026)}px;color:${t.dim}}
+</style></head><body>
+<div class="brand"><div class="badge">F</div><span class="wordmark">Fred</span><span class="domain">${esc(footer)}</span></div>
+<main><h1>${headline}</h1>${bubbleHtml}</main>
+<footer>Your family assistant. On WhatsApp.</footer>
 </body></html>`;
 }
 
@@ -174,6 +210,7 @@ function main() {
 
   const html = buildHtml({
     text,
+    bubble: args.bubble,
     kicker: args.kicker || 'Fred',
     footer: args.footer || 'fredhelpsyour.family',
     shape,
