@@ -95,9 +95,11 @@ class QueueItem(BaseModel):
     body: str = Field(..., min_length=1, max_length=2900)
     post_at: datetime
     # Which network to publish to. Defaults to linkedin so every existing
-    # caller keeps working unchanged. Instagram is not accepted: it has
-    # no text-only post type, so it needs the image pipeline first.
-    platform: Literal["linkedin", "x"] = "linkedin"
+    # caller keeps working unchanged. Instagram items must carry an
+    # image_url (a public JPEG — POST /media provides one) and a caption
+    # within Instagram's 2,200-char limit; both checked at queue time so
+    # a bad item is refused now, not discovered when it's due.
+    platform: Literal["linkedin", "x", "instagram"] = "linkedin"
     # Optional attachment: a link card (link_url + link_title) OR an
     # image fetched from image_url — not both.
     link_url: str | None = Field(default=None, max_length=1000)
@@ -119,6 +121,13 @@ async def queue_posts(req: QueueRequest, _: None = Depends(_require_admin)) -> d
     for item in req.posts:
         if item.link_url and item.image_url:
             raise HTTPException(status_code=422, detail="link_or_image_not_both")
+        if item.platform == "instagram":
+            if not item.image_url:
+                raise HTTPException(status_code=422, detail="instagram_needs_image_url")
+            if item.link_url:
+                raise HTTPException(status_code=422, detail="instagram_no_link_posts")
+            if len(item.body) > 2200:
+                raise HTTPException(status_code=422, detail="instagram_caption_max_2200")
         post_id = await db.queue_linkedin_post(
             item.body,
             item.post_at,

@@ -21,7 +21,7 @@ from urllib.parse import urlencode
 import httpx
 
 from app.config import settings
-from app.services import db, x_social
+from app.services import db, instagram, x_social
 
 _AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization"
 _TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
@@ -182,11 +182,13 @@ async def publish(
 
 # Platform dispatch for the shared queue. Each publisher takes the body
 # plus optional attachments and returns {"ok", "post_id", "error"}.
-# Instagram is deliberately absent: it has no text-only post type, so it
-# needs the image pipeline before it can be wired in at all.
+# Instagram items must carry an image_url (a public JPEG — /media
+# provides them); the API layer enforces that at queue time and the
+# publisher again at post time.
 _PUBLISHERS = {
     "linkedin": lambda body, **kw: publish(body, **kw),
     "x": lambda body, **kw: x_social.publish(body, **kw),
+    "instagram": lambda body, **kw: instagram.publish(body, **kw),
 }
 
 

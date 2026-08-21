@@ -74,6 +74,16 @@ class Settings(BaseSettings):
     # live one is persisted in the DB after the first refresh.
     x_refresh_token: str = ""
 
+    # Instagram — "Instagram API with Instagram Login" product on a Meta
+    # app kept in Development mode (@familyfredmin added as an Instagram
+    # Tester): posting to our own account needs no App Review and no
+    # Facebook Page. These are the Instagram app id/secret from the
+    # product's "API setup with Instagram login" page, NOT the Meta app
+    # id on the dashboard. Empty disables /instagram/* (503); the token
+    # is captured via GET /instagram/auth and self-refreshes in the DB.
+    instagram_app_id: str = ""
+    instagram_app_secret: str = ""
+
     @property
     def unsubscribe_secret(self) -> str:
         return self.outbound_unsubscribe_secret or self.form_csrf_secret

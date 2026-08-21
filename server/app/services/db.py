@@ -190,6 +190,26 @@ CREATE TABLE IF NOT EXISTS x_auth (
     updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- Instagram long-lived token (~60 days, self-refreshing while posting
+-- continues). updated_at doubles as the token's age for the refresh
+-- endpoint's must-be-24h-old rule.
+CREATE TABLE IF NOT EXISTS instagram_auth (
+    id           INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    access_token TEXT NOT NULL,
+    user_id      TEXT NOT NULL,
+    expires_at   TIMESTAMPTZ NOT NULL,
+    updated_at   TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Public media store: Instagram fetches post images from a public URL
+-- and takes JPEG only, and the container's disk doesn't survive a
+-- redeploy — so post images live here, in the DB, behind /media/{name}.
+CREATE TABLE IF NOT EXISTS media_files (
+    name       TEXT PRIMARY KEY,
+    content    BYTEA NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS linkedin_queue (
     id               BIGSERIAL PRIMARY KEY,
     body             TEXT NOT NULL,
@@ -370,6 +390,112 @@ async def save_x_refresh_token(refresh_token: str) -> bool:
             return True
     except Exception as exc:
         print(f"[db] save_x_refresh_token failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return False
+
+
+async def save_instagram_auth(access_token: str, user_id: str, expires_at) -> bool:
+    if not _pool:
+        return False
+    try:
+        async with _pool.acquire() as conn:
+            await conn.execute(
+                """
+                INSERT INTO instagram_auth (id, access_token, user_id, expires_at, updated_at)
+                VALUES (1, $1, $2, $3, NOW())
+                ON CONFLICT (id) DO UPDATE SET
+                    access_token = EXCLUDED.access_token,
+                    user_id = EXCLUDED.user_id,
+                    expires_at = EXCLUDED.expires_at,
+                    updated_at = NOW()
+                """,
+                access_token, user_id, expires_at,
+            )
+        return True
+    except Exception as exc:
+        print(f"[db] save_instagram_auth failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return False
+
+
+async def get_instagram_auth() -> dict | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow("SELECT * FROM instagram_auth WHERE id = 1")
+            return dict(row) if row else None
+    except Exception as exc:
+        print(f"[db] get_instagram_auth failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+# ---------------------------------------------------------------------------
+# Media store — public JPEGs for Instagram (and any other) posts.
+# ---------------------------------------------------------------------------
+
+async def save_media(name: str, content: bytes, *, overwrite: bool = False) -> bool | None:
+    """True = saved, False = name taken (and overwrite not set),
+    None = DB unavailable."""
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            if overwrite:
+                await conn.execute(
+                    """
+                    INSERT INTO media_files (name, content) VALUES ($1, $2)
+                    ON CONFLICT (name) DO UPDATE SET content = EXCLUDED.content
+                    """,
+                    name, content,
+                )
+                return True
+            result = await conn.execute(
+                "INSERT INTO media_files (name, content) VALUES ($1, $2) ON CONFLICT (name) DO NOTHING",
+                name, content,
+            )
+            return result.endswith("1")
+    except Exception as exc:
+        print(f"[db] save_media failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def get_media(name: str) -> dict | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            row = await conn.fetchrow("SELECT name, content FROM media_files WHERE name = $1", name)
+            return dict(row) if row else None
+    except Exception as exc:
+        print(f"[db] get_media failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def list_media() -> list[dict] | None:
+    if not _pool:
+        return None
+    try:
+        async with _pool.acquire() as conn:
+            rows = await conn.fetch(
+                """
+                SELECT name, octet_length(content) AS size, created_at
+                FROM media_files ORDER BY created_at DESC LIMIT 200
+                """
+            )
+            return [dict(r) for r in rows]
+    except Exception as exc:
+        print(f"[db] list_media failed: {type(exc).__name__}: {str(exc)[:200]}")
+        return None
+
+
+async def delete_media(name: str) -> bool:
+    if not _pool:
+        return False
+    try:
+        async with _pool.acquire() as conn:
+            result = await conn.execute("DELETE FROM media_files WHERE name = $1", name)
+            return result.endswith("1")
+    except Exception as exc:
+        print(f"[db] delete_media failed: {type(exc).__name__}: {str(exc)[:200]}")
         return False
 
 

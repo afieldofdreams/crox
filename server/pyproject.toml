@@ -13,6 +13,8 @@ dependencies = [
     "posthog>=3.7.0",
     "asyncpg>=0.30.0",
     "dnspython>=2.7.0",
+    # /media converts uploaded PNGs to the JPEGs Instagram insists on.
+    "pillow>=11.0.0",
 ]
 
 [dependency-groups]
