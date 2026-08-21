@@ -137,34 +137,42 @@ that happened to Adam, because it did.
 story of building it, what it broke, what it earns. Product framing
 lives on X and Instagram — see `content/FRED-SOCIAL.md`.
 
-**X posts daily — seven a week, weekends included** (Adam's call,
-2026-08-21, raising the initial three-a-week added the same day after
-X went silent for a week because this file never told the routine to
-queue it). X's consumer audience is active on weekends, unlike
-LinkedIn's, so X does not stop on Friday. The week's seven:
+**X sells Fred — daily, seven a week, weekends included** (Adam's
+call, 2026-08-21, replacing the journey-repost plan from earlier the
+same day). X is a marketing channel for Fred and nothing else: every
+post's job is to make a parent want to try Fred, and every post ends
+with the click —
 
-- **Mon–Fri: the journey, reposted.** Adam is on X Premium, so each
-  weekday's LinkedIn body posts to X verbatim at a different time of
-  day (afternoon works — LinkedIn has the morning). Strip anything
-  that only makes sense with the LinkedIn context, like a reference
-  to an attached image (the X publisher is text-only). If a body
-  genuinely cannot stand alone, swap that day for a product post
-  rather than posting something confusing.
-- **Sat–Sun: Fred product posts.** X is Fred's product channel
-  (`FRED-SOCIAL.md`): what Fred does, plainly, for the family
-  audience.
+> First month free: https://fredhelpsyour.family
 
-The no-links rule applies on X too, with an extra reason: X bills per
-post from prepaid credits, and a post containing a link costs ~13×
-more (~\$0.20 vs ~\$0.015). Seven link-free posts cost ~\$0.11 a week.
-The bio carries the link. A `402` in the queue means the balance ran
-out — flag it for Adam, don't debug.
+(That pricing is real: free first month, then £19.95/month. Never
+call Fred free without the qualifier.) The week's seven:
+
+- **Most days: sell the product.** One concrete family scenario Fred
+  solves, in the launch-post voice: the 900-word school email, the
+  permission slip at the bottom of the bag, the trip payment nobody
+  wrote down. Scenarios are archetypal, never fake case studies — no
+  invented users, testimonials, or numbers, ever.
+- **One or two a week: the solo builder, building Fred.** What broke,
+  what it cost, what it taught — but only when the story is Fred.
+  These still end with the CTA. The general consultancy journey stays
+  on LinkedIn; a LinkedIn body only crosses to X when it is about
+  Fred, adapted to end in the click.
+
+**Links are required on X, unlike LinkedIn.** The no-links rule is a
+LinkedIn rule; on X the click is the whole point of the channel. Cost
+of that choice: X bills per post from prepaid credits and a post with
+a link costs ~\$0.20 (vs ~\$0.015 without), so seven a week is about
+\$1.40 — accepted as marketing spend. A `402` in the queue means the
+balance ran out — flag it for Adam to top up, don't debug.
 
 **Hard rules for the post bodies:**
 
-- **No links.** Text only — no `link_url`, no `image_url`. Adam's call:
-  he believes outbound links suppress reach. This costs us click
-  tracking (see Measurement).
+- **No links on LinkedIn.** Text only — no `link_url`, no `image_url`.
+  Adam's call: he believes outbound links suppress reach there. This
+  costs us click tracking (see Measurement). **X is the opposite** —
+  every X post ends with the fredhelpsyour.family link, because X's
+  job is clicks (see the X block above).
 - **Never invent.** No made-up clients, quotes, conversations, or
   statistics. If a number cannot be traced to a real source or Adam's
   own work, it does not go in the post. This is the whole basis of the
@@ -186,9 +194,10 @@ POST https://chat.crox.io/linkedin/queue
 ]}
 ```
 
-`platform` is `linkedin` (the default) or `x`. Adam is on X Premium, so
-long-form copy posts to X verbatim — repost the LinkedIn body rather
-than writing it twice, unless the framing genuinely differs.
+`platform` is `linkedin` (the default) or `x`. Adam is on X Premium,
+so length is not a constraint on X — but X posts are written for X
+(Fred marketing, ending in the link), not copied from LinkedIn. See
+the X block in step 5.
 
 Instagram is **not** a valid platform value and the API rejects it. It
 has no text-only post type, so it needs an image for every post: see

@@ -12,7 +12,7 @@ LinkedIn as build-in-public, not as a product pitch.**
 | Platform | Framing | Why |
 |---|---|---|
 | **LinkedIn** | An episode of the solo builder journey: building Fred, with real numbers. | LinkedIn is Adam's builder-journey channel (his call, 2026-08-20). Fred is proof he builds things, told as story — never pitched as a product there. |
-| **X** | The product, plainly. What Fred does, what it costs, what broke. | Mixed audience, tolerant of both builder and product talk. Premium account, so LinkedIn copy can be reposted nearly verbatim when it fits. |
+| **X** | Marketing. Every post sells Fred and ends with the try-Fred link. | Adam's call (2026-08-21): X exists to get people to click and try Fred. Solo-builder content is welcome only when the story is Fred, and it still ends in the CTA. Daily, weekends included. |
 | **Instagram** | Visual. Cards, screenshots, short demos. | The consumer audience actually lives here. Also the only platform where the copy *cannot* be reused — see below. |
 
 ## The visual system (corrected 2026-08-21)
@@ -79,7 +79,7 @@ nothing to screenshot, not as the default.
 >
 > What's the equivalent invisible admin in your firm?
 
-**X (product, same idea, direct):**
+**X (marketing, same idea, direct, ends in the click):**
 
 > Built Fred because every family runs on admin nobody signed up for.
 >
@@ -87,6 +87,8 @@ nothing to screenshot, not as the default.
 > thing that needs buying before Thursday.
 >
 > It sits with whoever notices it first. Usually the same person.
+>
+> Fred takes it. First month free: https://fredhelpsyour.family
 
 **Instagram (card):**
 
@@ -97,7 +99,9 @@ nothing to screenshot, not as the default.
 
 Everything in `OUTBOUND.md` — Reads-human, voice examples — and the hard
 rules in `WEEKLY-ROUTINE.md`: no invented anecdotes, no fabricated
-numbers, no links in the body. Fred posts describe a product Adam
+numbers. No links on LinkedIn; on X the link **is** the point — every
+post ends with `First month free: https://fredhelpsyour.family` (and
+never plain "free": first month free, then £19.95/month). Fred posts describe a product Adam
 actually built and uses. Nothing about a real family goes in a post
 without Adam saying so explicitly, and it is his family, so the default
 is nothing.
