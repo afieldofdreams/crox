@@ -1,0 +1,15 @@
+{
+  "_comment": "Capability: the tomorrow rundown, and reading the newsletter to the end. Priya asks what’s on; the £1 cake sale was buried in paragraph six.",
+  "contact": "Fred",
+  "status": "online",
+  "messages": [
+    { "e2e": true },
+    { "day": "Today" },
+    { "from": "me", "time": "20:05", "status": "read", "text": "what’s tomorrow looking like?" },
+    { "from": "them", "time": "20:05", "text": "Thursday, all in one place:\n\n• PE kit — back in school\n• Show and tell — something beginning with S\n• Cake sale — £1 coins if you have them\n\nNothing to sign, nothing due." },
+    { "from": "me", "time": "20:07", "status": "read", "text": "when did anyone mention a cake sale??" },
+    { "from": "them", "time": "20:07", "text": "Tuesday’s newsletter — paragraph six, just after the head lice bit. Nobody reads paragraph six. That’s what I’m for." },
+    { "from": "me", "time": "20:08", "status": "read", "text": "found a £1 coin in the car door. we’re winning" },
+    { "from": "them", "time": "20:08", "text": "Peak parenting. I’ll do the PE kit check with you at 7. 👟" }
+  ]
+}

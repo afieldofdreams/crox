@@ -1,0 +1,13 @@
+{
+  "_comment": "Capability: calendar clash-catching. Dan forwards a party invite from the class group chat; Fred logs it AND catches that the family is away that weekend, then sets the RSVP reminder.",
+  "contact": "Fred",
+  "status": "online",
+  "messages": [
+    { "e2e": true },
+    { "day": "Today" },
+    { "from": "me", "forwarded": true, "time": "17:24", "status": "read", "text": "Hi everyone! Jessie is having her birthday party at Adventure Zone on Saturday 11th October, 2–4pm. All the class welcome! Please RSVP by Wednesday so we can give numbers for food. Emma x" },
+    { "from": "them", "time": "17:24", "text": "Invite logged — but heads up: you’re at your mum’s that weekend, back Sunday. Saturday 2pm doesn’t work.\n\nWant a reminder to reply to Emma before Wednesday either way?" },
+    { "from": "me", "time": "17:26", "status": "read", "text": "ah no. Ivy will be gutted. yes remind me tomorrow" },
+    { "from": "them", "time": "17:26", "text": "Will do — 8pm tomorrow. And Ruby’s party on the 18th is still in the diary with nothing against it, so the month isn’t a total loss. 🎈" }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "_comment": "Capability: the Sunday-night week-ahead brief, surfacing the INSET day nobody registered and offering to help sort the childcare fallout while it’s still sortable.",
+  "contact": "Fred",
+  "status": "online",
+  "messages": [
+    { "e2e": true },
+    { "day": "Today" },
+    { "from": "me", "time": "19:38", "status": "read", "text": "ok what’s this week" },
+    { "from": "them", "time": "19:38", "text": "Your week, the short version:\n\n• Tue — swimming restarts, kit and goggles\n• Wed — trip money deadline, £8 on ParentPay\n• Fri — INSET day. No school.\n\nFriday is the one to plan for." },
+    { "from": "me", "time": "19:40", "status": "read", "text": "INSET DAY?? since when" },
+    { "from": "them", "time": "19:40", "text": "September newsletter, page two, under the uniform reminders. Want a nudge tonight to sort Friday childcare while everyone’s still awake?" },
+    { "from": "me", "time": "19:41", "status": "read", "text": "asking grandma now actually" },
+    { "from": "them", "time": "19:41", "text": "Even better. I’ll check back at 9 in case Grandma has plans." }
+  ]
+}
