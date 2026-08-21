@@ -162,7 +162,17 @@ function bubbleHtml(msg, side, groupFirst) {
   </div></div>`;
 }
 
-function buildHtml(chat, clock) {
+/**
+ * enterP (0..1, optional): how far the LAST message in the list has
+ * entered. WhatsApp's arrival animation is the new bubble sliding up
+ * from the composer while everything above glides up to make room.
+ * With static frames the new row's height is unknown at authoring
+ * time, so an inline script measures it and shifts the whole chat
+ * column down by (1-p) * height — the layout has already made room,
+ * the transform hands it back, and easing p across frames produces
+ * the glide. The new bubble itself fades and rises the last few px.
+ */
+function buildHtml(chat, clock, enterP = null) {
   const inter = readFileSync(join(HERE, 'assets/fonts/Inter-Variable.ttf')).toString('base64');
   const avatar = readFileSync(join(HERE, 'assets/brand/fred-avatar-400.png')).toString('base64');
 
@@ -273,6 +283,19 @@ body{font-family:-apple-system,'Inter',sans-serif;position:relative;
   </div>
   <div class="homebar"><div></div></div>
 </div>
+${enterP === null ? '' : `<script>
+  const p = ${enterP};
+  const chat = document.querySelector('.chat');
+  const rows = chat.children;
+  const last = rows[rows.length - 1];
+  if (last) {
+    const h = last.getBoundingClientRect().height
+      + parseFloat(getComputedStyle(last).marginTop || 0) + 2;
+    chat.style.transform = 'translateY(' + ((1 - p) * h).toFixed(2) + 'px)';
+    last.style.opacity = p.toFixed(3);
+    last.style.transform = 'translateY(' + ((1 - p) * 6).toFixed(2) + 'px)';
+  }
+</script>`}
 </body></html>`;
 }
 
@@ -343,10 +366,22 @@ function renderVideo(chat, clock, out, scale, chromium) {
   const dir = mkdtempSync(join(tmpdir(), 'whatsapp-vid-'));
   const frames = []; // {file, duration}
   let n = 0;
-  const snap = (messages, duration) => {
-    const html = buildHtml({ ...chat, messages }, clock);
+  const snap = (messages, duration, enterP = null) => {
+    const html = buildHtml({ ...chat, messages }, clock, enterP);
     const file = screenshot(html, dir, `f${String(n++).padStart(3, '0')}`, scale, chromium);
     frames.push({ file, duration });
+  };
+
+  // Arrival animation: ~0.27s of ease-out tween frames at 30fps before
+  // the hold, so bubbles glide in instead of cutting in.
+  const DT = 1 / 30;
+  const TWEEN = 8;
+  const easeOut = (t) => 1 - (1 - t) ** 3;
+  const appear = (messages, hold, tween = TWEEN) => {
+    for (let f = 1; f <= tween; f++) {
+      snap(messages, DT, easeOut(f / tween));
+    }
+    snap(messages, Math.max(hold - tween * DT, 0.2));
   };
 
   const shown = [];
@@ -359,15 +394,17 @@ function renderVideo(chat, clock, out, scale, chromium) {
   for (let i = shown.length; i < chat.messages.length; i++) {
     const msg = chat.messages[i];
     if (!msg.day && !msg.e2e && msg.from !== 'me' && !msg.typing) {
-      // Fred is typing… two pulse cycles.
+      // Fred is typing… the bubble eases in, then two pulse cycles.
+      appear([...shown, { from: 'them', typing: true, typingPhase: 0 }], 0.32, 5);
       for (let cycle = 0; cycle < 2; cycle++) {
-        for (let phase = 0; phase < TYPING_PHASES.length; phase++) {
+        for (let phase = cycle ? 0 : 1; phase < TYPING_PHASES.length; phase++) {
           snap([...shown, { from: 'them', typing: true, typingPhase: phase }], 0.28);
         }
       }
     }
     shown.push(msg);
-    snap([...shown], msg.day || msg.e2e ? 0.6 : holdFor(msg));
+    if (msg.day || msg.e2e) snap([...shown], 0.6);
+    else appear([...shown], holdFor(msg));
   }
   // Let the finished conversation breathe before the loop/cut.
   frames[frames.length - 1].duration += 2.0;
