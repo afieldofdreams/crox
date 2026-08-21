@@ -1,0 +1,14 @@
+{
+  "_comment": "Capability: reminding the right person, and switching when plans change. The approved copy’s ’reminds the right person before Thursday’, dramatised: dentist pickup moves from Rob to Meg mid-afternoon.",
+  "contact": "Fred",
+  "status": "online",
+  "messages": [
+    { "e2e": true },
+    { "day": "Today" },
+    { "from": "them", "time": "14:45", "text": "Reminder: Freya’s dentist today, 3:40 at Northgate. Rob’s on pickup — I’ve nudged him too." },
+    { "from": "me", "time": "14:47", "status": "read", "text": "he’s just texted me, stuck at work. can you switch it to me" },
+    { "from": "them", "time": "14:47", "text": "Done — the reminder’s yours now. Leave by 3:15 and you’re fine. I’ve told Rob he’s off the hook." },
+    { "from": "me", "time": "14:48", "status": "read", "text": "lifesaver" },
+    { "from": "them", "time": "14:48", "text": "All part of the service. 3:15. 🦷" }
+  ]
+}

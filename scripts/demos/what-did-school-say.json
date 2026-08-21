@@ -1,0 +1,14 @@
+{
+  "_comment": "Capability: retrieval — quoting back what a letter actually said, weeks later, at 9pm. Then a reminder placed early enough to avoid the Thursday-night costume build.",
+  "contact": "Fred",
+  "status": "online",
+  "messages": [
+    { "e2e": true },
+    { "day": "Today" },
+    { "from": "me", "time": "21:14", "status": "read", "text": "what did the letter say about book week costumes? was it no bought ones or something?" },
+    { "from": "them", "time": "21:14", "text": "From Friday’s letter: “For Book Week children may come dressed as a character from a favourite book. Costumes do not need to be bought — homemade is encouraged. Please, no football kits.”\n\nThat’s Friday 17 Oct. You’ve got two weeks." },
+    { "from": "me", "time": "21:16", "status": "read", "text": "he wants to go as the gruffalo" },
+    { "from": "them", "time": "21:16", "text": "Brown jumper, cardboard horns, green pom-pom wart. I’ll remind you the weekend before, so it’s not a Thursday-night build. 📚" },
+    { "from": "me", "time": "21:17", "status": "read", "text": "deal" }
+  ]
+}
