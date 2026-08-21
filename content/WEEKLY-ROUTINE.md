@@ -137,23 +137,28 @@ that happened to Adam, because it did.
 story of building it, what it broke, what it earns. Product framing
 lives on X and Instagram — see `content/FRED-SOCIAL.md`.
 
-**X is a standing output, not an extra** (added 2026-08-21, after X
-went silent for a week because this file never told the routine to
-queue it). Every week, queue **at least three X posts** alongside the
-five LinkedIn posts:
+**X posts daily — seven a week, weekends included** (Adam's call,
+2026-08-21, raising the initial three-a-week added the same day after
+X went silent for a week because this file never told the routine to
+queue it). X's consumer audience is active on weekends, unlike
+LinkedIn's, so X does not stop on Friday. The week's seven:
 
-- **Two Fred product posts.** X is Fred's product channel
-  (`FRED-SOCIAL.md`): what Fred does, plainly, for the family audience.
-- **At least one journey repost.** Adam is on X Premium, so pick the
-  LinkedIn journey posts that stand alone and repost the body verbatim
-  — but strip anything that only makes sense with the LinkedIn
-  context, like a reference to an attached image (the X publisher is
-  text-only).
+- **Mon–Fri: the journey, reposted.** Adam is on X Premium, so each
+  weekday's LinkedIn body posts to X verbatim at a different time of
+  day (afternoon works — LinkedIn has the morning). Strip anything
+  that only makes sense with the LinkedIn context, like a reference
+  to an attached image (the X publisher is text-only). If a body
+  genuinely cannot stand alone, swap that day for a product post
+  rather than posting something confusing.
+- **Sat–Sun: Fred product posts.** X is Fred's product channel
+  (`FRED-SOCIAL.md`): what Fred does, plainly, for the family
+  audience.
 
-Stagger them across the week at different times from the LinkedIn
-slots. The no-links rule applies on X too, with an extra reason: X
-bills per post from prepaid credits, and a post containing a link
-costs ~13× more (~\$0.20 vs ~\$0.015). The bio carries the link.
+The no-links rule applies on X too, with an extra reason: X bills per
+post from prepaid credits, and a post containing a link costs ~13×
+more (~\$0.20 vs ~\$0.015). Seven link-free posts cost ~\$0.11 a week.
+The bio carries the link. A `402` in the queue means the balance ran
+out — flag it for Adam, don't debug.
 
 **Hard rules for the post bodies:**
 
@@ -229,11 +234,12 @@ GET https://chat.crox.io/linkedin/queue
 ```
 
 Confirm **five pending `linkedin` items** exist for the coming
-Monday–Friday **and at least three pending `x` items**. If there are
-fewer of either, the run has failed at its most important job: say so
-at the top of the report, in plain words, and do not describe the run
-as successful. A quiet week is the one outcome that must never look
-fine — and a week that is quiet on only one platform still counts.
+Monday–Friday **and seven pending `x` items covering every day of the
+coming week**. If there are fewer of either, the run has failed at its
+most important job: say so at the top of the report, in plain words,
+and do not describe the run as successful. A quiet week is the one
+outcome that must never look fine — and a week that is quiet on only
+one platform still counts.
 
 ### 9. Append the log entry
 
@@ -280,5 +286,5 @@ Diagnose in this order — the last outage was the third one:
 
 ## Cadence
 
-Written Sundays, published Monday to Friday. Every working day, always
-a week in hand.
+Written Sundays, always a week in hand. LinkedIn publishes Monday to
+Friday; X publishes every day of the week.
