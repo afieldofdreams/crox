@@ -324,20 +324,25 @@ body{font-family:-apple-system,'Inter',sans-serif;position:relative;
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
      background:#9aa4ab;margin-right:3px}
 
-.bottom{position:absolute;bottom:${kbOff}px;left:0;right:0;z-index:2;height:${bottomH}px;
+.bottom{position:absolute;bottom:${kbOff}px;left:0;right:0;z-index:2;min-height:${bottomH}px;
         background:${C.bar};backdrop-filter:blur(20px);
         border-top:0.5px solid ${C.hairline};padding:6px 10px 0}
-.composer{display:flex;align-items:center;gap:12px;padding:0 4px}
-.field{flex:1;height:35px;background:#fff;border:0.5px solid ${C.hairline};
-       border-radius:18px;display:flex;align-items:center;
-       padding:0 9px 0 12px;overflow:hidden}
-.draft{flex:1;font-size:16px;color:${C.text};white-space:nowrap;overflow:hidden;
-       display:flex;align-items:center;justify-content:flex-start}
-.draft span{flex:0 0 auto}
-.caret{width:2px;height:21px;background:${C.green};margin-left:1px;border-radius:1px}
+.composer{display:flex;align-items:flex-end;gap:12px;padding:0 4px 6px}
+.composer > svg{flex:0 0 auto;margin-bottom:6px}
+.field{flex:1;min-height:35px;background:#fff;border:0.5px solid ${C.hairline};
+       border-radius:18px;display:flex;align-items:flex-end;
+       padding:6px 9px 7px 12px;overflow:hidden}
+.field > svg{flex:0 0 auto;margin-bottom:-1px}
+/* The draft wraps and the field grows upward, like the real composer —
+   never a single line scrolling off to the right. */
+.draft{flex:1;font-size:16px;line-height:21px;color:${C.text};
+       white-space:pre-wrap;overflow-wrap:break-word;min-height:21px}
+.caret{display:inline-block;width:2px;height:18px;background:${C.green};
+       margin-left:1px;border-radius:1px;vertical-align:-3px}
 .spacer{flex:1}
 .sendbtn{width:30px;height:30px;border-radius:50%;background:${C.green};
-         display:flex;align-items:center;justify-content:center}
+         display:flex;align-items:center;justify-content:center;
+         flex:0 0 auto;margin-bottom:3px}
 .homebar{height:30px;display:flex;align-items:center;justify-content:center}
 .homebar div{width:140px;height:5px;border-radius:3px;background:#000}
 
@@ -387,7 +392,15 @@ body{font-family:-apple-system,'Inter',sans-serif;position:relative;
   ${kb > 0 ? '' : '<div class="homebar"><div></div></div>'}
 </div>
 ${kb > 0 ? keyboardHtml(pressKey) : ''}
-${enterP === null ? '' : `<script>
+<script>
+  // A multi-line draft grows the composer upward; hand that height to
+  // the chat so the last bubbles ride up instead of being covered.
+  {
+    const bar = document.querySelector('.bottom');
+    const chat = document.querySelector('.chat');
+    chat.style.bottom = (${kbOff} + bar.offsetHeight) + 'px';
+  }
+  ${enterP === null ? '' : `{
   const p = ${enterP};
   const chat = document.querySelector('.chat');
   const rows = chat.children;
@@ -399,7 +412,8 @@ ${enterP === null ? '' : `<script>
     last.style.opacity = p.toFixed(3);
     last.style.transform = 'translateY(' + ((1 - p) * 6).toFixed(2) + 'px)';
   }
-</script>`}
+  }`}
+</script>
 </body></html>`;
 }
 
