@@ -92,10 +92,18 @@ it is most of the growth:
 Once the Meta app is connected (`FRED-SOCIAL.md`, "Connecting
 Instagram"), the queue can auto-publish the **image posts** — the
 Wednesday carousel slides and Saturday cards — via `platform:
-"instagram"` with `/media` URLs. **Reels stay manual**: they need a
-phone screen recording with native captions, and the publisher is
-image-only. That split is fine — the Reels are the part that needs a
-human anyway, and it's three short recordings a week.
+"instagram"` with `/media` URLs.
+
+**Reels creative is generated, posting is manual.**
+`scripts/whatsapp-shot.mjs` (added 21 Aug) renders pixel-accurate
+WhatsApp conversations from a JSON chat script — stills at true iPhone
+resolution, or `--video` for an animated MP4 with messages landing one
+by one behind a typing indicator. That covers "the proof" pillar
+without filming anything: write the conversation, render, upload from
+the phone. The generator's honesty rule applies: only conversations
+Fred can actually have, never presented as a real user's chat. The
+publisher itself is image-only, so the MP4 is posted natively — which
+is where Instagram's own captions/audio tools live anyway.
 
 Cadence decision, connection, and whether the Monday routine takes
 over the image slots: Adam's call once the account is connected.
