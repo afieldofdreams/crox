@@ -9,8 +9,10 @@ from app.api.assessment import router as assessment_router
 from app.api.capture import router as capture_router
 from app.api.chat import router as chat_router
 from app.api.contact_form import router as contact_form_router
+from app.api.instagram_auth import router as instagram_auth_router
 from app.api.linkedin import router as linkedin_router
 from app.api.links import router as links_router
+from app.api.media import router as media_router
 from app.api.outbound import router as outbound_router
 from app.api.x_auth import router as x_auth_router
 from app.config import settings
@@ -120,4 +122,6 @@ app.include_router(admin_router)
 app.include_router(outbound_router)
 app.include_router(linkedin_router)
 app.include_router(x_auth_router)
+app.include_router(instagram_auth_router)
+app.include_router(media_router)
 app.include_router(links_router)

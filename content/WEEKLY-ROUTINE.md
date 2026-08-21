@@ -199,9 +199,14 @@ so length is not a constraint on X — but X posts are written for X
 (Fred marketing, ending in the link), not copied from LinkedIn. See
 the X block in step 5.
 
-Instagram is **not** a valid platform value and the API rejects it. It
-has no text-only post type, so it needs an image for every post: see
-`content/FRED-SOCIAL.md` and `scripts/social-card.mjs`.
+`instagram` is also a valid platform value (server support built 21
+Aug 2026), but every instagram item must carry an `image_url` — a
+public JPEG, which `POST /media` provides — and a caption of at most
+2,200 characters; the API refuses the item otherwise. Instagram is
+**not yet one of this routine's outputs**: it goes live once Adam
+completes the one-off Meta app setup in `content/FRED-SOCIAL.md`, and
+what cadence it gets is his call to make then. Until that is done, do
+not queue instagram items.
 
 Queuing is not publishing. The background poster flushes due items every
 ten minutes, so a week queued on Sunday has a veto window on every post —

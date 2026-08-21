@@ -106,6 +106,74 @@ actually built and uses. Nothing about a real family goes in a post
 without Adam saying so explicitly, and it is his family, so the default
 is nothing.
 
+## Connecting Instagram (one-off)
+
+The server side is built: OAuth flow, self-refreshing token, publisher,
+and a `/media` store that converts any uploaded image to the public
+JPEG URL Instagram requires. What remains is creating the Meta app —
+about five minutes, and no App Review because the app stays in
+Development mode posting to our own account.
+
+1. At [developers.facebook.com](https://developers.facebook.com), create
+   an app: type **Business** (any name, e.g. "Fred posting"). Leave it
+   in **Development mode** — do not publish it.
+2. Add the product **Instagram** and choose **API setup with Instagram
+   login** (not the Facebook-login variant — that one demands a
+   Facebook Page).
+3. On that product's setup page: add **@familyfredmin** as an
+   **Instagram Tester** (App roles → Roles → Add People → Instagram
+   Tester), then accept the invite from Instagram's own settings
+   (Apps and Websites → Tester Invites) while logged in as
+   @familyfredmin.
+4. Under the product's **Business login settings**, set the redirect
+   URI — exactly:
+
+   ```
+   https://chat.crox.io/instagram/callback
+   ```
+
+5. Copy the **Instagram app ID** and **Instagram app secret** from the
+   product's API setup page (these are *not* the Meta app id on the
+   dashboard) into the server env as `INSTAGRAM_APP_ID` and
+   `INSTAGRAM_APP_SECRET`, and redeploy.
+6. With the admin token:
+
+   ```bash
+   curl -s -H "Authorization: Bearer $CROX_ADMIN_TOKEN" \
+     https://chat.crox.io/instagram/auth
+   ```
+
+   Open `open_this_url` in a browser logged in as **@familyfredmin**
+   and approve. Check it took with `GET /instagram/status`.
+
+The token lasts ~60 days and refreshes itself whenever posting is
+active, so unlike LinkedIn this is not a recurring chore — it only
+needs redoing if posting stops entirely for two months.
+
+### Posting to Instagram once connected
+
+Two steps, because Instagram only accepts a public JPEG URL:
+
+```bash
+# 1. Generate the card, upload it to the media store
+node scripts/social-card.mjs --text "..." --shape portrait --theme fred --out card.png
+curl -s -X POST -H "Authorization: Bearer $CROX_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"name\": \"fred-2026-08-24\", \"content_base64\": \"$(base64 -w0 card.png)\"}" \
+  https://chat.crox.io/media
+# → returns {"url": "https://chat.crox.io/media/fred-2026-08-24.jpg"}
+
+# 2. Queue it like any other post
+# POST /linkedin/queue with
+# {"platform": "instagram", "image_url": "<that url>",
+#  "body": "<caption, max 2200 chars>", "post_at": "..."}
+```
+
+The store converts PNG to JPEG automatically (quality 90, alpha
+flattened onto Fred's near-black). Captions follow IG SEO practice —
+keywords in the caption, no hashtag spam — and 4:5 portrait remains
+the format call from the cropping lesson. **No music on carousels.**
+
 ## Connecting X (one-off)
 
 The callback URL X asks for is:
@@ -156,9 +224,12 @@ the connection renews itself rather than expiring like LinkedIn's
   the queue means top up at developer.x.com, not debug the code. A post
   is ~\$0.015, or ~\$0.20 if it contains a link.
 - **Instagram** — account live: **@familyfredmin** (created 21 Aug 2026).
-  Manual/native posting for Phase 1; the card generator produces the
-  creative. API automation can follow via a Development-mode Meta app
-  with the Instagram-Login variant — no App Review and no Facebook Page
-  needed to post to our own account (verified against Meta's developer
-  docs, Aug 2026). Note for that build: the API accepts JPEG only, and
-  images must be at a public URL.
+  **Server automation built 21 Aug 2026**: OAuth connect flow
+  (`/instagram/auth`), self-refreshing 60-day token, publisher wired
+  into the shared queue (`platform: "instagram"`, requires
+  `image_url`), and a `/media` store that turns any uploaded image
+  into the public JPEG URL the API demands. Waiting on the one-off
+  Meta app setup — see "Connecting Instagram" above. Until then,
+  manual/native posting continues; the queue rejects nothing (an
+  instagram item just errors `instagram_not_configured` if queued
+  before the env vars exist).
