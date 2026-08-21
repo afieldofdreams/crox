@@ -15,6 +15,23 @@ LinkedIn as build-in-public, not as a product pitch.**
 | **X** | The product, plainly. What Fred does, what it costs, what broke. | Mixed audience, tolerant of both builder and product talk. Premium account, so LinkedIn copy can be reposted nearly verbatim when it fits. |
 | **Instagram** | Visual. Cards, screenshots, short demos. | The consumer audience actually lives here. Also the only platform where the copy *cannot* be reused — see below. |
 
+## The visual system (corrected 2026-08-21)
+
+Fred's brand is the fredhelpsyour.family hero system, and only that:
+near-black `#0b0d12` with an indigo glow top (`rgba(99,102,241)`) and a
+pink glow bottom-right (`rgba(236,72,153)`), Inter 800 headlines with
+the key phrase in periwinkle `#818cf8`, the purple-to-pink gradient F
+badge, and white WhatsApp-style reply bubbles as Fred's voice.
+
+The beige/teal/green WhatsApp colours that appear on the site are the
+**chat mockup inside the phone frame, not the brand** — the first
+attempt at cards and avatars copied them and read as a different
+product. `scripts/social-card.mjs` (`--theme fred`) now renders the
+hero system, including `[[...]]` for the periwinkle highlight and
+`--bubble` for a Fred reply. Profile images (bubble-mark on the dark
+gradient, circle-crop safe) live in `scripts/assets/brand/` — 1000px
+for Instagram, 400px for X.
+
 ## Instagram needs pictures, and that is not a preference
 
 There is no text-only Instagram feed post. The publishing API supports
