@@ -13,7 +13,7 @@ LinkedIn as build-in-public, not as a product pitch.**
 |---|---|---|
 | **LinkedIn** | An episode of the solo builder journey: building Fred, with real numbers. | LinkedIn is Adam's builder-journey channel (his call, 2026-08-20). Fred is proof he builds things, told as story — never pitched as a product there. |
 | **X** | Marketing. Every post sells Fred and ends with the try-Fred link. | Adam's call (2026-08-21): X exists to get people to click and try Fred. Solo-builder content is welcome only when the story is Fred, and it still ends in the CTA. Daily, weekends included. |
-| **Instagram** | Visual. Cards, screenshots, short demos. | The consumer audience actually lives here. Also the only platform where the copy *cannot* be reused — see below. |
+| **Instagram** | Visual. Cards, screenshots, short demos. | The consumer audience actually lives here. Also the only platform where the copy *cannot* be reused — see below. Full from-zero strategy and weekly calendar: `content/FRED-INSTAGRAM-PLAN.md`. |
 
 ## The visual system (corrected 2026-08-21)
 
