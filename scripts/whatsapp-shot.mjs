@@ -483,22 +483,30 @@ function renderVideo(chat, clock, out, scale, chromium) {
   };
 
   const shown = [];
-  // Opening state: any leading day pill / e2e notice on their own.
+  // Leading day pill / e2e notice…
   while (chat.messages.length > shown.length && (chat.messages[shown.length].day || chat.messages[shown.length].e2e)) {
     shown.push(chat.messages[shown.length]);
   }
-  snap([...shown], 1.0);
+  // …plus the first content message, pre-loaded. The cold open must put
+  // the hook on screen at frame one — an empty chat for a second is
+  // exactly the two-second churn window (Adam, 2026-08-21). Animation
+  // starts from message two, ~0.4s in.
+  if (shown.length < chat.messages.length) shown.push(chat.messages[shown.length]);
+  snap([...shown], 0.4);
 
+  let laterReply = false;
   for (let i = shown.length; i < chat.messages.length; i++) {
     const msg = chat.messages[i];
     if (!msg.day && !msg.e2e && msg.from !== 'me' && !msg.typing) {
-      // Fred is typing… the bubble eases in, then two pulse cycles.
+      // Fred is typing… one pulse cycle before the first reply (keep
+      // the open moving), two once the viewer is invested.
       appear([...shown, { from: 'them', typing: true, typingPhase: 0 }], 0.32, 5);
-      for (let cycle = 0; cycle < 2; cycle++) {
+      for (let cycle = 0; cycle < (laterReply ? 2 : 1); cycle++) {
         for (let phase = cycle ? 0 : 1; phase < TYPING_PHASES.length; phase++) {
           snap([...shown, { from: 'them', typing: true, typingPhase: phase }], 0.28);
         }
       }
+      laterReply = true;
     }
 
     if (msg.from === 'me' && msg.text && !msg.forwarded) {
